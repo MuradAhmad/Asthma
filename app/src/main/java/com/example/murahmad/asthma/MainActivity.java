@@ -1,4 +1,4 @@
-/*
+
 package com.example.murahmad.asthma;
 
 import android.Manifest;
@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -51,24 +52,15 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
 
-
-
-
-    private class LeScanResult
-    {
+    private class LeScanResult {
         BluetoothDevice device;
         int rssi;
         byte[] scanData;
     }
 
 
-*/
-/*
-
     private static final String TAG = "MainActivity";
-    private static final String ALTBEACON_LAYOUT = "m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25";
-*//*
-
+    //   private static final String ALTBEACON_LAYOUT = "m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25";
 
 
     private ArrayList<LeScanResult> scanResults;
@@ -87,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
     private static int MAX_SCAN_TIME_MS = 1000;
 
 
-    Button btnStart,btnStop;
+    Button btnStart, btnStop;
+    TextView txtTemperature;
 
     private BeaconManager beaconManager = null;
 
@@ -109,8 +102,9 @@ public class MainActivity extends AppCompatActivity {
         btnStart = (Button) findViewById(R.id.btnStart);
 
         btnStop = (Button) findViewById(R.id.btnStop);
-        requestPermissions( new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, 1234);
+        txtTemperature = (TextView) findViewById(R.id.txtTemperature);
 
+        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
 
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -120,206 +114,11 @@ public class MainActivity extends AppCompatActivity {
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
 
-
-
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        int scanInterval = Integer.parseInt(settings.getString("pref_scaninterval", "5")) * 1000;
-        scheduler.scheduleAtFixedRate(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                if(!scheduler.isShutdown())
-                    startScan();
-            }
-        }, 0, scanInterval-MAX_SCAN_TIME_MS+1, TimeUnit.MILLISECONDS);
-
-        timer = new Timer();
-//        TimerTask alertManager = new ScannerService.alertManager();
-        //timer.scheduleAtFixedRate(alertManager, 2500, 2500);
     }
 
 
-    private void startScan() {
-        if(scanning)
-            return;
 
-        scanTimerHandler.postDelayed(new Runnable() {
-            @Override
-            public void run()
-            {
-                scanning = false;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    bluetoothAdapter.stopLeScan(mLeScanCallback);
-                }
-                processFoundDevices();
-            }
-        }, MAX_SCAN_TIME_MS);
-
-        scanResults = new ArrayList<LeScanResult>();
-        scanning = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            bluetoothAdapter.startLeScan(mLeScanCallback);
-        }
-    }
-
-    // Device scan callback.
-    private BluetoothAdapter.LeScanCallback mLeScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
-
-                @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord)
-                {
-                    Iterator<LeScanResult> itr = scanResults.iterator();
-
-                    LeScanResult dev = new LeScanResult();
-                    dev.device = device;
-                    dev.rssi = rssi;
-                    dev.scanData = scanRecord;
-
-                    boolean devFound = false;
-
-                    while(itr.hasNext())
-                    {
-                        LeScanResult element = itr.next();
-                        if(device.getAddress().equalsIgnoreCase(element.device.getAddress()))
-                            devFound = true;
-                    }
-
-
-                    if(!devFound)
-                    {
-                        scanResults.add(dev);
-                    }
-                }
-            };
-
-    void processFoundDevices()
-    {
-
-
-        Iterator<LeScanResult> itr = scanResults.iterator();
-        while(itr.hasNext())
-        {
-            LeScanResult element = itr.next();
-
-            // Parse the payload of the advertisement packet
-            // as a list of AD structures.
-            List<ADStructure> structures =
-                    ADPayloadParser.getInstance().parse(element.scanData);
-
-            // For each AD structure contained in the advertisement packet.
-            for (ADStructure structure : structures)
-            {
-                if (structure instanceof EddystoneURL)
-                {
-                    // Eddystone URL
-                    EddystoneURL es = (EddystoneURL)structure;
-                    if (es.getURL().toString().startsWith("https://ruu.vi/#") || es.getURL().toString().startsWith("https://r/"))
-                    {
-                        // Creates temporary ruuvitag-object, without heavy calculations
-                        Ruuvitag temp = new Ruuvitag(element.device.getAddress(),es.getURL().toString(),null,""+element.rssi, true);
-                        if(checkForSameTag(temp)) {
-                            // Creates real object, with temperature etc. calculated
-                            Ruuvitag real = new Ruuvitag(element.device.getAddress(),es.getURL().toString(),null,""+element.rssi, false);
-                            ruuvitagArrayList.add(real);
-                            update(real);
-                            scanEvent.addRuuvitag(real);
-                        }
-                    }
-
-                }
-                // If the AD structure represents Eddystone TLM.
-                else if(structure instanceof ADManufacturerSpecific)
-                {
-                    ADManufacturerSpecific es = (ADManufacturerSpecific)structure;
-                    if(es.getCompanyId() == 0x0499)
-                    {
-
-                        byte[] data = es.getData();
-                        if (data != null) {
-
-                            Ruuvitag tempTag = new Ruuvitag(element.device.getAddress(),null,data,""+element.rssi, true);
-                            if(checkForSameTag(tempTag)) {
-                                // Creates real object, with temperature etc. calculated
-                                Ruuvitag real = new Ruuvitag(element.device.getAddress(),null,data,""+element.rssi, false);
-                                ruuvitagArrayList.add(real);
-                                update(real);
-                                scanEvent.addRuuvitag(real);
-                            }
-                        }
-                    }
-
-
-                }
-            }
-
-
-
-            if(backendUrl != null)
-            {
-                //JsonObject json = new JsonObject();
-                //  JsonObject json = JSON.(scanEvent);
-                String jsonData =  new Gson().toJson(scanEvent);
-                Ion.with(getApplicationContext())
-                        .load(backendUrl)
-                        .setJsonPojoBody(scanEvent)
-                        .asJsonObject()
-                        .setCallback(new FutureCallback<JsonObject>() {
-                            @Override
-                            public void onCompleted(Exception e, JsonObject result) {
-                                // do stuff with the result or error
-                            }
-                        });
-            }
-            plotSource.addScanEvent(scanEvent);
-
-            exportRuuvitags();
-        }
-    }
-
-    public SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
-        {
-            if(settings.getBoolean("pref_bgscan", false))
-                startFG();
-
-            if(!settings.getBoolean("pref_bgscan", false))
-                stopForeground(true);
-
-            backendUrl = settings.getString("pref_backend",null);
-
-            scheduler.shutdown();
-
-            scheduler = Executors.newSingleThreadScheduledExecutor();
-            int scanInterval = Integer.parseInt(settings.getString("pref_scaninterval", "5")) * 1000;
-            scheduler.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run()
-                {
-                    if(!scheduler.isShutdown())
-                        startScan();
-                }
-            }, 0, scanInterval-MAX_SCAN_TIME_MS+1, TimeUnit.MILLISECONDS);
-
-            */
-/*
-            try
-            {
-                beaconManager.setForegroundBetweenScanPeriod
-                        (Long.parseLong(settings.getString("pref_scaninterval", "1")) * 1000 - 1000l);
-                beaconManager.updateScanPeriods();
-            } catch (RemoteException e)
-            {
-                e.printStackTrace();
-            }*//*
-
-        }
-    };
-
-        */
-/*
+   /*
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // Detect the URL frame:
         beaconManager.getBeaconParsers().add(new BeaconParser()
@@ -436,15 +235,25 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
+
+
+
+
+}
+
+*/
+
+
     @Override
     protected void onStart() {
-        */
-/*Intent intent = new Intent(MainActivity.this, ScannerService.class);
-        startService(intent);*//*
+
+Intent intent = new Intent(MainActivity.this, RuuviTagScanner.class);
+        startService(intent);
 
         super.onStart();
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -471,12 +280,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
+   @Override
+   protected void onStop() {
+       super.onStop();
+   }
 
 }
-*/

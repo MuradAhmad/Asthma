@@ -228,6 +228,8 @@ public class RuuviTagScanner extends Service {
                             // Creates real object, with temperature etc. calculated
                             RuuviTag real = new RuuviTag(element.device.getAddress(), es.getURL().toString(), null, "" + element.rssi, false);
                             ruuvitagArrayList.add(real);
+                            Log.d("Temperature", real.getTemperature());
+                            Log.d("Humidity", real.getHumidity());
                           /*  update(real);
                             scanEvent.addRuuvitag(real);*/
                         }
@@ -248,6 +250,7 @@ public class RuuviTagScanner extends Service {
                                 RuuviTag real = new RuuviTag(element.device.getAddress(), null, data, "" + element.rssi, false);
                                 ruuvitagArrayList.add(real);
                                 Log.d("Temperature", real.getTemperature());
+                                Log.d("Humidity", real.getHumidity());
                               /*  update(real);
                                 scanEvent.addRuuvitag(real);*/
                             }
@@ -283,15 +286,9 @@ public class RuuviTagScanner extends Service {
 
             exportRuuvitags();*/
         }
-<<<<<<< HEAD
-    
-=======
-<<<<<<< HEAD
-    
-=======
-    }
->>>>>>> cef8ab4edaf0afa69a9b603f0b57f9bf63cbe3de
->>>>>>> 7229238c201ef4dc94f396208f7601c573c1502f
+
+
+
 
     public SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -354,14 +351,7 @@ public class RuuviTagScanner extends Service {
     }
 
 
-    private boolean checkForSameTag(RuuviTag ruuvi) {
-        for (RuuviTag ruuvitag : ruuvitagArrayList) {
-            if (ruuvi.getId().equals(ruuvitag.getId())) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     @Override
     public void onDestroy() {
@@ -409,6 +399,16 @@ public class RuuviTagScanner extends Service {
         }
         return false;
     }
+
+
+private boolean checkForSameTag(RuuviTag ruuvi) {
+        for(RuuviTag ruuvitag : ruuvitagArrayList) {
+        if(ruuvi.getId().equals(ruuvitag.getId())) {
+        return false;
+        }
+        }
+        return true;
+        }
     public Integer[] readSeparated(String data) {
         String[] linevector;
         int index = 0;
