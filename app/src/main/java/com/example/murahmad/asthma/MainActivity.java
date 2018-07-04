@@ -1,3 +1,4 @@
+/*
 package com.example.murahmad.asthma;
 
 import android.Manifest;
@@ -61,11 +62,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+*/
 /*
 
     private static final String TAG = "MainActivity";
     private static final String ALTBEACON_LAYOUT = "m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25";
-*/
+*//*
+
 
 
     private ArrayList<LeScanResult> scanResults;
@@ -300,7 +303,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 0, scanInterval-MAX_SCAN_TIME_MS+1, TimeUnit.MILLISECONDS);
 
-            /*
+            */
+/*
             try
             {
                 beaconManager.setForegroundBetweenScanPeriod
@@ -309,19 +313,23 @@ public class MainActivity extends AppCompatActivity {
             } catch (RemoteException e)
             {
                 e.printStackTrace();
-            }*/
+            }*//*
+
         }
     };
 
-        /*
+        */
+/*
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // Detect the URL frame:
         beaconManager.getBeaconParsers().add(new BeaconParser()
                 .setBeaconLayout(BeaconParser.EDDYSTONE_URL_LAYOUT));
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.))
-        beaconManager.bind(this);*/
+        beaconManager.bind(this);*//*
 
-      /*  beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
+
+      */
+/*  beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
     beaconManager.bind(this);
 
     beaconManager.setMonitorNotifier(new MonitorNotifier() {
@@ -424,13 +432,16 @@ public class MainActivity extends AppCompatActivity {
         }   catch (RemoteException e){
             e.printStackTrace();
         }
-*/
+*//*
+
 
 
     @Override
     protected void onStart() {
-        /*Intent intent = new Intent(MainActivity.this, ScannerService.class);
-        startService(intent);*/
+        */
+/*Intent intent = new Intent(MainActivity.this, ScannerService.class);
+        startService(intent);*//*
+
         super.onStart();
     }
 
@@ -468,3 +479,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+*/
