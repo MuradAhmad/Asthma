@@ -1,5 +1,6 @@
 package com.example.murahmad.asthma;
 
+import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -16,6 +17,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.neovisionaries.bluetooth.ble.advertising.ADManufacturerSpecific;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
@@ -35,6 +37,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class RuuviTagScanner extends Service {
     public RuuviTagScanner() {
@@ -105,6 +108,7 @@ public class RuuviTagScanner extends Service {
 
         if (settings.getBoolean("pref_bgscan", false))
             startFG();
+
 
         Foreground.init(getApplication());
         Foreground.get().addListener(listener);
@@ -243,6 +247,7 @@ public class RuuviTagScanner extends Service {
                                 // Creates real object, with temperature etc. calculated
                                 RuuviTag real = new RuuviTag(element.device.getAddress(), null, data, "" + element.rssi, false);
                                 ruuvitagArrayList.add(real);
+                                Log.d("Temperature", real.getTemperature());
                               /*  update(real);
                                 scanEvent.addRuuvitag(real);*/
                             }
@@ -278,7 +283,7 @@ public class RuuviTagScanner extends Service {
 
             exportRuuvitags();*/
         }
-    }
+    
 
     public SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -387,7 +392,15 @@ public class RuuviTagScanner extends Service {
             }
         }
     };
-
+    private boolean isRunning(Class<?> serviceClass) {
+        ActivityManager mgr = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : mgr.getRunningServices(Integer.MAX_VALUE)) {
+            if(serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public Integer[] readSeparated(String data) {
         String[] linevector;
         int index = 0;
