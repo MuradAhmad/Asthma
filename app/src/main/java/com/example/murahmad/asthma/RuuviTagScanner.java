@@ -283,7 +283,15 @@ public class RuuviTagScanner extends Service {
 
             exportRuuvitags();*/
         }
+<<<<<<< HEAD
     
+=======
+<<<<<<< HEAD
+    
+=======
+    }
+>>>>>>> cef8ab4edaf0afa69a9b603f0b57f9bf63cbe3de
+>>>>>>> 7229238c201ef4dc94f396208f7601c573c1502f
 
     public SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
