@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBg">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/transparent_white_rect"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp"
+
+
+        >
+
+
+        <ImageView
+
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_account_circle_24dp"
+            android:layout_marginTop="10dp"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:text="Fill the form carefully"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="50px"
+            android:textStyle="bold"
+            android:textAlignment="center"/>
+        <AutoCompleteTextView
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="  Name"
+            android:background="@drawable/round_white_bg"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:textSize="14sp"
+
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:layout_marginBottom="10dp"
+            />
+
+
+
+        <AutoCompleteTextView
+            android:id="@+id/userDOB"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="  date of birth / 20-01-1980"
+            android:background="@drawable/round_white_bg"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:textSize="14sp"
+
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <AutoCompleteTextView
+            android:id="@+id/userEmail"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Email"
+            android:background="@drawable/round_white_bg"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:drawableLeft="@drawable/ic_person_24dp"
+            android:textSize="14sp"
+            android:drawablePadding="5dp"
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:layout_marginBottom="10dp"
+            />
+        <AutoCompleteTextView
+            android:id="@+id/userPassward"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Password"
+            android:background="@drawable/round_white_bg"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:drawableLeft="@drawable/ic_lock_24dp"
+            android:textSize="14sp"
+            android:drawablePadding="5dp"
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:inputType="textPassword"
+            android:layout_marginBottom="10dp"
+
+            />
+        <AutoCompleteTextView
+            android:id="@+id/userPasswardConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Confirm Password"
+            android:background="@drawable/round_white_bg"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+            android:drawableLeft="@drawable/ic_lock_24dp"
+            android:textSize="14sp"
+            android:drawablePadding="5dp"
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:inputType="textPassword"
+            android:layout_marginBottom="10dp"
+
+            />
+
+        <CheckBox android:id="@+id/chkbConsent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Consent"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_marginStart="15dp"
+            android:onClick="onCheckboxClicked"
+            android:shadowColor="@color/colorPrimaryDark"
+            android:contextClickable="true"
+
+            />
+
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_button"
+            android:text="Register"
+            android:textColor="@color/colorWhite"
+            android:textStyle="normal"
+
+
+            />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

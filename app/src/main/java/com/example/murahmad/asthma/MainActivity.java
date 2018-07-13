@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     private static int MAX_SCAN_TIME_MS = 1000;
 
 
-    Button btnStart, btnStop;
     TextView txtTemperature;
 
     private BeaconManager beaconManager = null;
@@ -99,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        btnStart = (Button) findViewById(R.id.btnStart);
 
-        btnStop = (Button) findViewById(R.id.btnStop);
         txtTemperature = (TextView) findViewById(R.id.txtTemperature);
 
         requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);

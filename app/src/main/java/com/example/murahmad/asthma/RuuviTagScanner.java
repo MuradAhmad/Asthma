@@ -77,6 +77,9 @@ public class RuuviTagScanner extends Service {
     private boolean scanning;
 
 
+
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle data = intent.getExtras();
@@ -228,7 +231,9 @@ public class RuuviTagScanner extends Service {
                             // Creates real object, with temperature etc. calculated
                             RuuviTag real = new RuuviTag(element.device.getAddress(), es.getURL().toString(), null, "" + element.rssi, false);
                             ruuvitagArrayList.add(real);
+                            Log.d("Ruuvitag ID", real.getId());
                             Log.d("Temperature", real.getTemperature());
+
                             Log.d("Humidity", real.getHumidity());
                           /*  update(real);
                             scanEvent.addRuuvitag(real);*/
@@ -249,7 +254,9 @@ public class RuuviTagScanner extends Service {
                                 // Creates real object, with temperature etc. calculated
                                 RuuviTag real = new RuuviTag(element.device.getAddress(), null, data, "" + element.rssi, false);
                                 ruuvitagArrayList.add(real);
+                                Log.d("Ruuvitag ID", real.getId());
                                 Log.d("Temperature", real.getTemperature());
+
                                 Log.d("Humidity", real.getHumidity());
                               /*  update(real);
                                 scanEvent.addRuuvitag(real);*/
