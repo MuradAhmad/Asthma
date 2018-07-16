@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
     SharedPreferences settings;
 
+    RuuviTag ruuviTag;
+
     private Timer timer;
     private Handler scanTimerHandler;
     private static int MAX_SCAN_TIME_MS = 1000;
@@ -100,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         txtTemperature = (TextView) findViewById(R.id.txtTemperature);
+
+     /*   if(ruuviTag.getTemperature() != null) {
+            txtTemperature.setText(ruuviTag.getTemperature());
+
+        } else
+            txtTemperature.setText("100");*/
 
         requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
