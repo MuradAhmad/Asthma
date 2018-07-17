@@ -1,4 +1,4 @@
-/*
+
 package com.example.murahmad.asthma;
 
 import android.content.ContentValues;
@@ -48,23 +48,28 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertData(String latitude, String longitude , String message) {
+    public boolean insertDeviceData(DBModel dbModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(USER_LATITUDE, latitude);
-        contentValues.put(USER_LONGITUDE, longitude);
-        contentValues.put(MESSAGE, message);
+        contentValues.put(DEVICE_ID, dbModel.getDeviceId());
+        contentValues.put(URL, dbModel.getUrl());
+        contentValues.put(RSSI, dbModel.getRssi());
+        contentValues.put(TEMPERATURE, dbModel.getTemperature());
+        contentValues.put(DATE, dbModel.getDate());
 
-        long result = db.insert(LOCATION_TABLE, null, contentValues);
+
+        long result = db.insert(DEVICE_TABLE, null, contentValues);
         if (result == -1) {
 
             return false;
         } else {
             return true;
         }
+
+
     }
     public Cursor viewData(){
-        String selectQuery= "SELECT * FROM " + LOCATION_TABLE +" ORDER BY column DESC LIMIT 1";
+        String selectQuery= "SELECT * FROM " + DEVICE_TABLE +" ORDER BY DATE DESC LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;
@@ -73,9 +78,7 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-
-
     }
 
 }
-*/
+
