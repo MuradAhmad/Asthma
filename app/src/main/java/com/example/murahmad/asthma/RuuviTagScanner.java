@@ -6,9 +6,13 @@ import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,7 +31,9 @@ import com.neovisionaries.bluetooth.ble.advertising.EddystoneURL;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
@@ -57,9 +63,9 @@ public class RuuviTagScanner extends Service {
     //private BeaconManager beaconManager;
     private BackgroundPowerSaver bps;
     SharedPreferences settings;
-    //DBHandler handler;
-    //SQLiteDatabase db;
-    //Cursor cursor;
+    Database handler;
+    SQLiteDatabase db;
+    Cursor cursor;
     Region region;
     private String[] titles;
     private String backendUrl;
@@ -121,10 +127,10 @@ public class RuuviTagScanner extends Service {
         ruuvitagArrayList = new ArrayList<>();
 
         // commit by me
-        /*
-        handler = new DBHandler(getApplicationContext());
+
+        handler = new Database(getApplicationContext());
         db = handler.getWritableDatabase();
-*/
+
 /*
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // Detect the URL frame:
@@ -153,9 +159,9 @@ public class RuuviTagScanner extends Service {
             }
         }, 0, scanInterval - MAX_SCAN_TIME_MS + 1, TimeUnit.MILLISECONDS);
 
-      /*  timer = new Timer();
+      /* timer = new Timer();
         TimerTask alertManager = new RuuviTagScanner.alertManager();
-        timer.scheduleAtFixedRate(alertManager, 2500, 2500);*/
+        timer.scheduleAtFixedRate(alertManager, 2500, 2500); */
     }
 
 
@@ -235,8 +241,38 @@ public class RuuviTagScanner extends Service {
                             Log.d("Temperature", real.getTemperature());
 
                             Log.d("Humidity", real.getHumidity());
-                          /*  update(real);
-                            scanEvent.addRuuvitag(real);*/
+                            //update(real);
+
+
+
+
+
+
+                            String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+
+                                ContentValues values = new ContentValues();
+                                values.put(Database.DEVICE_ID, real.getId());
+                                values.put(Database.URL, real.getUrl());
+                                values.put(Database.RSSI, real.getRssi());
+                                values.put(Database.TEMPERATURE, real.getTemperature());
+                                //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+                                //values.put(Database.PRESSURE, ruuvitag.getPressure());
+                                values.put(Database.DATE, time);
+
+                                db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
+
+
+
+
+
+
+
+
+                                // scanEvent.addRuuvitag(real);
+
+                            // add real object to a class ruuvitage from where data should extracted
+
                         }
                     }
 
@@ -258,8 +294,34 @@ public class RuuviTagScanner extends Service {
                                 Log.d("Temperature", real.getTemperature());
 
                                 Log.d("Humidity", real.getHumidity());
-                              /*  update(real);
-                                scanEvent.addRuuvitag(real);*/
+                                //update(real);
+
+
+
+                                String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+
+                                ContentValues values = new ContentValues();
+                                values.put(Database.DEVICE_ID, real.getId());
+                                values.put(Database.URL, real.getUrl());
+                                values.put(Database.RSSI, real.getRssi());
+                                values.put(Database.TEMPERATURE, real.getTemperature());
+                                //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+                                //values.put(Database.PRESSURE, ruuvitag.getPressure());
+                                values.put(Database.DATE, time);
+
+                                handler.insertDeviceData( values);
+
+                               // db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
+
+
+
+
+
+
+
+
+                                //scanEvent.addRuuvitag(real);
                             }
                         }
                     }
@@ -359,6 +421,54 @@ public class RuuviTagScanner extends Service {
 
 
 
+    public void save(RuuviTag ruuvitag) {
+        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+        if(!Exists(ruuvitag.getId())) {
+            ContentValues values = new ContentValues();
+            values.put(Database.DEVICE_ID, ruuvitag.getId());
+            values.put(Database.URL, ruuvitag.getUrl());
+            values.put(Database.RSSI, ruuvitag.getRssi());
+            values.put(Database.TEMPERATURE, ruuvitag.getTemperature());
+            //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+            //values.put(Database.PRESSURE, ruuvitag.getPressure());
+            values.put(Database.DATE, time);
+            //values.put(DBContract.RuuvitagDB.COLUMN_VALUES, "-500,-500,-500,-500,-500,-500,-500,-500");
+
+            long newRowId = db.insert(Database.DEVICE_TABLE, null, values);
+        }
+    }
+
+
+    public void update(RuuviTag ruuvitag) {
+        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+        if(Exists(ruuvitag.getId())) {
+            ContentValues values = new ContentValues();
+            values.put(Database.DEVICE_ID, ruuvitag.getId());
+            values.put(Database.URL, ruuvitag.getUrl());
+            values.put(Database.RSSI, ruuvitag.getRssi());
+            values.put(Database.TEMPERATURE, ruuvitag.getTemperature());
+            //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+            //values.put(Database.PRESSURE, ruuvitag.getPressure());
+            values.put(Database.DATE, time);
+
+            db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(ruuvitag.getId()), null);
+        }
+    }
+
+    public boolean Exists(String id) {
+        cursor = db.rawQuery("select 1 from ruuvitag where "+Database.DEVICE_ID+"=?",
+                new String[] { id });
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
+
+
+
+
+
 
     @Override
     public void onDestroy() {
@@ -391,8 +501,8 @@ public class RuuviTagScanner extends Service {
 
         public void onBecameBackground() {
             if (!settings.getBoolean("pref_bgscan", false)) {
-                timer.cancel();
-                scheduler.shutdown();
+               if (timer!=null) timer.cancel();
+                if (scheduler!= null) scheduler.shutdown();
                 stopSelf();
             }
         }

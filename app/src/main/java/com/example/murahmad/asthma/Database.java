@@ -68,6 +68,20 @@ public class Database extends SQLiteOpenHelper {
 
 
     }
+
+    public boolean insertDeviceData(ContentValues contentValues) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.insert(DEVICE_TABLE, null, contentValues);
+        if (result == -1) {
+
+            return false;
+        } else {
+            return true;
+        }
+
+
+    }
     public Cursor viewData(){
         String selectQuery= "SELECT * FROM " + DEVICE_TABLE +" ORDER BY DATE DESC LIMIT 1";
         SQLiteDatabase db = this.getWritableDatabase();

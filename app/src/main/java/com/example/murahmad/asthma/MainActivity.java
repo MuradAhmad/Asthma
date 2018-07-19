@@ -6,10 +6,13 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -39,8 +42,10 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
@@ -75,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences settings;
 
     RuuviTag ruuviTag;
+
+
+    Database handler;
+    SQLiteDatabase db;
+    Cursor cursor;
 
     private Timer timer;
     private Handler scanTimerHandler;
@@ -119,7 +129,70 @@ public class MainActivity extends AppCompatActivity {
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
 
+
+        handler = new Database(this);
+        db = handler.getReadableDatabase();
+
+        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+
+        ContentValues values = new ContentValues();
+        values.put(Database.DEVICE_ID, 12);
+        values.put(Database.URL, "URL");
+        values.put(Database.RSSI, "RSSI");
+        values.put(Database.TEMPERATURE, "12345");
+        //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+        //values.put(Database.PRESSURE, ruuvitag.getPressure());
+        values.put(Database.DATE, time);
+
+        handler.insertDeviceData( values);
+
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
+
+        if(cursor != null) {
+            cursor.moveToFirst();
+
+            if(cursor.getCount() > 0){
+// get values from cursor here
+
+
+            String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+            String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+
+            txtTemperature.setText(temperature);
+            }
+        }
+
+
+/*
+        runOnUiThread(new Runnable() {
+            public void run() {
+                //Whatever task you wish to perform
+                //For eg. textView.setText("SOME TEXT")
+                cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
+
+                if(cursor != null) {
+                    cursor.moveToFirst();
+
+                    if(cursor.getCount() > 0){
+// get values from cursor here
+
+
+                        String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+                        String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+
+                        txtTemperature.setText(temperature);
+                    }
+                }
+            }
+        });*/
+
     }
+
+
+
+
 
 
 
