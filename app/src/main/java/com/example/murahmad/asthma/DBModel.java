@@ -10,6 +10,7 @@ public class DBModel implements Serializable {
     private String rssi;
     private String url;
     private String temperature;
+    private String humidity;
     private String date;
 
 
@@ -18,13 +19,14 @@ public class DBModel implements Serializable {
     }
 
 
-    public DBModel(String id, String url, String rssi, String temperature, String date ) {
+    public DBModel(String id, String url, String rssi, String temperature, String humidity, String date ) {
 
         super();
         this.deviceId = id;
         this.url = url;
         this.rssi = rssi;
         this.temperature = temperature;
+        this.humidity = humidity;
         this.date = date;
 
     }
@@ -61,6 +63,14 @@ public class DBModel implements Serializable {
 
     public void setTemperature(String temperature) {
         this.temperature = temperature;
+    }
+
+    public String getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
     }
 
     public String getDate() {

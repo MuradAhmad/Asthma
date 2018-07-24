@@ -16,6 +16,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String URL = "Url";
     public static final String RSSI = "Rssi";
     public static final String TEMPERATURE = "Temperature";
+    public static final String HUMIDITY = "Humidity";
     public static final String DATE = "Date";
 
 
@@ -36,7 +37,7 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + DEVICE_TABLE + "(Id TEXT, Url TEXT, Rssi TEXT, Temperature TEXT, Date TEXT )");
+        db.execSQL("create table " + DEVICE_TABLE + "(Id TEXT, Url TEXT, Rssi TEXT, Temperature TEXT, Humidity TEXT, Date TEXT )");
 
     }
 
@@ -55,6 +56,7 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(URL, dbModel.getUrl());
         contentValues.put(RSSI, dbModel.getRssi());
         contentValues.put(TEMPERATURE, dbModel.getTemperature());
+        contentValues.put(HUMIDITY,dbModel.getHumidity());
         contentValues.put(DATE, dbModel.getDate());
 
 

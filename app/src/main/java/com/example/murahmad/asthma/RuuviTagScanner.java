@@ -63,7 +63,7 @@ public class RuuviTagScanner extends Service {
     //private BeaconManager beaconManager;
     private BackgroundPowerSaver bps;
     SharedPreferences settings;
-    Database handler;
+    Database dbHandler;
     SQLiteDatabase db;
     Cursor cursor;
     Region region;
@@ -128,8 +128,8 @@ public class RuuviTagScanner extends Service {
 
         // commit by me
 
-        handler = new Database(getApplicationContext());
-        db = handler.getWritableDatabase();
+        dbHandler = new Database(getApplicationContext());
+        db = dbHandler.getWritableDatabase();
 
 /*
         beaconManager = BeaconManager.getInstanceForApplication(this);
@@ -256,7 +256,7 @@ public class RuuviTagScanner extends Service {
                                 values.put(Database.URL, real.getUrl());
                                 values.put(Database.RSSI, real.getRssi());
                                 values.put(Database.TEMPERATURE, real.getTemperature());
-                                //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+                                values.put(Database.HUMIDITY, real.getHumidity());
                                 //values.put(Database.PRESSURE, ruuvitag.getPressure());
                                 values.put(Database.DATE, time);
 
@@ -306,11 +306,11 @@ public class RuuviTagScanner extends Service {
                                 values.put(Database.URL, real.getUrl());
                                 values.put(Database.RSSI, real.getRssi());
                                 values.put(Database.TEMPERATURE, real.getTemperature());
-                                //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+                                values.put(Database.HUMIDITY, real.getHumidity());
                                 //values.put(Database.PRESSURE, ruuvitag.getPressure());
                                 values.put(Database.DATE, time);
 
-                                handler.insertDeviceData( values);
+                                dbHandler.insertDeviceData( values);
 
                                // db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
 
@@ -421,6 +421,7 @@ public class RuuviTagScanner extends Service {
 
 
 
+
     public void save(RuuviTag ruuvitag) {
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
@@ -438,6 +439,7 @@ public class RuuviTagScanner extends Service {
             long newRowId = db.insert(Database.DEVICE_TABLE, null, values);
         }
     }
+
 
 
     public void update(RuuviTag ruuvitag) {

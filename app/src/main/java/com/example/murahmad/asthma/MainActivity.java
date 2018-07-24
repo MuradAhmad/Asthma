@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private static int MAX_SCAN_TIME_MS = 1000;
 
 
-    TextView txtTemperature;
+    TextView txtTemperature, txtHumidity, txtDeviceId;
 
     private BeaconManager beaconManager = null;
 
@@ -112,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         txtTemperature = (TextView) findViewById(R.id.txtTemperature);
+        txtDeviceId = (TextView) findViewById(R.id.txtDeviceId);
+        txtHumidity = (TextView) findViewById(R.id.txtHumidity);
 
      /*   if(ruuviTag.getTemperature() != null) {
             txtTemperature.setText(ruuviTag.getTemperature());
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new Database(this);
         db = handler.getReadableDatabase();
 
-        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+       /* String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
 
         ContentValues values = new ContentValues();
@@ -163,9 +165,9 @@ public class MainActivity extends AppCompatActivity {
             txtTemperature.setText(temperature);
             }
         }
+*/
 
 
-/*
         runOnUiThread(new Runnable() {
             public void run() {
                 //Whatever task you wish to perform
@@ -181,12 +183,19 @@ public class MainActivity extends AppCompatActivity {
 
                         String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
                         String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
-                        txtTemperature.setText(temperature);
+                        txtDeviceId.setText(deviceId);
+                        txtTemperature.setText(temperature + " °C " );
+                        txtHumidity.setText(humidity + " % ");
+
+                        Log.d("Device ID from Main: ", deviceId);
+                        Log.d("Temperature from Main: ", temperature);
+                        Log.d("Humidity from Main: ", humidity);
                     }
                 }
             }
-        });*/
+        });
 
     }
 
