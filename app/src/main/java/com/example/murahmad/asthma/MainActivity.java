@@ -18,12 +18,16 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -62,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
         int rssi;
         byte[] scanData;
     }
+
+
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
 
 
     private static final String TAG = "MainActivity";
@@ -108,7 +116,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         txtTemperature = (TextView) findViewById(R.id.txtTemperature);
@@ -129,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
-
 
 
         handler = new Database(this);
@@ -174,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
                 //For eg. textView.setText("SOME TEXT")
                 cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
 
-                if(cursor != null) {
+                if (cursor != null) {
                     cursor.moveToFirst();
 
-                    if(cursor.getCount() > 0){
+                    if (cursor.getCount() > 0) {
 // get values from cursor here
 
 
@@ -186,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
                         txtDeviceId.setText(deviceId);
-                        txtTemperature.setText(temperature + " °C " );
+                        txtTemperature.setText(temperature + " °C ");
                         txtHumidity.setText(humidity + " % ");
 
                         Log.d("Device ID from Main: ", deviceId);
@@ -199,13 +210,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
-
-
-
-   /*
+    /*
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // Detect the URL frame:
         beaconManager.getBeaconParsers().add(new BeaconParser()
@@ -336,11 +354,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
 
-Intent intent = new Intent(MainActivity.this, RuuviTagScanner.class);
+        Intent intent = new Intent(MainActivity.this, RuuviTagScanner.class);
         startService(intent);
 
         super.onStart();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -353,23 +372,36 @@ Intent intent = new Intent(MainActivity.this, RuuviTagScanner.class);
 
         List<String> listPermissionsNeeded = new ArrayList<>();
 
-        if(permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+        if (permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
         }
 
-        if(permissionWriteExternal != PackageManager.PERMISSION_GRANTED) {
+        if (permissionWriteExternal != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-        if(!listPermissionsNeeded.isEmpty()) {
+        if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
 
 
     }
-   @Override
-   protected void onStop() {
-       super.onStop();
-   }
 
-}
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }

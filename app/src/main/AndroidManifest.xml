@@ -27,10 +27,20 @@
             </intent-filter>
         </activity>
 
+
+        <activity android:name=".Login" />
+        <activity android:name=".UserRegister" />
+
+
+
         <service
             android:name=".RuuviTagScanner"
             android:enabled="true"
             android:exported="true"></service>
+
+
+
+
     </application>
 
 </manifest>
