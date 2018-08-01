@@ -10,6 +10,14 @@
 
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/scrollView"
+
+        >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,7 +52,7 @@
             android:textSize="50px"
             android:textStyle="bold"
             android:textAlignment="center"/>
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/userName"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -61,11 +69,11 @@
 
 
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/userDOB"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:hint="  date of birth / 20-01-1980"
+            android:hint="  date of birth"
             android:background="@drawable/round_white_bg"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
@@ -76,7 +84,7 @@
             android:layout_marginBottom="10dp"
             />
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/userEmail"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -91,7 +99,7 @@
             android:paddingLeft="2dp"
             android:layout_marginBottom="10dp"
             />
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/userPassward"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -108,7 +116,7 @@
             android:layout_marginBottom="10dp"
 
             />
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/userPasswardConfirm"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -140,7 +148,7 @@
             />
 
         <Button
-            android:id="@+id/btnlogin"
+            android:id="@+id/btnRegister"
             android:layout_width="130dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
@@ -158,6 +166,8 @@
 
     </LinearLayout>
 
+
+</ScrollView>
 
 
 
