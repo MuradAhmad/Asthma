@@ -4,6 +4,7 @@
     <item android:id="@+id/medication" android:title="Medication" android:icon="@drawable/ic_local_pharmacy_24dp"/>
     <item android:id="@+id/symptoms" android:title="Symptoms" android:icon="@drawable/ic_description_24dp"/>
     <item android:id="@+id/profile" android:title="Profile" android:icon="@drawable/ic_person_24dp"/>
+    <item android:id="@+id/feedback" android:title="Feedback" android:icon="@drawable/ic_description_24dp"/>
     <item android:id="@+id/settings" android:title="Settings" android:icon="@drawable/ic_settings_24dp"/>
     <item android:id="@+id/logout" android:title="Logout" android:icon="@drawable/ic_exit_to_app_24dp"/>
 

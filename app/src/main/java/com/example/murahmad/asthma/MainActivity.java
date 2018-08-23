@@ -20,8 +20,10 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +34,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
@@ -58,7 +61,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
 
     private class LeScanResult {
@@ -99,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     private static int MAX_SCAN_TIME_MS = 1000;
 
 
-    TextView txtTemperature, txtHumidity, txtDeviceId;
+
 
     private BeaconManager beaconManager = null;
 
@@ -116,6 +119,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+     /*   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+
+
+     NavigationView navigationView = (NavigationView)findViewById(R.id.navigationView);
+     navigationView.setNavigationItemSelectedListener(this);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -123,9 +134,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        txtTemperature = (TextView) findViewById(R.id.txtTemperature);
-        txtDeviceId = (TextView) findViewById(R.id.txtDeviceId);
-        txtHumidity = (TextView) findViewById(R.id.txtHumidity);
+
 
      /*   if(ruuviTag.getTemperature() != null) {
             txtTemperature.setText(ruuviTag.getTemperature());
@@ -145,6 +154,58 @@ public class MainActivity extends AppCompatActivity {
 
         handler = new Database(this);
         db = handler.getReadableDatabase();
+
+
+
+
+
+
+        runOnUiThread(new Runnable() {
+            public void run() {
+                //Whatever task you wish to perform
+                //For eg. textView.setText("SOME TEXT")
+               // cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
+                cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
+
+                if (cursor != null) {
+                    cursor.moveToFirst();
+
+                    if (cursor.getCount() > 0) {
+// get values from cursor here
+
+
+
+                        Log.d("Device ID from Main: ", cursor.getString(cursor.getColumnIndex(Database.USERNAME)));
+                        Log.d("Temperature from Main: ", cursor.getString(cursor.getColumnIndex(Database.DOB)));
+                        Log.d("Humidity from Main: ", cursor.getString(cursor.getColumnIndex(Database.EMAIL)));
+
+
+
+     /*                   String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+                        String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));*/
+
+                  /*      txtDeviceId.setText(deviceId);
+                        txtTemperature.setText(temperature + " °C ");
+                        txtHumidity.setText(humidity + " % ");*/
+
+                      /*  Log.d("Device ID from Main: ", deviceId);
+                        Log.d("Temperature from Main: ", temperature);
+                        Log.d("Humidity from Main: ", humidity);*/
+                    }
+                }
+            }
+        });
+
+
+
+
+
+
+
+
+
+
 
        /* String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
@@ -179,35 +240,48 @@ public class MainActivity extends AppCompatActivity {
 */
 
 
-        runOnUiThread(new Runnable() {
-            public void run() {
-                //Whatever task you wish to perform
-                //For eg. textView.setText("SOME TEXT")
-                cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
-
-                if (cursor != null) {
-                    cursor.moveToFirst();
-
-                    if (cursor.getCount() > 0) {
-// get values from cursor here
+       if(savedInstanceState == null){
+           getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+           navigationView.setCheckedItem(R.id.dashboard);
+       }
 
 
-                        String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-                        String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
-                        txtDeviceId.setText(deviceId);
-                        txtTemperature.setText(temperature + " °C ");
-                        txtHumidity.setText(humidity + " % ");
+    }
 
-                        Log.d("Device ID from Main: ", deviceId);
-                        Log.d("Temperature from Main: ", temperature);
-                        Log.d("Humidity from Main: ", humidity);
-                    }
-                }
-            }
-        });
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
+        switch (menuItem.getItemId()){
+
+
+            case R.id.dashboard:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+                break;
+
+            case R.id.profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UserProfile()).commit();
+                break;
+
+            case R.id.medication:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Medication()).commit();
+                break;
+
+            case R.id.symptoms:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Symptoms()).commit();
+                break;
+            case R.id.feedback:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
+                break;
+
+
+
+        }
+
+
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override

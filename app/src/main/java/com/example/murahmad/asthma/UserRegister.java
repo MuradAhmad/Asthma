@@ -2,9 +2,14 @@ package com.example.murahmad.asthma;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,7 +28,14 @@ import java.util.Calendar;
 
 public class UserRegister extends AppCompatActivity {
 
-    EditText txtDateOfBirth, txtName, txtEmail,txtPassword, txtConfirmPassword;
+
+    Database dbHandler;
+    SQLiteDatabase db;
+    Cursor cursor;
+
+    TextView txtDateOfBirth;
+
+    EditText  txtName, txtEmail,txtPassword, txtConfirmPassword;
     CheckBox chkConsent;
     Button btnRegister;
 
@@ -40,7 +52,7 @@ public class UserRegister extends AppCompatActivity {
 
 
         txtName = (EditText) findViewById(R.id.userName);
-        txtDateOfBirth = (EditText) findViewById(R.id.userDOB);
+        txtDateOfBirth = (TextView) findViewById(R.id.userDOB);
         txtEmail = (EditText) findViewById(R.id.userEmail);
         txtPassword = (EditText) findViewById(R.id.userPassward);
         txtConfirmPassword = (EditText) findViewById(R.id.userPasswardConfirm);
@@ -50,11 +62,11 @@ public class UserRegister extends AppCompatActivity {
         btnRegister = (Button)findViewById(R.id.btnRegister);
 
 
-        name = txtName.getText().toString();
-        dateOfBirth = txtDateOfBirth.getText().toString();
-        email = txtEmail.getText().toString();
-        password = txtPassword.getText().toString();
-        confirmPassword = txtConfirmPassword.getText().toString();
+
+
+
+
+
 
 
 
@@ -74,26 +86,79 @@ public class UserRegister extends AppCompatActivity {
 
 
 
+        dbHandler = new Database(getApplicationContext());
+        db = dbHandler.getWritableDatabase();
 
 
 
-         btnRegister.setOnClickListener(new View.OnClickListener() {
+
+/*
+        final Handler threadHandler = new Handler();
+        Runnable runnable = new Runnable()
+        {
+            public void run() {
+                //Whatever task you wish to perform
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+// get values from cursor here
+
+
+
+
+                Log.d("User Name: ", cursor.getString(cursor.getColumnIndex(Database.USERNAME)));
+                Log.d("Email ", cursor.getString(cursor.getColumnIndex(Database.EMAIL)));
+                Log.d("Date of Birth: ", cursor.getString(cursor.getColumnIndex(Database.DOB)));
+            }
+        }
+        threadHandler.postDelayed(this, 1000);
+    }
+};*/
+
+
+
+
+
+        btnRegister.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
+                        name = txtName.getText().toString();
+                        dateOfBirth = txtDateOfBirth.getText().toString();
+                        email = txtEmail.getText().toString();
+                        password = txtPassword.getText().toString();
+                        confirmPassword = txtConfirmPassword.getText().toString();
+
+
+                        ContentValues values = new ContentValues();
+                        values.put(Database.USERNAME, name);
+                        values.put(Database.DOB, dateOfBirth);
+                        values.put(Database.EMAIL, email);
+                        values.put(Database.PASSWORD, password);
+                        values.put(Database.reg_timestamp,System.currentTimeMillis());
+
+                        dbHandler.insertRegistrationData(values);
 
                         // 1. save data,
+
+
+
                         // 2.validate data
-                        
 
+                     if(validate()) {
+                         Intent intent = new Intent(UserRegister.this, MainActivity.class);
+                         startActivity(intent);
 
+                     }
 
-
-                        Intent intent=new Intent(UserRegister.this,MainActivity.class);
-                        startActivity(intent);
                     }
                 });
+
 
 
 
@@ -169,8 +234,14 @@ public class UserRegister extends AppCompatActivity {
 
 
 
+        if (((CheckBox) chkConsent).isChecked()){
+            return true;
+        }else
+        {
+            Toast.makeText(this, "Select Consent", Toast.LENGTH_SHORT).show();
+        }
 
-        if(name.isEmpty()) {
+            if(name.isEmpty()) {
             txtName.setError("enter username");
         }
         if(dateOfBirth.isEmpty()) {
@@ -190,12 +261,25 @@ public class UserRegister extends AppCompatActivity {
         } else {
             txtPassword.setError(null);
         }
+
+        if (confirmPassword.isEmpty() || confirmPassword.length() < 4 || confirmPassword.length() > 10) {
+            txtConfirmPassword.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            txtConfirmPassword.setError(null);
+        }
+
         if(confirmPassword.equals(password)) {
                txtConfirmPassword.setError(null);
 
         }else {
             txtConfirmPassword.setError("password not same");
         }
+
+
+
+
+
 
         return valid;
     }
