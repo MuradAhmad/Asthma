@@ -89,6 +89,8 @@ public class Feedback extends Fragment {
 
 
         if(feedbackQuestion<1) {
+            rdFeedback.clearCheck();
+
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
             rdYes.setText(questionLibrary.getFeedbackOption(0));
             rdNo.setText(questionLibrary.getFeedbackOption(1));
@@ -96,6 +98,8 @@ public class Feedback extends Fragment {
 
         }
         else if(feedbackQuestion<2) {
+
+            rdFeedback.clearCheck();
 
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
             rdYes.setText(questionLibrary.getFeedbackOption(2));

@@ -1,11 +1,15 @@
 package com.example.murahmad.asthma;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by muradahmad on 14/08/2018.
@@ -32,6 +39,17 @@ public class Symptoms extends Fragment {
     private RadioGroup rdGroupQuestions;
 
     private ColorStateList textColorDefaultRb;
+
+    String mild,strong,moderate,notAtAll;
+
+
+    private List<String> qList;
+    private List<String> aList;
+
+
+    Database dbHandler;
+    SQLiteDatabase db;
+    Cursor cursor;
 
 
 
@@ -58,6 +76,12 @@ public class Symptoms extends Fragment {
 
 
 
+        dbHandler = new Database(getContext());
+        db = dbHandler.getWritableDatabase();
+
+        qList = new ArrayList<String>();
+        aList = new ArrayList<String>();
+
 
         updateQuestion();
 
@@ -68,6 +92,8 @@ public class Symptoms extends Fragment {
             @Override
             public void onClick(View view) {
                 updateQuestion();
+                //saveQuestion();
+
                 // get selected radio button from radioGroup
                 /*int selectedId = rdGroupQuestions.getCheckedRadioButtonId();
 
@@ -83,41 +109,6 @@ public class Symptoms extends Fragment {
 
                 Toast.makeText(getContext(),
                         rdButton.getText(), Toast.LENGTH_SHORT).show();*/
-
-                rdGroupQuestions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-                {
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        // checkedId is the RadioButton selected
-
-                        switch(checkedId) {
-                            case R.id.rdMild:
-                                // switch to fragment 1
-
-                                Toast.makeText(getActivity(), "Mild Question Saved!",
-                                        Toast.LENGTH_LONG).show();
-
-                                break;
-                            case R.id.rdModerate:
-                                // Fragment 2
-
-                                Toast.makeText(getActivity(), "Moderate Question Saved!",
-                                        Toast.LENGTH_LONG).show();
-                                break;
-                            case R.id.rdNotatall:
-                                // Fragment 2
-
-                                Toast.makeText(getActivity(), "Not at all Question Saved!",
-                                        Toast.LENGTH_LONG).show();
-                                break;
-                            case R.id.rdStrong:
-                                // Fragment 2
-
-                                Toast.makeText(getActivity(), "Strong Question Saved!",
-                                        Toast.LENGTH_LONG).show();
-                                break;
-                        }
-                    }
-                });
 
 
 
@@ -155,13 +146,11 @@ public class Symptoms extends Fragment {
             rdStrong.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,3));
             severetyQuestionNumber++;
 
-            if(rdNotatall.isChecked() || rdMild.isChecked()||rdStrong.isChecked()||rdModerate.isChecked()) {
+
+            qList.add(txtQuestion.getText().toString());
 
 
-
-            }
-
-
+            saveQuestion();
 
 
 
@@ -179,6 +168,7 @@ public class Symptoms extends Fragment {
             frequencyQuestionNumber++;
 
 
+            qList.add(txtQuestion.getText().toString());
             saveQuestion();
 
         }
@@ -193,17 +183,41 @@ public class Symptoms extends Fragment {
             rdStrong.setText(questionLibrary.getEstimationOption(3));
             estimationQuestionNumber++;
 
+            qList.add(txtQuestion.getText().toString());
 
             saveQuestion();
+            btnNext.setText("Finish");
+
+         /*   int index =0;
+            for(int i =0; i<= qList.size();i++) {
+                Log.d("question:",  qList.get(index) + "answer:" + aList.get(index));
+
+                index++;
+            }*/
+
+
 
         }
         else
          {
-             Toast.makeText(getActivity(), "Done!",
-                     Toast.LENGTH_LONG).show();
 
-           // Intent intent = new Intent(getContext(), Feedback.class);
-           // startActivity(intent);
+
+             /*if(index<= qList.size()) {
+
+                 // save data in database
+
+                 ContentValues values = new ContentValues();
+                 values.put(Database.Q1, qList.get(index));
+                 values.put(Database.A1, aList.get(index));
+
+                 values.put(Database.reg_timestamp, System.currentTimeMillis());
+
+
+                 dbHandler.insertSymptomsData(values);
+             }*/
+
+             Intent intent = new Intent(getContext(), MainActivity.class);
+             startActivity(intent);
         }
 
 
@@ -211,11 +225,61 @@ public class Symptoms extends Fragment {
 
     public void saveQuestion() {
 
+        rdGroupQuestions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+
+                switch(checkedId) {
+                    case R.id.rdMild:
+                        // switch to fragment 1
+
+                        mild = rdMild.getText().toString();
+
+                        aList.add(mild);
+
+                        Toast.makeText(getActivity(), "Mild Question Saved:" +mild,
+                                Toast.LENGTH_LONG).show();
+
+                        break;
+                    case R.id.rdModerate:
+                        // Fragment 2
+
+                        moderate = rdModerate.getText().toString();
+
+                        aList.add(moderate);
+
+                        Toast.makeText(getActivity(), "Moderate Question Saved:"+moderate,
+                                Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.rdNotatall:
+                        // Fragment 2
+
+                        notAtAll = rdNotatall.getText().toString();
+
+                        aList.add(notAtAll);
+
+                        Toast.makeText(getActivity(), "Not at all Question Saved:"+notAtAll,
+                                Toast.LENGTH_LONG).show();
+                        break;
+                    case R.id.rdStrong:
+                        // Fragment 2
+
+                        strong = rdStrong.getText().toString();
+
+                        aList.add(strong);
+
+                        Toast.makeText(getActivity(), "Strong Question Saved:"+ strong,
+                                Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
 
 
 
-        Toast.makeText(getActivity(), "Question Saved!",
-                Toast.LENGTH_LONG).show();
+
+
 
 
     }

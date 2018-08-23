@@ -131,7 +131,7 @@ public class Medication extends Fragment {
                 values.put(Database.OTHER,otherconsiderations );
 
 
-                dbHandler.insertRegistrationData(values);
+                dbHandler.insertMedicationData(values);
 
 
 

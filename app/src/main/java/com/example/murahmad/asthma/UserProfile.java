@@ -64,6 +64,8 @@ public class UserProfile extends Fragment {
             public void run() {
                 //Whatever task you wish to perform
                 //For eg. textView.setText("SOME TEXT")
+
+
                 cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE +" order by Timestamp desc limit 1", null);
 
                 if (cursor != null) {
@@ -97,6 +99,7 @@ public class UserProfile extends Fragment {
 
                         String drugs = cursor1.getString(cursor1.getColumnIndex(Database.DRUGS));
 
+                        Log.d("Medicine",cursor1.getString(cursor1.getColumnIndex(Database.DRUGS)));
 
                         txtdrugs.setText(drugs);
 
@@ -109,7 +112,7 @@ public class UserProfile extends Fragment {
                 threadHandler.postDelayed(this, 1000);
             }
         };
-
+        threadHandler.postDelayed(runnable, 1000);
 
 
 
