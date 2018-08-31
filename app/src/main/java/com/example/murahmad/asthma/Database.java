@@ -38,6 +38,7 @@ public class Database extends SQLiteOpenHelper {
 
 
     public static final String MEDICATION_TABLE = "Medication_Table";
+   // public static final String PATIENT_NAME = "Name";
     public static final String MED_DATE = "Date";
     public static final String DRUGS = "Drugs";
     public static final String OTHER_DRUGS = "Other_Drugs";
@@ -89,14 +90,14 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 4);
+        super(context, USER_DATABASE, null, 5);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + DEVICE_TABLE + "(Id TEXT, Url TEXT, Rssi TEXT, Temperature TEXT, Humidity TEXT, Date TEXT )");
         db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT , Timestamp REAL)");
-        db.execSQL("create table " + MEDICATION_TABLE + "(Datae TEXT, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
+        db.execSQL("create table " + MEDICATION_TABLE + "(Date TEXT, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
         //db.execSQL("create table " + SYMPTOMS_TABLE + "(Q1 TEXT, A1 TEXT, Q2 TEXT, A2 TEXT ,Q3 TEXT, A3 TEXT,Q4 TEXT, A4 TEXT,Q5 TEXT, A5 TEXT,Q6 TEXT, A6 TEXT,Q7 TEXT, A7 TEXT, Timestamp REAL)");
 
         db.execSQL("create table " + SYMPTOMS_TABLE + "(Q1 TEXT, A1 TEXT, Timestamp REAL)");

@@ -8,6 +8,7 @@
     <color name="colorYellow">#fbcb04</color>
     <color name="colorOrange">#f57c00</color>
     <color name="colorTransparent">#80ffffff</color>
-    #f57c00
+    <color name="colorTeal">#9ccc65</color>
+
 
 </resources>

@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBg"
+    android:background="@drawable/dashboard"
 
 
     >
@@ -26,6 +26,7 @@
             android:text="Admin"
             android:textStyle="bold"
             android:textSize="18sp"
+            android:textColor="@color/colorTransparent"
             android:layout_gravity="center"
             />
         <TextView
@@ -35,6 +36,7 @@
             android:text="date of birth"
             android:textStyle="bold"
             android:textSize="10sp"
+            android:textColor="@color/colorTransparent"
             android:layout_gravity="center"
             />
 
@@ -50,7 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@+id/llprofileHeader">
+        android:layout_below="@+id/llprofileHeader"
+        android:background="@drawable/transparent_white_rect">
 
 
         <TextView
@@ -59,6 +62,7 @@
             android:text="Current medications "
             android:textStyle="bold"
             android:textSize="24sp"
+            android:textColor="@color/colorTransparent"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"/>
         <TextView
@@ -68,6 +72,7 @@
             android:text="Drugs loading... "
             android:textStyle="bold"
             android:textSize="20sp"
+            android:textColor="@color/colorTransparent"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:maxLines="15"

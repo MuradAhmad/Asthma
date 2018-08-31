@@ -25,7 +25,7 @@ public class UserProfile extends Fragment {
 
     Database handler;
     SQLiteDatabase db;
-    Cursor cursor,cursor1;
+    Cursor cursor;
 
     TextView txtdrugs, txtusername, txtdateofbirth;
 
@@ -65,8 +65,10 @@ public class UserProfile extends Fragment {
                 //Whatever task you wish to perform
                 //For eg. textView.setText("SOME TEXT")
 
+                //cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE + Database.MEDICATION_TABLE +" order by Timestamp desc limit 1", null);
 
-                cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE +" order by Timestamp desc limit 1", null);
+
+                cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE  +","+ Database.MEDICATION_TABLE , null);
 
                 if (cursor != null) {
                     cursor.moveToFirst();
@@ -77,37 +79,17 @@ public class UserProfile extends Fragment {
 
                         String name = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
                         String dateOfBirth = cursor.getString(cursor.getColumnIndex(Database.DOB));
+                        String drugs = cursor.getString(cursor.getColumnIndex(Database.DRUGS));
 
                         txtusername.setText(name);
                         txtdateofbirth.setText(dateOfBirth);
-
-
-
-                    }
-                }
-
-
-
-                cursor1 = db.rawQuery("SELECT * FROM " + Database.MEDICATION_TABLE ,null);
-
-                if (cursor1 != null) {
-                    cursor1.moveToFirst();
-
-                    if (cursor1.getCount() > 0) {
-// get values from cursor here
-
-
-                        String drugs = cursor1.getString(cursor1.getColumnIndex(Database.DRUGS));
-
-                        Log.d("Medicine",cursor1.getString(cursor1.getColumnIndex(Database.DRUGS)));
-
                         txtdrugs.setText(drugs);
 
 
 
-
                     }
                 }
+
 
                 threadHandler.postDelayed(this, 1000);
             }

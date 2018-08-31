@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dashboard">
+
+    <LinearLayout
+        android:id="@+id/llprofileHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorTransparent">
+
+        <TextView
+            android:id="@+id/txtMorning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Morning Time"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="20dp"
+
+            android:layout_gravity="center" />
+        <EditText
+            android:id="@+id/edtMorning"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Enter time"
+            android:background="@drawable/transparent_white_rect"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+
+            android:textSize="14sp"
+            android:gravity="center"
+
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:layout_marginTop="10dp"
+
+
+            />
+
+        <TextView
+            android:id="@+id/txtEvening"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evening Time"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="20dp"
+
+            android:layout_gravity="center" />
+        <EditText
+            android:id="@+id/edtEvening"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Enter time"
+            android:background="@drawable/transparent_white_rect"
+            android:layout_marginEnd="15dp"
+            android:layout_marginStart="15dp"
+
+            android:textSize="14sp"
+            android:gravity="center"
+
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:layout_marginTop="10dp"
+
+
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

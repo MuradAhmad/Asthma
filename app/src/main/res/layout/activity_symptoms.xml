@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical"
-    android:background="@color/colorBg"
+    android:background="@drawable/dashboard"
     >
 <LinearLayout
     android:layout_width="match_parent"
@@ -19,8 +19,10 @@
         android:text="Daily severity of Symptoms"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/colorWhite"
         android:layout_marginTop="5dp"
         android:gravity="center"
+
 
         />
 
@@ -31,6 +33,7 @@
         android:text="Questions"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/colorTransparent"
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:paddingStart="5dp"
@@ -42,42 +45,115 @@
 
         />
 
-    <RadioGroup
+    <!--<RadioGroup
         android:id="@+id/rdGroupQuestions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="10dp"
         android:layout_marginTop="10dp"
+
         >
 
         <RadioButton
             android:id="@+id/rdStrong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Str" />
+            android:text="Str"
+            android:textColor="@color/colorWhite"/>
 
 
         <RadioButton
             android:id="@+id/rdModerate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mod" />
+            android:text="Mod"
+            android:textColor="@color/colorWhite"/>
         <RadioButton
             android:id="@+id/rdMild"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mi" />
+            android:text="Mi"
+            android:textColor="@color/colorWhite"/>
 
         <RadioButton
             android:id="@+id/rdNotatall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Not "
+            android:textColor="@color/colorWhite"
              />
 
     </RadioGroup>
+-->
+
+
 
     <Button
+        android:id="@+id/btn1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="20dp"
+        android:background="@drawable/transparent_white_rect"
+        android:text="option 1"
+        android:textColor="@color/colorWhite"
+        android:textStyle="normal"
+
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+
+        />
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="10dp"
+        android:background="@drawable/transparent_white_rect"
+        android:text="option 2"
+        android:textColor="@color/colorWhite"
+        android:textStyle="normal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+
+        />
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="10dp"
+        android:background="@drawable/transparent_white_rect"
+        android:text="option 3"
+        android:textColor="@color/colorWhite"
+        android:textStyle="normal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+
+        />
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+
+        android:layout_marginTop="10dp"
+        android:background="@drawable/transparent_white_rect"
+        android:text="option 4"
+        android:textColor="@color/colorWhite"
+        android:textStyle="normal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+
+        />
+
+<!--    <Button
         android:id="@+id/btnNext"
         android:layout_width="130dp"
         android:layout_height="40dp"
@@ -89,7 +165,7 @@
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
 
-        />
+        />-->
 
 
 

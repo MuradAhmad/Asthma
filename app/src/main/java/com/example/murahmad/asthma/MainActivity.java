@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        runOnUiThread(new Runnable() {
+      /*  runOnUiThread(new Runnable() {
             public void run() {
                 //Whatever task you wish to perform
                 //For eg. textView.setText("SOME TEXT")
@@ -181,23 +181,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-     /*                   String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+     *//*                   String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
                         String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));*/
+                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));*//*
 
-                  /*      txtDeviceId.setText(deviceId);
+                  *//*      txtDeviceId.setText(deviceId);
                         txtTemperature.setText(temperature + " °C ");
-                        txtHumidity.setText(humidity + " % ");*/
+                        txtHumidity.setText(humidity + " % ");*//*
 
-                      /*  Log.d("Device ID from Main: ", deviceId);
+                      *//*  Log.d("Device ID from Main: ", deviceId);
                         Log.d("Temperature from Main: ", temperature);
-                        Log.d("Humidity from Main: ", humidity);*/
+                        Log.d("Humidity from Main: ", humidity);*//*
                     }
                 }
             }
         });
 
-
+*/
 
 
 
@@ -272,6 +272,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.feedback:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
+                break;
+            case R.id.settings:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Setting()).commit();
+                break;
+            case R.id.logout:
+                finish();
                 break;
 
 

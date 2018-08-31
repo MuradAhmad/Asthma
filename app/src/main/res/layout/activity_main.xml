@@ -46,6 +46,7 @@
         android:background="@color/colorWhite"
         app:itemTextColor="@color/colorPrimaryDark"
         app:menu="@menu/drawermenu"
+        app:itemIconTint="@color/colorPrimaryDark"
 
         android:layout_gravity="start"
 

@@ -154,6 +154,9 @@ public class UserRegister extends AppCompatActivity {
                          Intent intent = new Intent(UserRegister.this, MainActivity.class);
                          startActivity(intent);
 
+                     }else {
+                         Toast.makeText(UserRegister.this, "Fill the form", Toast.LENGTH_LONG).show();
+
                      }
 
                     }
@@ -234,14 +237,14 @@ public class UserRegister extends AppCompatActivity {
 
 
 
-        if (((CheckBox) chkConsent).isChecked()){
-            return true;
-        }else
-        {
-            Toast.makeText(this, "Select Consent", Toast.LENGTH_SHORT).show();
+        if (!((CheckBox) chkConsent).isChecked()){
+
+            chkConsent.setError("Read consent");
+            valid = false;
+
         }
 
-            if(name.isEmpty()) {
+        if(name.isEmpty()) {
             txtName.setError("enter username");
         }
         if(dateOfBirth.isEmpty()) {
@@ -262,22 +265,12 @@ public class UserRegister extends AppCompatActivity {
             txtPassword.setError(null);
         }
 
-        if (confirmPassword.isEmpty() || confirmPassword.length() < 4 || confirmPassword.length() > 10) {
-            txtConfirmPassword.setError("between 4 and 10 alphanumeric characters");
+        if (confirmPassword.isEmpty() || !(confirmPassword.equals(password))) {
+            txtConfirmPassword.setError("password did not match");
             valid = false;
         } else {
             txtConfirmPassword.setError(null);
         }
-
-        if(confirmPassword.equals(password)) {
-               txtConfirmPassword.setError(null);
-
-        }else {
-            txtConfirmPassword.setError("password not same");
-        }
-
-
-
 
 
 

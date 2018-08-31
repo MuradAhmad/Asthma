@@ -12,6 +12,10 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by muradahmad on 20/08/2018.
@@ -24,10 +28,11 @@ public class Feedback extends Fragment {
 
 
     private TextView txtFeedback;
-    private Button btnFinish;
-    private RadioButton rdYes,rdNo;
-    private RadioGroup rdFeedback;
+    private Button btn1,btn2;
 
+
+    private List<String> qList;
+    private List<String> aList;
 
 
 
@@ -39,15 +44,17 @@ public class Feedback extends Fragment {
 
 
         txtFeedback = (TextView)view.findViewById(R.id.txtFeedback);
-        btnFinish = (Button)view.findViewById(R.id.btnFinish);
-
-        rdFeedback= (RadioGroup) view.findViewById(R.id.rdFeedback);
-
-        rdYes = (RadioButton)view.findViewById(R.id.rdYes);
-        rdNo = (RadioButton)view.findViewById(R.id.rdNo);
+        btn1 = (Button)view.findViewById(R.id.btn1);
+        btn2 = (Button)view.findViewById(R.id.btn2);
 
 
 
+
+
+
+
+        qList = new ArrayList<String>();
+        aList = new ArrayList<String>();
 
 
 
@@ -56,20 +63,34 @@ public class Feedback extends Fragment {
 
 
 
-
-        btnFinish.setOnClickListener(new View.OnClickListener() {
+        btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                aList.add(btn1.getText().toString());
+
+
                 updateQuestion();
-                // get selected radio button from radioGroup
-                /*int selectedId = rdGroupQuestions.getCheckedRadioButtonId();
-
-                // find the radiobutton by returned id
-                rdButton = (RadioButton) view.findViewById(selectedId);
-
 
                 Toast.makeText(getContext(),
-                        rdButton.getText(), Toast.LENGTH_SHORT).show();*/
+                        btn1.getText(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                aList.add(btn2.getText().toString());
+
+
+                updateQuestion();
+
+                Toast.makeText(getContext(),
+                        btn2.getText(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -89,24 +110,30 @@ public class Feedback extends Fragment {
 
 
         if(feedbackQuestion<1) {
-            rdFeedback.clearCheck();
+
 
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
-            rdYes.setText(questionLibrary.getFeedbackOption(0));
-            rdNo.setText(questionLibrary.getFeedbackOption(1));
+            btn1.setText(questionLibrary.getFeedbackOption(0));
+            btn2.setText(questionLibrary.getFeedbackOption(1));
+
+            qList.add(txtFeedback.getText().toString());
+
             feedbackQuestion++;
 
         }
         else if(feedbackQuestion<2) {
 
-            rdFeedback.clearCheck();
+
 
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
-            rdYes.setText(questionLibrary.getFeedbackOption(2));
-            rdNo.setText(questionLibrary.getFeedbackOption(3));
+            btn1.setText(questionLibrary.getFeedbackOption(2));
+            btn2.setText(questionLibrary.getFeedbackOption(3));
+
+
+            qList.add(txtFeedback.getText().toString());
 
             feedbackQuestion++;
-            btnFinish.setText("Finish");
+
         }
         else {
 

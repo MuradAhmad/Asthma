@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".Login" android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,9 +33,10 @@
         <activity android:name=".Medication" android:label="Medication"/>
         <activity android:name=".UserRegister" android:label="Registration" />
         <activity android:name=".Consent" android:label="Consent"/>
-        <activity android:name=".UserProfile" android:label="UserProfile" />
+        <activity android:name=".UserProfile"/>
         <activity android:name=".Feedback" />
         <activity android:name=".Dashboard" />
+        <activity android:name=".Setting" />
 
 
 

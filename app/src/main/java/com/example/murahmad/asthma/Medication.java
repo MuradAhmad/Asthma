@@ -14,9 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -62,16 +64,6 @@ public class Medication extends Fragment {
         db = dbHandler.getWritableDatabase();
 
 
-
-        // Strings data
-
-        medicationDate = edtmedicationDate.getText().toString();
-        drugs = edtdrugs.getText().toString();
-        otherDrugs = edtotherDrugs.getText().toString();
-        newDrugs = edtnewDrugs.getText().toString();
-        visits = edtvisits.getText().toString();
-        otherVisits = edtotherVisits.getText().toString();
-        otherconsiderations = edtotherconsiderations.getText().toString();
 
 
 
@@ -121,24 +113,32 @@ public class Medication extends Fragment {
 
 
 
-                ContentValues values = new ContentValues();
-                values.put(Database.MED_DATE, medicationDate);
-                values.put(Database.DRUGS, drugs);
-                values.put(Database.OTHER_DRUGS, otherDrugs);
-                values.put(Database.NEW_DRUGS, newDrugs);
-                values.put(Database.DOC_VISITS_ASTHMA,visits);
-                values.put(Database.DOC_VISITS_ALLERGY, otherVisits);
-                values.put(Database.OTHER,otherconsiderations );
+                if(validate()) {
+                    ContentValues values = new ContentValues();
+                    values.put(Database.MED_DATE, medicationDate);
+                    values.put(Database.DRUGS, drugs);
+                    values.put(Database.OTHER_DRUGS, otherDrugs);
+                    values.put(Database.NEW_DRUGS, newDrugs);
+                    values.put(Database.DOC_VISITS_ASTHMA, visits);
+                    values.put(Database.DOC_VISITS_ALLERGY, otherVisits);
+                    values.put(Database.OTHER, otherconsiderations);
 
 
-                dbHandler.insertMedicationData(values);
+                    dbHandler.insertMedicationData(values);
 
 
+                }
 
                 // 2.validate data
 
-               Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+
+                if(validate()) {
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(getContext(), "Fill the form", Toast.LENGTH_LONG).show();
+                }
 
 
 
@@ -157,4 +157,44 @@ public class Medication extends Fragment {
         return view;
 
     }
+
+
+    public boolean validate() {
+        boolean valid = true;
+
+
+        medicationDate = edtmedicationDate.getText().toString();
+        drugs = edtdrugs.getText().toString();
+        otherDrugs = edtotherDrugs.getText().toString();
+        newDrugs = edtnewDrugs.getText().toString();
+        visits = edtvisits.getText().toString();
+        otherVisits = edtotherVisits.getText().toString();
+        otherconsiderations = edtotherconsiderations.getText().toString();
+
+
+
+
+
+
+      /*  if(medicationDate.isEmpty()) {
+            edtmedicationDate.setError("enter medication intake date ");
+        }else {
+            edtmedicationDate.setError(null);
+        }*/
+        if(drugs.isEmpty()) {
+            edtdrugs.setError("enter drugs");
+            return valid =false;
+        }else {
+            return true;
+        }
+
+
+
+
+
+    }
+
+
+
+
 }
