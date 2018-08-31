@@ -45,46 +45,6 @@
 
         />
 
-    <!--<RadioGroup
-        android:id="@+id/rdGroupQuestions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:layout_marginTop="10dp"
-
-        >
-
-        <RadioButton
-            android:id="@+id/rdStrong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Str"
-            android:textColor="@color/colorWhite"/>
-
-
-        <RadioButton
-            android:id="@+id/rdModerate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mod"
-            android:textColor="@color/colorWhite"/>
-        <RadioButton
-            android:id="@+id/rdMild"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mi"
-            android:textColor="@color/colorWhite"/>
-
-        <RadioButton
-            android:id="@+id/rdNotatall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Not "
-            android:textColor="@color/colorWhite"
-             />
-
-    </RadioGroup>
--->
 
 
 
@@ -95,7 +55,7 @@
         android:layout_gravity="center"
 
         android:layout_marginTop="20dp"
-        android:background="@drawable/transparent_white_rect"
+        android:background="@drawable/button_bg"
         android:text="option 1"
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
@@ -112,7 +72,7 @@
         android:layout_gravity="center"
 
         android:layout_marginTop="10dp"
-        android:background="@drawable/transparent_white_rect"
+        android:background="@drawable/button_bg"
         android:text="option 2"
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
@@ -128,7 +88,7 @@
         android:layout_gravity="center"
 
         android:layout_marginTop="10dp"
-        android:background="@drawable/transparent_white_rect"
+        android:background="@drawable/button_bg"
         android:text="option 3"
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
@@ -144,8 +104,8 @@
         android:layout_gravity="center"
 
         android:layout_marginTop="10dp"
-        android:background="@drawable/transparent_white_rect"
-        android:text="option 4"
+        android:background="@drawable/button_bg"
+        android:text=""
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
         android:layout_marginLeft="10dp"
@@ -153,7 +113,7 @@
 
         />
 
-<!--    <Button
+    <Button
         android:id="@+id/btnNext"
         android:layout_width="130dp"
         android:layout_height="40dp"
@@ -165,7 +125,7 @@
         android:textColor="@color/colorWhite"
         android:textStyle="normal"
 
-        />-->
+        />
 
 
 
