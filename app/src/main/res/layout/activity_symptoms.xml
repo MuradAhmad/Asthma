@@ -45,9 +45,6 @@
 
         />
 
-
-
-
     <Button
         android:id="@+id/btn1"
         android:layout_width="match_parent"
@@ -62,8 +59,6 @@
 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-
-
         />
     <Button
         android:id="@+id/btn2"
@@ -78,7 +73,6 @@
         android:textStyle="normal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-
 
         />
     <Button
@@ -113,22 +107,7 @@
 
         />
 
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="130dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/login_button"
-        android:text="Next"
-        android:textColor="@color/colorWhite"
-        android:textStyle="normal"
-
-        />
-
-
-
+    
 </LinearLayout>
 
 

@@ -46,16 +46,16 @@ public class Symptoms extends Fragment {
     private int frequencyQuestionNumber = 0;
     private int estimationQuestionNumber = 0;
 
-    private Button btn1,btn2,btn3,btn4;
+    private Button btn1, btn2, btn3, btn4;
 
     private TextView txtQuestion;
     private Button btnNext;
-    private RadioButton rdStrong,rdMild,rdModerate,rdNotatall, rdButton;
+    private RadioButton rdStrong, rdMild, rdModerate, rdNotatall, rdButton;
     private RadioGroup rdGroupQuestions;
 
     private ColorStateList textColorDefaultRb;
 
-    String mild,strong,moderate,notAtAll;
+    String mild, strong, moderate, notAtAll;
 
 
     private List<String> qList;
@@ -67,24 +67,19 @@ public class Symptoms extends Fragment {
     Cursor cursor;
 
 
-
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_symptoms, container, false);
 
 
-
-        txtQuestion = (TextView)view.findViewById(R.id.txtQuestion);
+        txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
         //btnNext = (Button)view.findViewById(R.id.btnNext);
 
-        btn1 = (Button)view.findViewById(R.id.btn1);
-        btn2 = (Button)view.findViewById(R.id.btn2);
-        btn3 = (Button)view.findViewById(R.id.btn3);
-        btn4 = (Button)view.findViewById(R.id.btn4);
+        btn1 = (Button) view.findViewById(R.id.btn1);
+        btn2 = (Button) view.findViewById(R.id.btn2);
+        btn3 = (Button) view.findViewById(R.id.btn3);
+        btn4 = (Button) view.findViewById(R.id.btn4);
 
 
 
@@ -102,7 +97,6 @@ public class Symptoms extends Fragment {
 */
 
 
-
         dbHandler = new Database(getContext());
         db = dbHandler.getWritableDatabase();
 
@@ -111,7 +105,6 @@ public class Symptoms extends Fragment {
 
 
         updateQuestion();
-
 
 
         btn1.setOnClickListener(new View.OnClickListener() {
@@ -207,52 +200,32 @@ public class Symptoms extends Fragment {
         });*/
 
 
-
-
-
-
-
-
-
-
-
-
-
         return view;
 
 
     }
 
 
+    public void updateQuestion() {
 
 
-
-
-    public void updateQuestion(){
-
-
-        if(severetyQuestionNumber<4) {
-
+        if (severetyQuestionNumber < 4) {
 
 
             txtQuestion.setText(questionLibrary.getSeverityQuestion(severetyQuestionNumber));
 
 
-
-
-            btn1.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,0));
-            btn2.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,1));
-            btn3.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,2));
-            btn4.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,3));
+            btn1.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 0));
+            btn2.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 1));
+            btn3.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 2));
+            btn4.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 3));
             severetyQuestionNumber++;
 
 
             qList.add(txtQuestion.getText().toString());
 
 
-        }
-        else if(severetyQuestionNumber>3 && frequencyQuestionNumber<3)  {
-
+        } else if (severetyQuestionNumber > 3 && frequencyQuestionNumber < 3) {
 
 
             txtQuestion.setText(questionLibrary.getFrequencyQuestion(frequencyQuestionNumber));
@@ -264,9 +237,7 @@ public class Symptoms extends Fragment {
             qList.add(txtQuestion.getText().toString());
 
 
-        }
-        else if(estimationQuestionNumber<1) {
-
+        } else if (estimationQuestionNumber < 1) {
 
 
             txtQuestion.setText(questionLibrary.getEstimationQuestion(estimationQuestionNumber));
@@ -280,11 +251,7 @@ public class Symptoms extends Fragment {
             estimationQuestionNumber++;
 
 
-
-
-
-        }
-        else {
+        } else {
 
 
 
@@ -358,13 +325,10 @@ public class Symptoms extends Fragment {
                     "Finished", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(getContext(), MainActivity.class);
-             startActivity(intent);
-
-
+            startActivity(intent);
 
 
         }
-
 
 
     }
@@ -567,7 +531,7 @@ public class Symptoms extends Fragment {
         final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
         String url = "https://co2.awareframework.com:8443/insert";
-       // String url = "https://co2.awareframework.com:3306/insert";
+        // String url = "https://co2.awareframework.com:3306/insert";
 
 
         try {
@@ -583,40 +547,51 @@ public class Symptoms extends Fragment {
             jsonObject.put("data", tempJsonObject);
             jsonObject.put("timeStamp", "123456");
 
-            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            Toast.makeText(getContext(), "Response:  " + response.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            error.printStackTrace();
+                            // error
+                            Log.d("Error is: ", error.toString());
+                            Toast.makeText(getContext(),
+                                    "Data not sent to server", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    }
+
+            ) {    //this is the part, that adds the header to the request
                 @Override
-                public void onResponse(JSONObject response) {
-
-                    Log.d("Response is: ", response.toString());
-                    Log.d("Json data: ", jsonObject.toString());
-
-                    Toast.makeText(getContext(), "Response:  " + response.toString(), Toast.LENGTH_SHORT).show();
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    return params;
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+            };
 
 
-                    // error
-                    Log.d("Error is: ", error.toString());
-                    Toast.makeText(getContext(),
-                            "Data not sent to server", Toast.LENGTH_SHORT).show();
-
-
-                }
-            });
             requestQueue.add(jsonObjectRequest);
 
-            } catch (JSONException e1) {
+        } catch (JSONException e1) {
             e1.printStackTrace();
-        } ;
-
-
-
         }
-        // Toast.makeText(getApplicationContext(), "done", Toast.LENGTH_LONG).show();
+        ;
 
 
+    }
+    // Toast.makeText(getApplicationContext(), "done", Toast.LENGTH_LONG).show();
 
 
 }

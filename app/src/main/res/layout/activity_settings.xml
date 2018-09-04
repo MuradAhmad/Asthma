@@ -5,71 +5,111 @@
     android:background="@drawable/dashboard">
 
     <LinearLayout
-        android:id="@+id/llprofileHeader"
+        android:id="@+id/llSetting"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/colorTransparent">
 
         <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notifications"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="@color/colorTransparent"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center" />
+
+        <TextView
             android:id="@+id/txtMorning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Morning Time"
+            android:text="Select morning time"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/colorTransparent"
-            android:layout_marginTop="20dp"
-
             android:layout_gravity="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+       android:gravity="center"
+        >
         <EditText
-            android:id="@+id/edtMorning"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Enter time"
+            android:id="@+id/edtMorningHour"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:hint="Hour"
+            android:background="@drawable/transparent_white_rect"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:paddingStart="2dp"
+            android:paddingLeft="2dp"
+            android:layout_marginTop="10dp"
+            />
+        <EditText
+            android:id="@+id/edtMorningMinutes"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:hint="Minutes"
             android:background="@drawable/transparent_white_rect"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
 
             android:textSize="14sp"
             android:gravity="center"
-
-            android:paddingStart="2dp"
-            android:paddingLeft="2dp"
             android:layout_marginTop="10dp"
-
-
             />
+
+    </LinearLayout>
 
         <TextView
             android:id="@+id/txtEvening"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Evening Time"
+            android:text="Select evening time"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/colorTransparent"
-            android:layout_marginTop="20dp"
-
-            android:layout_gravity="center" />
-        <EditText
-            android:id="@+id/edtEvening"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:hint="Enter time"
-            android:background="@drawable/transparent_white_rect"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-
-            android:textSize="14sp"
-            android:gravity="center"
-
-            android:paddingStart="2dp"
-            android:paddingLeft="2dp"
             android:layout_marginTop="10dp"
 
+            android:layout_gravity="center" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+            <EditText
+                android:id="@+id/edtEveningHour"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:hint="Hour"
+                android:background="@drawable/transparent_white_rect"
+                android:textSize="14sp"
+                android:gravity="center"
 
-            />
+                android:paddingStart="2dp"
+                android:paddingLeft="2dp"
+                android:layout_marginTop="10dp"
+                />
+            <EditText
+                android:id="@+id/edtEveningMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:hint="Minutes"
+                android:background="@drawable/transparent_white_rect"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 
