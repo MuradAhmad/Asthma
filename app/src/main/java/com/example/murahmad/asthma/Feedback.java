@@ -72,8 +72,6 @@ public class Feedback extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn1.getText(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -88,15 +86,9 @@ public class Feedback extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn2.getText(), Toast.LENGTH_SHORT).show();
 
             }
         });
-
-
-
-
 
 
 

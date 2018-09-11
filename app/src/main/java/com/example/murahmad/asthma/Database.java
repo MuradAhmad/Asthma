@@ -22,6 +22,20 @@ public class Database extends SQLiteOpenHelper {
     public static final String HUMIDITY = "Humidity";
     public static final String DATE = "Date";
 
+    // App Settings  Table
+
+    public static final String SETTING_TABLE = "Setting_Table";
+    public static final String MORNING_HR = "MorningHr";
+    public static final String MORNING_MIN = "MorningMin";
+    public static final String EVENING_HR = "EveningHr";
+    public static final String EVENING_MIN = "EveningMin";
+
+    public static final String LOGIN_TOKEN = "LoginToken";
+    public static final String Setting_timestamp = "Timestamp";
+
+
+
+
 
     // Registration table
     public static final String REGISTRATION_TABLE = "Registration_Table";
@@ -68,7 +82,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String A7 = "A7";*/
 
 
-
+/*
     // Feedback table
     public static final String FEEDBACK_TABLE = "Feedback_Table";
     public static final String FEEDBACK_timestamp = "Timestamp";
@@ -76,6 +90,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String FA1 = "FA1";
     public static final String FQ2 = "FQ2";
     public static final String FA2 = "FA2";
+
+
+*/
 
 
     public static Database instance;
@@ -90,7 +107,7 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 5);
+        super(context, USER_DATABASE, null, 9);
     }
 
     @Override
@@ -103,7 +120,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table " + SYMPTOMS_TABLE + "(Q1 TEXT, A1 TEXT, Timestamp REAL)");
 
 
-        db.execSQL("create table " + FEEDBACK_TABLE + "(FQ1 TEXT, FA1 TEXT, FQ2 TEXT, FA2 TEXT , Timestamp REAL)");
+        db.execSQL("create table " + SETTING_TABLE + "(MorningHr TEXT, MorningMin TEXT, EveningHr TEXT, EveningMin TEXT , LoginToken TEXT, Timestamp REAL)");
     }
 
     @Override
@@ -113,7 +130,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + REGISTRATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + MEDICATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + SYMPTOMS_TABLE);
-        db.execSQL(" DROP TABLE IF EXISTS " + FEEDBACK_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS " + SETTING_TABLE);
 
         onCreate(db);
 
@@ -191,10 +208,10 @@ public class Database extends SQLiteOpenHelper {
         }
 
     }
-    public boolean insertFeedbackData(ContentValues contentValues) {
+    public boolean insertSettingData(ContentValues contentValues) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        long result = db.insert(FEEDBACK_TABLE, null, contentValues);
+        long result = db.insert(SETTING_TABLE, null, contentValues);
         if (result == -1) {
 
             return false;
@@ -251,8 +268,8 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public Cursor viewFeedbackData(){
-        String selectQuery= "SELECT * FROM " + FEEDBACK_TABLE;
+    public Cursor viewSettingData(){
+        String selectQuery= "SELECT * FROM " + SETTING_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         return cursor;

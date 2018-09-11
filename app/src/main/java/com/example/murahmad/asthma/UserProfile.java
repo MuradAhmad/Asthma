@@ -65,9 +65,6 @@ public class UserProfile extends Fragment {
                 //Whatever task you wish to perform
                 //For eg. textView.setText("SOME TEXT")
 
-                //cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE + Database.MEDICATION_TABLE +" order by Timestamp desc limit 1", null);
-
-
                 cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE  +","+ Database.MEDICATION_TABLE , null);
 
                 if (cursor != null) {
@@ -89,6 +86,7 @@ public class UserProfile extends Fragment {
 
                     }
                 }
+                cursor.close();
 
 
                 threadHandler.postDelayed(this, 1000);

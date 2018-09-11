@@ -1,6 +1,8 @@
 package com.example.murahmad.asthma;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -17,8 +19,14 @@ import android.widget.Toast;
 
 public class Login extends AppCompatActivity {
 
+
+    Database handler;
+    SQLiteDatabase db;
+    Cursor cursor;
+
     Button btnLogin;
     TextView txtRegister;
+    private String userName,userPassword;
 
     AutoCompleteTextView username,password;
 
@@ -34,14 +42,32 @@ public class Login extends AppCompatActivity {
         password = (AutoCompleteTextView)findViewById(R.id.txtUserPassward);
 
 
+        handler = new Database(getApplicationContext());
+        db = handler.getReadableDatabase();
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE , null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+// get values from cursor here
+
+
+                userName = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
+                userPassword = cursor.getString(cursor.getColumnIndex(Database.PASSWORD));
+
+
+            }
+        }
+        cursor.close();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(username.getText().toString().equals("admin") &&
-                        password.getText().toString().equals("admin")) {
-                    Toast.makeText(getApplicationContext(),
-                            "Redirecting...",Toast.LENGTH_SHORT).show();
+                if(username.getText().toString().equals(userName) &&
+                        password.getText().toString().equals(userPassword)) {
+
                     Intent intent=new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
 

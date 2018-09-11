@@ -2,66 +2,43 @@
 package com.example.murahmad.asthma;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
-import android.os.RemoteException;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
+import android.widget.FrameLayout;
 
-import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
-import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
-import com.neovisionaries.bluetooth.ble.advertising.EddystoneURL;
-
-import org.altbeacon.beacon.Beacon;
-import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
-import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.Identifier;
-import org.altbeacon.beacon.MonitorNotifier;
-import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+
+public class MainActivity extends AppCompatActivity {
 
 
     private class LeScanResult {
@@ -70,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         byte[] scanData;
     }
 
+    private BottomNavigationView bottomNavigationView;
+    private FrameLayout frameLayout;
 
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
 
 
     private static final String TAG = "MainActivity";
@@ -100,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Timer timer;
     private Handler scanTimerHandler;
     private static int MAX_SCAN_TIME_MS = 1000;
+    int morningHr,morningMin, eveningHr, eveningMin;
+
 
 
 
@@ -120,18 +99,106 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-     /*   Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
+
+         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
-     NavigationView navigationView = (NavigationView)findViewById(R.id.navigationView);
-     navigationView.setNavigationItemSelectedListener(this);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        handler = new Database(this);
+        db = handler.getReadableDatabase();
+
+
+        frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigationView);
+
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()){
+
+
+                    case R.id.dashboard:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+                        break;
+
+                    case R.id.medication:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Medication()).commit();
+                        break;
+
+                    case R.id.symptoms:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Symptoms()).commit();
+                        break;
+
+
+                }
+                return true;
+            }
+        });
+
+
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+            bottomNavigationView.setSelectedItemId(R.id.dashboard);
+        }
+
+
+
+        // send User notification
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                morningHr = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.MORNING_HR)));
+                morningMin = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.MORNING_MIN)));
+                eveningHr = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.EVENING_HR)));
+                eveningMin = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.EVENING_MIN)));
+
+                Log.d("Morning hour", String.valueOf(morningHr));
+                Log.d("Morning Min", String.valueOf(morningMin));
+               Log.d("Evening hour", String.valueOf(eveningHr));
+               Log.d("Evening Min", String.valueOf(eveningMin));
+
+
+            }
+
+        }
+        cursor.close();
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY,morningHr);
+        calendar.set(Calendar.MINUTE,morningMin);
+        calendar.set(Calendar.SECOND,30);
+
+        // set evening notification
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.set(Calendar.HOUR_OF_DAY,eveningHr);
+        calendar2.set(Calendar.MINUTE,eveningMin);
+        calendar2.set(Calendar.SECOND,30);
+
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        // AlarmManager.Interval_Day set according to settings screen
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar2.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+
+
+
+
 
 
 
@@ -150,11 +217,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
-
-
-        handler = new Database(this);
-        db = handler.getReadableDatabase();
-
 
 
 
@@ -240,66 +302,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 */
 
 
-       if(savedInstanceState == null){
-           getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
-           navigationView.setCheckedItem(R.id.dashboard);
-       }
+
 
 
 
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        switch (menuItem.getItemId()){
-
-
-            case R.id.dashboard:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
-                break;
-
-            case R.id.profile:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UserProfile()).commit();
-                break;
-
-            case R.id.medication:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Medication()).commit();
-                break;
-
-            case R.id.symptoms:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Symptoms()).commit();
-                break;
-            case R.id.feedback:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
-                break;
-            case R.id.settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Setting()).commit();
-                break;
-            case R.id.logout:
-                finish();
-                break;
-
-
-
-        }
-
-
-
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
 
@@ -473,15 +482,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+
+        switch (item.getItemId()){
+
+
+            case R.id.profile:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UserProfile()).commit();
+                break;
+
+            case R.id.settings:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Setting()).commit();
+                break;
+
+            case R.id.logout:
+                Intent intent = new Intent(this, Login.class);
+                startActivity(intent);
+                finish();
+                break;
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+}

@@ -33,11 +33,11 @@ public class Medication extends Fragment {
     SQLiteDatabase db;
     Cursor cursor;
 
-    TextView edtmedicationDate;
+    private TextView edtmedicationDate;
 
-    EditText edtdrugs, edtotherDrugs, edtnewDrugs, edtvisits, edtotherVisits, edtotherconsiderations;
+    private EditText edtdrugs, edtotherDrugs, edtnewDrugs, edtvisits, edtotherVisits, edtotherconsiderations;
 
-    Button btnSave;
+    private Button btnSave;
 
     String medicationDate, drugs, otherDrugs,newDrugs,  visits,otherVisits,otherconsiderations;
 

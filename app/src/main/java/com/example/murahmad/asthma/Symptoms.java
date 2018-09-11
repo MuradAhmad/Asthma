@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +45,7 @@ import java.util.Map;
 public class Symptoms extends Fragment {
 
     private QuestionLibrary questionLibrary = new QuestionLibrary();
-    private int severetyQuestionNumber = 0;
+    private int severityQuestionNumber = 0;
     private int frequencyQuestionNumber = 0;
     private int estimationQuestionNumber = 0;
 
@@ -73,6 +76,10 @@ public class Symptoms extends Fragment {
         View view = inflater.inflate(R.layout.activity_symptoms, container, false);
 
 
+
+
+
+
         txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
         //btnNext = (Button)view.findViewById(R.id.btnNext);
 
@@ -83,18 +90,6 @@ public class Symptoms extends Fragment {
 
 
 
-/*
-        rdGroupQuestions= (RadioGroup) view.findViewById(R.id.rdGroupQuestions);
-
-        rdMild = (RadioButton)view.findViewById(R.id.rdMild);
-        rdStrong = (RadioButton)view.findViewById(R.id.rdStrong);
-        rdModerate = (RadioButton)view.findViewById(R.id.rdModerate);
-        rdNotatall = (RadioButton)view.findViewById(R.id.rdNotatall);
-
-
-        textColorDefaultRb = rdMild.getTextColors();
-      //  RadioButton rbSelected = (RadioButton)view.findViewById(rdGroupQuestions.getCheckedRadioButtonId());
-*/
 
 
         dbHandler = new Database(getContext());
@@ -116,8 +111,7 @@ public class Symptoms extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn1.getText(), Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -131,8 +125,7 @@ public class Symptoms extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn2.getText(), Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -145,8 +138,7 @@ public class Symptoms extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn3.getText(), Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -159,45 +151,13 @@ public class Symptoms extends Fragment {
 
                 updateQuestion();
 
-                Toast.makeText(getContext(),
-                        btn4.getText(), Toast.LENGTH_SHORT).show();
+
 
             }
         });
 
 
 
-
-
-
-/*
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateQuestion();
-                //saveQuestion();
-
-                // get selected radio button from radioGroup
-                *//*int selectedId = rdGroupQuestions.getCheckedRadioButtonId();
-
-                // find the radiobutton by returned id
-                rdButton = (RadioButton) view.findViewById(selectedId);
-
-
-                Toast.makeText(getContext(),
-                        rdButton.getText(), Toast.LENGTH_SHORT).show();*//*
-             *//*   RadioButton rbSelected = (RadioButton) view.findViewById(rdGroupQuestions.getCheckedRadioButtonId());
-
-
-
-                Toast.makeText(getContext(),
-                        rdButton.getText(), Toast.LENGTH_SHORT).show();*//*
-
-
-
-
-            }
-        });*/
 
 
         return view;
@@ -209,23 +169,23 @@ public class Symptoms extends Fragment {
     public void updateQuestion() {
 
 
-        if (severetyQuestionNumber < 4) {
+        if (severityQuestionNumber < 4) {
 
 
-            txtQuestion.setText(questionLibrary.getSeverityQuestion(severetyQuestionNumber));
+            txtQuestion.setText(questionLibrary.getSeverityQuestion(severityQuestionNumber));
 
 
-            btn1.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 0));
-            btn2.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 1));
-            btn3.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 2));
-            btn4.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber, 3));
-            severetyQuestionNumber++;
+            btn1.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 0));
+            btn2.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 1));
+            btn3.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 2));
+            btn4.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 3));
+            severityQuestionNumber++;
 
 
             qList.add(txtQuestion.getText().toString());
 
 
-        } else if (severetyQuestionNumber > 3 && frequencyQuestionNumber < 3) {
+        } else if (severityQuestionNumber > 3 && frequencyQuestionNumber < 3) {
 
 
             txtQuestion.setText(questionLibrary.getFrequencyQuestion(frequencyQuestionNumber));
@@ -253,81 +213,15 @@ public class Symptoms extends Fragment {
 
         } else {
 
-
-
-/*
-
-
-            // Instantiate the RequestQueue.
-            final RequestQueue queue = Volley.newRequestQueue(getContext());
-
-            String url = "https://co2.awareframework.com:8443";
-
-
-// Request a string response from the provided URL.
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            // Display the first 500 characters of the response string.
-                            Log.d("Response is: ", response.substring(0,500));
-
-
-
-
-                        }
-                    }, new Response.ErrorListener()
-            {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    // error
-                    Toast.makeText(getContext(),
-                            "Data not sent to server", Toast.LENGTH_SHORT).show();
-                }
-            }
-            ) {
-
-
-                    @Override
-                    protected Map<String, String> getParams ()
-                    {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("name", "Alif");
-                        params.put("domain", "http://itsalif.info");
-
-                        return params;
-                    }
-
-
-                           *//*private JSONObject buildJsonObject() throws JSONException {
-
-                    JSONObject jsonObject = new JSONObject();
-
-                    for (int i = 0; i <= qList.size(); i++) {
-                        jsonObject.accumulate(qList.get(i), aList.get(i));
-                    }
-                    Log.d("Questions and Answers",jsonObject.toString());
-                    return jsonObject;
-                }
-*//*
-
-
-
-
-            };
-
-// Add the request to the RequestQueue.
-            queue.add(stringRequest);*/
-
-
             sendPostRequest();
-            Toast.makeText(getContext(),
-                    "Finished", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(getContext(), MainActivity.class);
-            startActivity(intent);
 
 
+            FragmentManager fragmentManager = getFragmentManager();
+
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
+
+            //Intent intent = new Intent(getContext(), MainActivity.class);
+            //startActivity(intent);
         }
 
 
@@ -336,193 +230,6 @@ public class Symptoms extends Fragment {
 
 
 
-/*
-
-    public void updateQuestion(){
-
-
-        if(severetyQuestionNumber<4) {
-
-            rdGroupQuestions.clearCheck();
-
-            txtQuestion.setText(questionLibrary.getSeverityQuestion(severetyQuestionNumber));
-            rdNotatall.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,0));
-            rdMild.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,1));
-            rdModerate.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,2));
-            rdStrong.setText(questionLibrary.getSeverityOptions(severetyQuestionNumber,3));
-            severetyQuestionNumber++;
-
-
-            qList.add(txtQuestion.getText().toString());
-
-
-
-
-
-
-
-
-
-
-
-
-
-        }
-       else if(severetyQuestionNumber>3 && frequencyQuestionNumber<3)  {
-
-            rdGroupQuestions.clearCheck();
-
-            txtQuestion.setText(questionLibrary.getFrequencyQuestion(frequencyQuestionNumber));
-            rdNotatall.setText(questionLibrary.getFrequencyOption(0));
-            rdMild.setText(questionLibrary.getFrequencyOption(1));
-            rdModerate.setText(questionLibrary.getFrequencyOption(2));
-            rdStrong.setText(questionLibrary.getFrequencyOption(3));
-            frequencyQuestionNumber++;
-
-
-            qList.add(txtQuestion.getText().toString());
-
-
-
-
-
-
-
-
-        }
-        else if(estimationQuestionNumber<1) {
-
-            rdGroupQuestions.clearCheck();
-
-            txtQuestion.setText(questionLibrary.getEstimationQuestion(estimationQuestionNumber));
-            rdNotatall.setText(questionLibrary.getEstimationOption(0));
-            rdMild.setText(questionLibrary.getEstimationOption(1));
-            rdModerate.setText(questionLibrary.getEstimationOption(2));
-            rdStrong.setText(questionLibrary.getEstimationOption(3));
-            estimationQuestionNumber++;
-
-            qList.add(txtQuestion.getText().toString());
-
-
-
-
-
-
-
-
-            btnNext.setText("Finish");
-
-         */
-/*   int index =0;
-            for(int i =0; i<= qList.size();i++) {
-                Log.d("question:",  qList.get(index) + "answer:" + aList.get(index));
-
-                index++;
-            }*//*
-
-
-
-
-        }
-        else
-         {
-
-
-             */
-/*if(index<= qList.size()) {
-
-                 // save data in database
-
-                 ContentValues values = new ContentValues();
-                 values.put(Database.Q1, qList.get(index));
-                 values.put(Database.A1, aList.get(index));
-
-                 values.put(Database.reg_timestamp, System.currentTimeMillis());
-
-
-                 dbHandler.insertSymptomsData(values);
-             }*//*
-
-
-           //  Intent intent = new Intent(getContext(), MainActivity.class);
-            // startActivity(intent);
-             displayQuestionDatabase();
-
-        }
-
-
-    }
-
-    public void saveQuestion() {
-
-        rdGroupQuestions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the RadioButton selected
-
-                switch(checkedId) {
-                    case R.id.rdMild:
-                        // switch to fragment 1
-
-                        mild = rdMild.getText().toString();
-
-                        aList.add(mild);
-
-                        Toast.makeText(getActivity(), "Mild Question Saved:" +mild,
-                                Toast.LENGTH_LONG).show();
-
-                        break;
-                    case R.id.rdModerate:
-                        // Fragment 2
-
-                        moderate = rdModerate.getText().toString();
-
-                        aList.add(moderate);
-
-                        Toast.makeText(getActivity(), "Moderate Question Saved:"+moderate,
-                                Toast.LENGTH_LONG).show();
-                        break;
-                    case R.id.rdNotatall:
-                        // Fragment 2
-
-                        notAtAll = rdNotatall.getText().toString();
-
-                        aList.add(notAtAll);
-
-                        Toast.makeText(getActivity(), "Not at all Question Saved:"+notAtAll,
-                                Toast.LENGTH_LONG).show();
-                        break;
-                    case R.id.rdStrong:
-                        // Fragment 2
-
-                        strong = rdStrong.getText().toString();
-
-                        aList.add(strong);
-
-                        Toast.makeText(getActivity(), "Strong Question Saved:"+ strong,
-                                Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-
-
-    }
-
-
-    public void displayQuestionDatabase() {
-
-        int index = 0;
-        for (int i = 0; index <= qList.size(); i++) {
-            Log.d(" question:  ", qList.get(index) + "  answer:  " + aList.get(index));
-
-            index++;
-
-        }
-    }
-
-
-*/
 
 
     private void sendPostRequest() {
@@ -536,16 +243,22 @@ public class Symptoms extends Fragment {
 
         try {
 
-            final JSONObject tempJsonObject = new JSONObject();
-            tempJsonObject.put("tableName", "RuuviTag");
-            tempJsonObject.put("deviceId", "temporaryId");
+            // send device data to server
+            Calendar calendar = Calendar.getInstance();
+
+            final JSONObject symptomsJsonObject = new JSONObject();
+            for (int index = 0; index < qList.size(); index++) {
+                symptomsJsonObject.put(qList.get(index), aList.get(index));
+            }
 
             final JSONObject jsonObject = new JSONObject();
-
             jsonObject.put("tableName", "RuuviTag");
-            jsonObject.put("deviceId", "temporaryId");
-            jsonObject.put("data", tempJsonObject);
-            jsonObject.put("timeStamp", "123456");
+            jsonObject.put("deviceId", "ba890ac9-55a3-416b-bd38-387ffeeb8c42");
+            jsonObject.put("data", symptomsJsonObject);
+            jsonObject.put("timestamp", calendar.getTimeInMillis());
+
+
+
 
             final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
                     new Response.Listener<JSONObject>() {
@@ -555,7 +268,6 @@ public class Symptoms extends Fragment {
                             Log.d("Response is: ", response.toString());
                             Log.d("Json data: ", jsonObject.toString());
 
-                            Toast.makeText(getContext(), "Response:  " + response.toString(), Toast.LENGTH_SHORT).show();
                         }
                     },
                     new Response.ErrorListener() {
@@ -576,7 +288,8 @@ public class Symptoms extends Fragment {
                 @Override
                 public Map<String, String> getHeaders() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("Content-Type", "application/json");
+                   // params.put("Content-Type", "application/json; charset=utf-8");
+                    //params.put("Content-Type", "application/json");
                     return params;
                 }
             };
