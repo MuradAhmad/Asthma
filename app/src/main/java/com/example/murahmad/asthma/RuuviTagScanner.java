@@ -90,7 +90,7 @@ public class RuuviTagScanner extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Bundle data = intent.getExtras();
         if (data != null) {
-            //save((RuuviTag) data.getParcelable("favorite"));
+           save((RuuviTag) data.getParcelable("favorite"));
         }
         return Service.START_NOT_STICKY;
     }
@@ -126,7 +126,7 @@ public class RuuviTagScanner extends Service {
 
         ruuvitagArrayList = new ArrayList<>();
 
-        // commit by me
+
 
         dbHandler = new Database(getApplicationContext());
         db = dbHandler.getWritableDatabase();
@@ -159,9 +159,9 @@ public class RuuviTagScanner extends Service {
             }
         }, 0, scanInterval - MAX_SCAN_TIME_MS + 1, TimeUnit.MILLISECONDS);
 
-      /* timer = new Timer();
+       /* timer = new Timer();
         TimerTask alertManager = new RuuviTagScanner.alertManager();
-        timer.scheduleAtFixedRate(alertManager, 2500, 2500); */
+        timer.scheduleAtFixedRate(alertManager, 2500, 2500);*/
     }
 
 
@@ -237,18 +237,19 @@ public class RuuviTagScanner extends Service {
                             // Creates real object, with temperature etc. calculated
                             RuuviTag real = new RuuviTag(element.device.getAddress(), es.getURL().toString(), null, "" + element.rssi, false);
                             ruuvitagArrayList.add(real);
-                            Log.d("Ruuvitag ID", real.getId());
-                            Log.d("Temperature", real.getTemperature());
+                            Log.d("Ruuvitag ID Scanner:", real.getId());
+                            Log.d("Temperature Scanner: ", real.getTemperature());
 
-                            Log.d("Humidity", real.getHumidity());
-                            //update(real);
+                            Log.d("Humidity Scanner:", real.getHumidity());
 
-
-
+                            update(real);
 
 
 
-                            String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+
+
+                       /*     String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
 
                                 ContentValues values = new ContentValues();
@@ -263,7 +264,7 @@ public class RuuviTagScanner extends Service {
                                 db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
 
 
-
+*/
 
 
 
@@ -290,14 +291,14 @@ public class RuuviTagScanner extends Service {
                                 // Creates real object, with temperature etc. calculated
                                 RuuviTag real = new RuuviTag(element.device.getAddress(), null, data, "" + element.rssi, false);
                                 ruuvitagArrayList.add(real);
-                                Log.d("Ruuvitag ID", real.getId());
-                                Log.d("Temperature", real.getTemperature());
+                                Log.d("Ruuvitag ID Scanner :", real.getId());
+                                Log.d("Temperature Scanner :", real.getTemperature());
 
-                                Log.d("Humidity", real.getHumidity());
-                                //update(real);
+                                Log.d("Humidity Scanner :", real.getHumidity());
+                                update(real);
 
 
-
+/*
                                 String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
 
@@ -310,7 +311,7 @@ public class RuuviTagScanner extends Service {
                                 //values.put(Database.PRESSURE, ruuvitag.getPressure());
                                 values.put(Database.DATE, time);
 
-                                dbHandler.insertDeviceData( values);
+                                dbHandler.insertDeviceData( values);*/
 
                                // db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
 
@@ -431,12 +432,12 @@ public class RuuviTagScanner extends Service {
             values.put(Database.URL, ruuvitag.getUrl());
             values.put(Database.RSSI, ruuvitag.getRssi());
             values.put(Database.TEMPERATURE, ruuvitag.getTemperature());
-            //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+            values.put(Database.HUMIDITY, ruuvitag.getHumidity());
             //values.put(Database.PRESSURE, ruuvitag.getPressure());
             values.put(Database.DATE, time);
             //values.put(DBContract.RuuvitagDB.COLUMN_VALUES, "-500,-500,-500,-500,-500,-500,-500,-500");
 
-            long newRowId = db.insert(Database.DEVICE_TABLE, null, values);
+            dbHandler.insertDeviceData(values);
         }
     }
 
@@ -451,7 +452,7 @@ public class RuuviTagScanner extends Service {
             values.put(Database.URL, ruuvitag.getUrl());
             values.put(Database.RSSI, ruuvitag.getRssi());
             values.put(Database.TEMPERATURE, ruuvitag.getTemperature());
-            //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
+            values.put(Database.HUMIDITY, ruuvitag.getHumidity());
             //values.put(Database.PRESSURE, ruuvitag.getPressure());
             values.put(Database.DATE, time);
 
@@ -460,7 +461,7 @@ public class RuuviTagScanner extends Service {
     }
 
     public boolean Exists(String id) {
-        cursor = db.rawQuery("select 1 from ruuvitag where "+Database.DEVICE_ID+"=?",
+        cursor = db.rawQuery("select 1 from Device_Table where "+Database.DEVICE_ID+"= ? ",
                 new String[] { id });
         boolean exists = (cursor.getCount() > 0);
         cursor.close();

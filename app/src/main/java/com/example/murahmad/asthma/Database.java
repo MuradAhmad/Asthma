@@ -107,7 +107,7 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 9);
+        super(context, USER_DATABASE, null, 2);
     }
 
     @Override
@@ -136,7 +136,7 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertDeviceData(DBModel dbModel) {
+   /* public boolean insertDeviceData(DBModel dbModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DEVICE_ID, dbModel.getDeviceId());
@@ -156,7 +156,7 @@ public class Database extends SQLiteOpenHelper {
         }
 
 
-    }
+    }*/
 
     public boolean insertDeviceData(ContentValues contentValues) {
         SQLiteDatabase db = this.getWritableDatabase();

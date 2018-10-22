@@ -79,7 +79,7 @@ public class Dashboard extends Fragment {
 
 
 
-    TextView txtTemperature, txtHumidity, txtDeviceId;
+    TextView txtTemperature, txtHumidity, txtDeviceId, txtRssi;
 
     @Nullable
     @Override
@@ -90,6 +90,7 @@ public class Dashboard extends Fragment {
         txtTemperature = (TextView)  view.findViewById(R.id.txtTemperature);
         txtDeviceId = (TextView) view.findViewById(R.id.txtDeviceId);
         txtHumidity = (TextView) view.findViewById(R.id.txtHumidity);
+        txtRssi = (TextView) view.findViewById(R.id.txtRssi);
 
 
 
@@ -109,24 +110,28 @@ public class Dashboard extends Fragment {
                 //For eg. textView.setText("SOME TEXT")
                 cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
 
+
                 if (cursor != null) {
                     cursor.moveToFirst();
 
                     if (cursor.getCount() > 0) {
-// get values from cursor here
 
+                        // get values from cursor here
 
                         String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
                         String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
                         String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
+                        String rssi = cursor.getString(cursor.getColumnIndex(Database.RSSI));
 
                         txtDeviceId.setText(deviceId);
                         txtTemperature.setText(temperature + " °C ");
                         txtHumidity.setText(humidity + " % ");
+                        txtRssi.setText(rssi + "  itdBm");
 
-                        Log.d("Device ID from Main: ", deviceId);
-                        Log.d("Temperature from Main: ", temperature);
-                        Log.d("Humidity from Main: ", humidity);
+                        Log.d("Device ID Dashboard: ", deviceId);
+                        Log.d("Temperature Dashboard: ", temperature);
+                        Log.d("Humidity Dashboard: ", humidity);
+                        Log.d("RSSI Dashboard: ", rssi);
                     }
                 }
                 threadHandler.postDelayed(this, 1000);
@@ -134,6 +139,7 @@ public class Dashboard extends Fragment {
         };
 
         threadHandler.postDelayed(runnable, 1000);
+
 
 
 

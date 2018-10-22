@@ -13,7 +13,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
             android:layout_marginEnd="50dp"
             android:layout_marginStart="50dp"
             android:background="@drawable/transparent_white_rect"
@@ -65,6 +65,20 @@
                 android:text="Humidity"
                 android:textSize="28sp"
                 android:textStyle="bold"
+                android:textColor="@color/colorPrimaryDark"
+                />
+            <TextView
+                android:id="@+id/txtRssi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center"
+                android:text="RSSI"
+                android:textSize="28sp"
+                android:textStyle="italic"
                 android:textColor="@color/colorPrimaryDark"
                 />
      </LinearLayout>
