@@ -126,7 +126,7 @@ public class Dashboard extends Fragment {
                         txtDeviceId.setText(deviceId);
                         txtTemperature.setText(temperature + " °C ");
                         txtHumidity.setText(humidity + " % ");
-                        txtRssi.setText(rssi + "  itdBm");
+                        txtRssi.setText(rssi + "  dBm");
 
                         Log.d("Device ID Dashboard: ", deviceId);
                         Log.d("Temperature Dashboard: ", temperature);

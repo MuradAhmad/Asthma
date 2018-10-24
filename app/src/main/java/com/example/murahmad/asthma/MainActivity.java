@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -27,6 +28,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
@@ -38,7 +48,8 @@ import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
 
 
     private class LeScanResult {
@@ -51,8 +62,27 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout frameLayout;
 
 
+    // Fused Location and Location request
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
+
+    private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
+    private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 102;
+    private boolean permissionIsGranted = false;
+
+    private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
+    private GoogleApiClient googleApiClient;
+
+
+    private Double myLatitude;
+    private Double myLongitude;
+
+
 
     private static final String TAG = "MainActivity";
+
+
     //   private static final String ALTBEACON_LAYOUT = "m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25";
 
 
@@ -103,11 +133,39 @@ public class MainActivity extends AppCompatActivity {
          android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //user Location
 
+        fusedLocationProviderClient = new FusedLocationProviderClient(this);
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        locationRequest = new LocationRequest();
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10 * 1000);
+        locationRequest.setFastestInterval(15 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new
+                            String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_FINE_LOCATION);
+        } else {
+            permissionIsGranted = true;
+        }
+
+        //database
 
         handler = new Database(this);
         db = handler.getReadableDatabase();
 
+
+        //navigation and fragment
 
         frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigationView);
@@ -140,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        // display dashboard as main screen
 
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
@@ -202,16 +261,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-     /*   if(ruuviTag.getTemperature() != null) {
-            txtTemperature.setText(ruuviTag.getTemperature());
-
-        } else
-            txtTemperature.setText("100");*/
-
-        requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
-
-
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
 
@@ -219,87 +268,6 @@ public class MainActivity extends AppCompatActivity {
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
 
-
-
-
-      /*  runOnUiThread(new Runnable() {
-            public void run() {
-                //Whatever task you wish to perform
-                //For eg. textView.setText("SOME TEXT")
-               // cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
-                cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
-
-                if (cursor != null) {
-                    cursor.moveToFirst();
-
-                    if (cursor.getCount() > 0) {
-// get values from cursor here
-
-
-
-                        Log.d("Device ID from Main: ", cursor.getString(cursor.getColumnIndex(Database.USERNAME)));
-                        Log.d("Temperature from Main: ", cursor.getString(cursor.getColumnIndex(Database.DOB)));
-                        Log.d("Humidity from Main: ", cursor.getString(cursor.getColumnIndex(Database.EMAIL)));
-
-
-
-     *//*                   String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-                        String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-                        String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));*//*
-
-                  *//*      txtDeviceId.setText(deviceId);
-                        txtTemperature.setText(temperature + " °C ");
-                        txtHumidity.setText(humidity + " % ");*//*
-
-                      *//*  Log.d("Device ID from Main: ", deviceId);
-                        Log.d("Temperature from Main: ", temperature);
-                        Log.d("Humidity from Main: ", humidity);*//*
-                    }
-                }
-            }
-        });
-
-*/
-
-
-
-
-
-
-
-
-
-       /* String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
-
-
-        ContentValues values = new ContentValues();
-        values.put(Database.DEVICE_ID, 12);
-        values.put(Database.URL, "URL");
-        values.put(Database.RSSI, "RSSI");
-        values.put(Database.TEMPERATURE, "12345");
-        //values.put(Database.HUMIDITY, ruuvitag.getHumidity());
-        //values.put(Database.PRESSURE, ruuvitag.getPressure());
-        values.put(Database.DATE, time);
-
-        handler.insertDeviceData( values);
-
-
-        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE, null);
-
-        if(cursor != null) {
-            cursor.moveToFirst();
-
-            if(cursor.getCount() > 0){
-// get values from cursor here
-
-
-            String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-            String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-
-            txtTemperature.setText(temperature);
-            }
-        }
-*/
 
 
 
@@ -441,12 +409,64 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+    public void onConnected(Bundle bundle){
+        requestLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        myLatitude = location.getLatitude();
+        myLongitude = location.getLongitude();
+        Toast.makeText(getApplicationContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude), Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void requestLocationUpdates(){
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionIsGranted = true;
+            }
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }
+
+
+
+
+
+
+
+    @Override
     protected void onStart() {
 
         Intent intent = new Intent(MainActivity.this, RuuviTagScanner.class);
         startService(intent);
 
         super.onStart();
+
+        googleApiClient.connect();
     }
 
     @Override
@@ -474,11 +494,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        if (permissionIsGranted) {
+            if (googleApiClient.isConnected()) {
+                requestLocationUpdates();
+            }
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (permissionIsGranted)
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (permissionIsGranted)
+            googleApiClient.disconnect();
     }
 
 
@@ -514,7 +549,30 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case MY_PERMISSION_REQUEST_FINE_LOCATION:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted
+                    permissionIsGranted = true;
+                } else {
+                    //permission denied
+                    permissionIsGranted = false;
+                    Toast.makeText(getApplicationContext(), "This app requires location permission to be granted", Toast.LENGTH_SHORT).show();
+
+                }
+                break;
+            case MY_PERMISSION_REQUEST_COARSE_LOCATION:
+                // do something for coarse location
+                break;
+        }
+    }
+
 }

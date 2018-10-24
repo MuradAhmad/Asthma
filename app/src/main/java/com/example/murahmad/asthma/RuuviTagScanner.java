@@ -246,34 +246,6 @@ public class RuuviTagScanner extends Service {
 
 
 
-
-
-
-                       /*     String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
-
-
-                                ContentValues values = new ContentValues();
-                                values.put(Database.DEVICE_ID, real.getId());
-                                values.put(Database.URL, real.getUrl());
-                                values.put(Database.RSSI, real.getRssi());
-                                values.put(Database.TEMPERATURE, real.getTemperature());
-                                values.put(Database.HUMIDITY, real.getHumidity());
-                                //values.put(Database.PRESSURE, ruuvitag.getPressure());
-                                values.put(Database.DATE, time);
-
-                                db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
-
-
-*/
-
-
-
-
-
-                                // scanEvent.addRuuvitag(real);
-
-                            // add real object to a class ruuvitage from where data should extracted
-
                         }
                     }
 
@@ -298,31 +270,6 @@ public class RuuviTagScanner extends Service {
                                 update(real);
 
 
-/*
-                                String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
-
-
-                                ContentValues values = new ContentValues();
-                                values.put(Database.DEVICE_ID, real.getId());
-                                values.put(Database.URL, real.getUrl());
-                                values.put(Database.RSSI, real.getRssi());
-                                values.put(Database.TEMPERATURE, real.getTemperature());
-                                values.put(Database.HUMIDITY, real.getHumidity());
-                                //values.put(Database.PRESSURE, ruuvitag.getPressure());
-                                values.put(Database.DATE, time);
-
-                                dbHandler.insertDeviceData( values);*/
-
-                               // db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(real.getId()), null);
-
-
-
-
-
-
-
-
-                                //scanEvent.addRuuvitag(real);
                             }
                         }
                     }
@@ -331,30 +278,9 @@ public class RuuviTagScanner extends Service {
                 }
             }
 
-/*
-            if(beacon.getServiceUuid() == 0xfeaa && beacon.getBeaconTypeCode() == 0x10) {
-                // Parse url from beacon advert
-                String url = UrlBeaconUrlCompressor.uncompress(beacon.getId1().toByteArray());
-            }*/
 
-          /*  if (backendUrl != null) {
-                //JsonObject json = new JsonObject();
-                //  JsonObject json = JSON.(scanEvent);
-                String jsonData = new Gson().toJson(scanEvent);
-                Ion.with(getApplicationContext())
-                        .load(backendUrl)
-                        .setJsonPojoBody(scanEvent)
-                        .asJsonObject()
-                        .setCallback(new FutureCallback<JsonObject>() {
-                            @Override
-                            public void onCompleted(Exception e, JsonObject result) {
-                                // do stuff with the result or error
-                            }
-                        });*/
             }
-          /*  plotSource.addScanEvent(scanEvent);
 
-            exportRuuvitags();*/
         }
 
 
@@ -435,7 +361,7 @@ public class RuuviTagScanner extends Service {
             values.put(Database.HUMIDITY, ruuvitag.getHumidity());
             //values.put(Database.PRESSURE, ruuvitag.getPressure());
             values.put(Database.DATE, time);
-            //values.put(DBContract.RuuvitagDB.COLUMN_VALUES, "-500,-500,-500,-500,-500,-500,-500,-500");
+
 
             dbHandler.insertDeviceData(values);
         }
