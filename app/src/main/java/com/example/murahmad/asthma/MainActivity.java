@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
 
 
+        // toolBar
          android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -149,15 +150,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         locationRequest.setFastestInterval(15 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new
-                            String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSION_REQUEST_FINE_LOCATION);
-        } else {
-            permissionIsGranted = true;
-        }
 
         //database
 
@@ -165,45 +158,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         db = handler.getReadableDatabase();
 
 
-        //navigation and fragment
-
-        frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
-        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigationView);
-
-
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                switch (menuItem.getItemId()){
-
-
-                    case R.id.dashboard:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
-                        break;
-
-                    case R.id.medication:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Medication()).commit();
-                        break;
-
-                    case R.id.symptoms:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Symptoms()).commit();
-                        break;
-
-
-                }
-                return true;
-            }
-        });
-
-
-        // display dashboard as main screen
-
-        if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
-            bottomNavigationView.setSelectedItemId(R.id.dashboard);
-        }
 
 
 
@@ -260,10 +214,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
+        // Bluetooth manager
 
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         bluetoothAdapter = bluetoothManager.getAdapter();
-
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
@@ -271,6 +225,57 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
+        //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new
+                            String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSION_REQUEST_FINE_LOCATION);
+        } else {
+            permissionIsGranted = true;
+        }
+
+
+
+        //navigation and fragment
+
+        frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
+        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigationView);
+
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()){
+
+
+                    case R.id.dashboard:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+                        break;
+
+                    case R.id.medication:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Medication()).commit();
+                        break;
+
+                    case R.id.symptoms:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Symptoms()).commit();
+                        break;
+
+
+                }
+                return true;
+            }
+        });
+
+
+        // display dashboard as main screen
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
+            bottomNavigationView.setSelectedItemId(R.id.dashboard);
+        }
 
 
 
