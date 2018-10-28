@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 /**
  * Created by muradahmad on 10/07/2018.
@@ -39,7 +40,7 @@ public class UserRegister extends AppCompatActivity {
     CheckBox chkConsent;
     Button btnRegister;
 
-    String name,dateOfBirth,email,password,confirmPassword;
+    String uniqueID, name,dateOfBirth,email,password,confirmPassword;
 
 
     int year, month, day;
@@ -128,6 +129,9 @@ public class UserRegister extends AppCompatActivity {
                     public void onClick(View v) {
 
 
+                        // 1. save data,
+
+                        uniqueID = UUID.randomUUID().toString();
                         name = txtName.getText().toString();
                         dateOfBirth = txtDateOfBirth.getText().toString();
                         email = txtEmail.getText().toString();
@@ -140,12 +144,11 @@ public class UserRegister extends AppCompatActivity {
                         values.put(Database.DOB, dateOfBirth);
                         values.put(Database.EMAIL, email);
                         values.put(Database.PASSWORD, password);
+                        values.put(Database.UUID, uniqueID);
                         values.put(Database.reg_timestamp,System.currentTimeMillis());
 
                         dbHandler.insertRegistrationData(values);
-
-                        // 1. save data,
-
+                        db.close();
 
 
                         // 2.validate data

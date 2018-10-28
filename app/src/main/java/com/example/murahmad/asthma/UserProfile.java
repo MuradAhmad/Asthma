@@ -75,11 +75,15 @@ public class UserProfile extends Fragment {
 
 
                         String name = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
-                        String dateOfBirth = cursor.getString(cursor.getColumnIndex(Database.DOB));
+                        String userId = cursor.getString(cursor.getColumnIndex(Database.UUID));
                         String drugs = cursor.getString(cursor.getColumnIndex(Database.DRUGS));
 
+                        /*if(drugs == null)
+                        {
+                            drugs = "insert drugs";
+                        }*/
                         txtusername.setText(name);
-                        txtdateofbirth.setText(dateOfBirth);
+                        txtdateofbirth.setText(userId);
                         txtdrugs.setText(drugs);
 
 
@@ -87,6 +91,8 @@ public class UserProfile extends Fragment {
                     }
                 }
                 cursor.close();
+                db.close();
+
 
 
                 threadHandler.postDelayed(this, 1000);

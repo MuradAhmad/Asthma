@@ -1,5 +1,6 @@
 package com.example.murahmad.asthma;
 
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,7 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
+
+import java.util.Calendar;
 
 /**
  * Created by muradahmad on 31/08/2018.
@@ -28,15 +32,15 @@ public class Setting extends Fragment {
     Cursor cursor;
 
 
-    private TextView edtMorningHr;
-    private TextView edtMorningMin;
-    private TextView edtEveningHr;
-    private TextView edtEveningMin;
-    private NumberPicker numberPicker;
+    private Button btnMorning;
+    private Button btnEvening;
+
+
 
     private Button btnSave;
 
-    String morningHr,morningMin,eveningHr,eveningMin;
+    String morningTime;
+    String eveningTime;
 
 
 
@@ -51,26 +55,57 @@ public class Setting extends Fragment {
         db = dbHandler.getWritableDatabase();
 
 
-        edtMorningHr = (TextView) view.findViewById(R.id.edtMorningHour);
-        edtMorningMin = (TextView) view.findViewById(R.id.edtMorningMinutes);
-        edtEveningHr = (TextView) view.findViewById(R.id.edtEveningHour);
-        edtEveningMin = (TextView) view.findViewById(R.id.edtEveningMinutes);
+        // timer buttons
+        btnMorning = (Button) view.findViewById(R.id.btnMorning);
+        btnEvening = (Button) view.findViewById(R.id.btnEvening);
 
         btnSave = (Button) view.findViewById(R.id.btnSave);
 
-/*
-
-        numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
-                numberPicker.setMaxValue(24);
-                numberPicker.setMinValue(1);
-               // numberPicker.setWrapSelectorWheel(true);
-        numberPicker.setOnValueChangedListener(onValueChangeListener);
-                //edtMorningHr.setText(String.valueOf(numberPicker.getValue()));
-
-*/
 
 
+        btnMorning.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        btnMorning.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+            }
+        });
+
+
+
+        btnEvening.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        btnEvening.setText( selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, false);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+            }
+        });
 
 
 
@@ -80,18 +115,15 @@ public class Setting extends Fragment {
             public void onClick(View v) {
 
                 // 1. save data,
-                morningHr = edtMorningHr.getText().toString();
-                morningMin = edtMorningMin.getText().toString();
-                eveningHr = edtEveningHr.getText().toString();
-                eveningMin = edtEveningMin.getText().toString();
+                morningTime = btnMorning.getText().toString();
+                eveningTime = btnEvening.getText().toString();
+
 
 
 
                 ContentValues values = new ContentValues();
-                values.put(Database.MORNING_HR, morningHr);
-                values.put(Database.MORNING_MIN, morningMin);
-                values.put(Database.EVENING_HR, eveningHr);
-                values.put(Database.EVENING_MIN, eveningMin);
+                values.put(Database.MORNING_TIME, morningTime);
+                values.put(Database.EVENING_TIME, eveningTime);
                 values.put(Database.Setting_timestamp,System.currentTimeMillis());
 
                 dbHandler.insertSettingData(values);
@@ -103,16 +135,7 @@ public class Setting extends Fragment {
 
                 return view;
     }
- /*   NumberPicker.OnValueChangeListener onValueChangeListener =
-            new 	NumberPicker.OnValueChangeListener(){
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    Toast.makeText(getContext(),
-                            "selected number "+numberPicker.getValue(), Toast.LENGTH_SHORT);
-                    //edtMorningHr.setText(numberPicker.getValue());
 
-                }
-            };*/
 
 
 }

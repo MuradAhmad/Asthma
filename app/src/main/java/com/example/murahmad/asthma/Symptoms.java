@@ -32,8 +32,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,13 +54,11 @@ public class Symptoms extends Fragment {
     private Button btn1, btn2, btn3, btn4;
 
     private TextView txtQuestion;
-    private Button btnNext;
-    private RadioButton rdStrong, rdMild, rdModerate, rdNotatall, rdButton;
-    private RadioGroup rdGroupQuestions;
+
 
     private ColorStateList textColorDefaultRb;
 
-    String mild, strong, moderate, notAtAll;
+
 
 
     private List<String> qList;
@@ -81,12 +81,13 @@ public class Symptoms extends Fragment {
 
 
         txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
-        //btnNext = (Button)view.findViewById(R.id.btnNext);
+
 
         btn1 = (Button) view.findViewById(R.id.btn1);
         btn2 = (Button) view.findViewById(R.id.btn2);
         btn3 = (Button) view.findViewById(R.id.btn3);
         btn4 = (Button) view.findViewById(R.id.btn4);
+
 
 
 
@@ -213,15 +214,15 @@ public class Symptoms extends Fragment {
 
         } else {
 
-            sendPostRequest();
+            //sendPostRequest();
+            saveSymptoms();
 
 
             FragmentManager fragmentManager = getFragmentManager();
 
             fragmentManager.beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
 
-            //Intent intent = new Intent(getContext(), MainActivity.class);
-            //startActivity(intent);
+
         }
 
 
@@ -229,6 +230,38 @@ public class Symptoms extends Fragment {
 
 
 
+
+    public void saveSymptoms() {
+        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+        final JSONObject symptomsJsonObject = new JSONObject();
+        for (int index = 0; index < qList.size(); index++) {
+            try {
+                symptomsJsonObject.put(qList.get(index), aList.get(index));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        String stringSymptoms = symptomsJsonObject.toString();
+
+            ContentValues values = new ContentValues();
+
+            values.put(Database.SYMPTOMS, stringSymptoms);
+
+            values.put(Database.SYMPTOMS_timestamp, time);
+
+            dbHandler.insertSymptomsData(values);
+
+            dbHandler.close();
+
+    }
+
+
+    // commited server data get/post request
+
+/*
 
 
 
@@ -305,6 +338,7 @@ public class Symptoms extends Fragment {
 
     }
     // Toast.makeText(getApplicationContext(), "done", Toast.LENGTH_LONG).show();
+*/
 
 
 }

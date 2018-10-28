@@ -43,6 +43,7 @@ import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
 
+    private static final int REQUEST_READ_PHONE_STATE = 100;
     private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
     private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 102;
     private boolean permissionIsGranted = false;
@@ -107,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private Timer timer;
     private Handler scanTimerHandler;
     private static int MAX_SCAN_TIME_MS = 1000;
-    int morningHr,morningMin, eveningHr, eveningMin;
+    String morningTime;
+    String eveningTime;
 
 
 
@@ -152,10 +155,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
-        //database
+       /* //database
 
         handler = new Database(this);
         db = handler.getReadableDatabase();
+
 
 
 
@@ -172,15 +176,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 // get values from cursor here
 
-                morningHr = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.MORNING_HR)));
-                morningMin = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.MORNING_MIN)));
-                eveningHr = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.EVENING_HR)));
-                eveningMin = Integer.parseInt(cursor.getString(cursor.getColumnIndex(Database.EVENING_MIN)));
+                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
+                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
 
-                Log.d("Morning hour", String.valueOf(morningHr));
-                Log.d("Morning Min", String.valueOf(morningMin));
-               Log.d("Evening hour", String.valueOf(eveningHr));
-               Log.d("Evening Min", String.valueOf(eveningMin));
+                Log.d("Morning Time", String.valueOf(morningTime));
+                Log.d("Evening Time", String.valueOf(eveningTime));
 
 
             }
@@ -189,29 +189,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         cursor.close();
 
 
+
+        String[] parts = morningTime.split(":");
+        String part1 = parts[0]; // hour
+        String part2 = parts[1]; // minutes
+
+        Log.d("Morning Hour", String.valueOf(part1));
+        Log.d("Morning Minutes", String.valueOf(part2));
+
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,morningHr);
-        calendar.set(Calendar.MINUTE,morningMin);
-        calendar.set(Calendar.SECOND,30);
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        Log.d("current Time", String.valueOf(currentTime));
+
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
+        calendar.set(Calendar.SECOND, 0);
+
+        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
+
 
         // set evening notification
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.HOUR_OF_DAY,eveningHr);
-        calendar2.set(Calendar.MINUTE,eveningMin);
-        calendar2.set(Calendar.SECOND,30);
 
-        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(),100,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        if( currentTime == calendar.getTimeInMillis() ) {
 
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        // AlarmManager.Interval_Day set according to settings screen
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar2.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+            Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            // AlarmManager.Interval_Day set according to settings screen
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
+        }
 
-
+*/
 
 
         // Bluetooth manager
@@ -236,6 +248,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
 
+        // permissions for UUID
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_READ_PHONE_STATE);
+        } else {
+            //TODO
+        }
 
         //navigation and fragment
 
@@ -276,6 +297,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
             bottomNavigationView.setSelectedItemId(R.id.dashboard);
         }
+
+
+
+
+
 
 
 

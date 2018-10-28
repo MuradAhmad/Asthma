@@ -22,20 +22,13 @@ public class Database extends SQLiteOpenHelper {
     public static final String HUMIDITY = "Humidity";
     public static final String DATE = "Date";
 
-    // App Settings  Table
+    // Settings  Table
 
     public static final String SETTING_TABLE = "Setting_Table";
-    public static final String MORNING_HR = "MorningHr";
-    public static final String MORNING_MIN = "MorningMin";
-    public static final String EVENING_HR = "EveningHr";
-    public static final String EVENING_MIN = "EveningMin";
-
+    public static final String MORNING_TIME = "MorningTime";
+    public static final String EVENING_TIME = "EveningTime";
     public static final String LOGIN_TOKEN = "LoginToken";
     public static final String Setting_timestamp = "Timestamp";
-
-
-
-
 
     // Registration table
     public static final String REGISTRATION_TABLE = "Registration_Table";
@@ -44,12 +37,10 @@ public class Database extends SQLiteOpenHelper {
     public static final String EMAIL = "Email";
     public static final String PASSWORD = "Password";
     public static final String reg_timestamp = "Timestamp";
+    public static final String UUID = "Uuid";
    // public static final String CONSENT = "Consent";
 
-
-
     // Medication Table
-
 
     public static final String MEDICATION_TABLE = "Medication_Table";
    // public static final String PATIENT_NAME = "Name";
@@ -66,33 +57,20 @@ public class Database extends SQLiteOpenHelper {
 
     public static final String SYMPTOMS_TABLE = "Symptoms_Table";
     public static final String SYMPTOMS_timestamp = "Timestamp";
-    public static final String Q1 = "Q1";
-    public static final String A1 = "A1";
-/*    public static final String Q2 = "Q2";
-    public static final String A2 = "A2";
-    public static final String Q3 = "Q3";
-    public static final String A3 = "A3";
-    public static final String Q4 = "Q4";
-    public static final String A4 = "A4";
-    public static final String Q5 = "Q5";
-    public static final String A5 = "A5";
-    public static final String Q6 = "Q6";
-    public static final String A6 = "A6";
-    public static final String Q7 = "Q7";
-    public static final String A7 = "A7";*/
+    public static final String SYMPTOMS = "Symptoms";
 
-
-/*
     // Feedback table
+
     public static final String FEEDBACK_TABLE = "Feedback_Table";
     public static final String FEEDBACK_timestamp = "Timestamp";
-    public static final String FQ1 = "FQ1";
-    public static final String FA1 = "FA1";
-    public static final String FQ2 = "FQ2";
-    public static final String FA2 = "FA2";
+    public static final String FEEDBACK = "Feedback";
 
+    // Location Table
 
-*/
+    public static final String LOCATION_TABLE = "Location_Table";
+    public static final String LOCATION_timestamp = "Timestamp";
+    public static final String LATITUDE = "Latitude";
+    public static final String LONGITUDE = "Longitude";
 
 
     public static Database instance;
@@ -107,20 +85,18 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 2);
+        super(context, USER_DATABASE, null, 5);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + DEVICE_TABLE + "(Id TEXT, Url TEXT, Rssi TEXT, Temperature TEXT, Humidity TEXT, Date TEXT )");
-        db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT , Timestamp REAL)");
+        db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT ,Uuid TEXT, Timestamp REAL)");
         db.execSQL("create table " + MEDICATION_TABLE + "(Date TEXT, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
-        //db.execSQL("create table " + SYMPTOMS_TABLE + "(Q1 TEXT, A1 TEXT, Q2 TEXT, A2 TEXT ,Q3 TEXT, A3 TEXT,Q4 TEXT, A4 TEXT,Q5 TEXT, A5 TEXT,Q6 TEXT, A6 TEXT,Q7 TEXT, A7 TEXT, Timestamp REAL)");
-
-        db.execSQL("create table " + SYMPTOMS_TABLE + "(Q1 TEXT, A1 TEXT, Timestamp REAL)");
-
-
-        db.execSQL("create table " + SETTING_TABLE + "(MorningHr TEXT, MorningMin TEXT, EveningHr TEXT, EveningMin TEXT , LoginToken TEXT, Timestamp REAL)");
+        db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Timestamp REAL)");
+        db.execSQL("create table " + FEEDBACK_TABLE + "(Feedback TEXT, Timestamp REAL)");
+        db.execSQL("create table " + LOCATION_TABLE + "(Latitude TEXT, Longitude TEXT, Timestamp REAL)");
+        db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, EveningTime TEXT, LoginToken TEXT, Timestamp REAL)");
     }
 
     @Override
@@ -130,6 +106,8 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + REGISTRATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + MEDICATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + SYMPTOMS_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS " + FEEDBACK_TABLE);
+        db.execSQL(" DROP TABLE IF EXISTS " + LOCATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + SETTING_TABLE);
 
         onCreate(db);
@@ -208,6 +186,33 @@ public class Database extends SQLiteOpenHelper {
         }
 
     }
+    public boolean insertFeedbackData(ContentValues contentValues) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.insert(FEEDBACK_TABLE, null, contentValues);
+        if (result == -1) {
+
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public boolean insertLocationData(ContentValues contentValues) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long result = db.insert(LOCATION_TABLE, null, contentValues);
+        if (result == -1) {
+
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+
     public boolean insertSettingData(ContentValues contentValues) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -267,6 +272,28 @@ public class Database extends SQLiteOpenHelper {
 
 
     }
+
+    public Cursor viewFeedbackData(){
+        String selectQuery= "SELECT * FROM " + FEEDBACK_TABLE;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        return cursor;
+        // close cursor
+        //close database
+
+
+    }
+    public Cursor viewLocationData(){
+        String selectQuery= "SELECT * FROM " + LOCATION_TABLE;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        return cursor;
+        // close cursor
+        //close database
+
+
+    }
+
 
     public Cursor viewSettingData(){
         String selectQuery= "SELECT * FROM " + SETTING_TABLE;

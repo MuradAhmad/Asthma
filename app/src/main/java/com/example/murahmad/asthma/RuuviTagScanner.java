@@ -1,6 +1,7 @@
 package com.example.murahmad.asthma;
 
 import android.app.ActivityManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -33,6 +34,7 @@ import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -67,6 +69,11 @@ public class RuuviTagScanner extends Service {
     SQLiteDatabase db;
     Cursor cursor;
     Region region;
+
+    String morningTime;
+    String eveningTime;
+
+
     private String[] titles;
     private String backendUrl;
     //private PlotSource plotSource;
@@ -105,18 +112,10 @@ public class RuuviTagScanner extends Service {
 
         // commited by me
 
-      /*  titles = new String[]{ getString(R.string.alert_notification_title0),
-                getString(R.string.alert_notification_title1),
-                getString(R.string.alert_notification_title2),
-                getString(R.string.alert_notification_title3),
-                getString(R.string.alert_notification_title4),
-                getString(R.string.alert_notification_title5),
-                getString(R.string.alert_notification_title6),
-                getString(R.string.alert_notification_title7)
-        };*/
 
         if (settings.getBoolean("pref_bgscan", false))
-            startFG();
+            //startFG();
+            startNotification();
 
 
         Foreground.init(getApplication());
@@ -156,6 +155,9 @@ public class RuuviTagScanner extends Service {
             public void run() {
                 if (!scheduler.isShutdown())
                     startScan();
+                // added notification method here to see if it sends notification or not
+
+                startNotification();
             }
         }, 0, scanInterval - MAX_SCAN_TIME_MS + 1, TimeUnit.MILLISECONDS);
 
@@ -290,7 +292,8 @@ public class RuuviTagScanner extends Service {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (settings.getBoolean("pref_bgscan", false))
-                startFG();
+                //startFG();
+                startNotification();
 
             if (!settings.getBoolean("pref_bgscan", false))
                 stopForeground(true);
@@ -322,18 +325,22 @@ public class RuuviTagScanner extends Service {
         }
     };
 
+/*
 
     public void startFG()
     {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+       */
+/* Intent notificationIntent = new Intent(this, MainActivity.class);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent1111 = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         NotificationCompat.Builder notification;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         notification
                 = new NotificationCompat.Builder(getApplicationContext());
-                /*.setContentTitle(this.getString(R.string.scanner_notification_title))
+                *//*
+*/
+/*.setContentTitle(this.getString(R.string.scanner_notification_title))
                 .setSmallIcon(R.mipmap.ic_launcher_small)
                 .setTicker(this.getString(R.string.scanner_notification_ticker))
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(this.getString(R.string.scanner_notification_message)))
@@ -341,11 +348,152 @@ public class RuuviTagScanner extends Service {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setLargeIcon(bitmap)
-                .setContentIntent(pendingIntent);*/
+                .setContentIntent(pendingIntent);*//*
+*/
+/*
 
         startForeground(notificationId, notification.build());
+
+        *//*
+
+
+
+
+        // Notification code from main activity
+
+        // send User notification
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
+                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
+
+                Log.d("Morning Time", String.valueOf(morningTime));
+                Log.d("Evening Time", String.valueOf(eveningTime));
+
+
+            }
+
+        }
+        cursor.close();
+
+
+
+        String[] parts = morningTime.split(":");
+        String part1 = parts[0]; // hour
+        String part2 = parts[1]; // minutes
+
+        Log.d("Morning Hour", String.valueOf(part1));
+        Log.d("Morning Minutes", String.valueOf(part2));
+
+        Calendar calendar = Calendar.getInstance();
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        Log.d("current Time", String.valueOf(currentTime));
+
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
+        calendar.set(Calendar.SECOND, 0);
+
+        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
+
+
+        // set evening notification
+        Calendar calendar2 = Calendar.getInstance();
+
+        if( currentTime == calendar.getTimeInMillis() ) {
+
+
+            Intent intent = new Intent(this, NotificationReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            // AlarmManager.Interval_Day set according to settings screen
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+        }
+
     }
 
+*/
+
+
+
+    public void startNotification()
+    {
+        // Notification code from main activity
+
+        // send User notification
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
+                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
+
+                Log.d("Morning Time", String.valueOf(morningTime));
+                Log.d("Evening Time", String.valueOf(eveningTime));
+
+
+            }
+
+        }
+        cursor.close();
+
+        String[] parts = morningTime.split(":");
+        String part1 = parts[0]; // hour
+        String part2 = parts[1]; // minutes
+
+        Log.d("Morning Hour", String.valueOf(part1));
+        Log.d("Morning Minutes", String.valueOf(part2));
+
+        Calendar calendar = Calendar.getInstance();
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        Log.d("current Time", String.valueOf(currentTime));
+
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
+        calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
+        calendar.set(Calendar.SECOND, 0);
+
+        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
+
+
+        if( currentTime.(calendar.getTimeInMillis()) ) {
+
+            Intent notificationIntent = new Intent(this, Symptoms.class);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this,App.CHANNEL_1_ID)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_notification_24dp)
+                    //.addAction(R.drawable.ic_notification_24dp, "Call", pendingIntent)
+                    .setContentTitle("FEEDBACK")
+                    .setContentText("Submit daily symptoms")
+                    .setShowWhen(true)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE);
+
+            startForeground(notificationId, notification.build());
+
+        }
+
+
+
+    }
 
 
 

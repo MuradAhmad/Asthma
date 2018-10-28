@@ -26,101 +26,52 @@
             android:id="@+id/txtMorning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select morning time (24-hour)"
+            android:text="Select morning time"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="@color/colorTransparent"
             android:layout_gravity="center" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-       android:gravity="center"
-        >
-
-        <EditText
-            android:id="@+id/edtMorningHour"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:hint="Hour"
+        <Button
+            android:id="@+id/btnMorning"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/transparent_white_rect"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:maxLines="1"
-            android:inputType="number"
+            android:text="time"
+            android:textColor="@color/colorWhite"
+            android:textStyle="normal"
 
-            android:textSize="14sp"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
+
             />
 
-        <EditText
-            android:id="@+id/edtMorningMinutes"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:hint="Minutes"
-            android:background="@drawable/transparent_white_rect"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:maxLines="1"
-            android:inputType="number"
 
-            android:textSize="14sp"
-            android:gravity="center"
-            android:layout_marginTop="10dp"
-            />
-
-    </LinearLayout>
 
         <TextView
             android:id="@+id/txtEvening"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select evening time (24-hour)"
+            android:text="Select evening time"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="@color/colorTransparent"
             android:layout_marginTop="10dp"
-
             android:layout_gravity="center" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            >
-            <EditText
-                android:id="@+id/edtEveningHour"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:hint="Hour"
-                android:background="@drawable/transparent_white_rect"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:maxLines="1"
-                android:inputType="number"
 
-                android:paddingStart="2dp"
-                android:paddingLeft="2dp"
-                android:layout_marginTop="10dp"
-                />
-            <EditText
-                android:id="@+id/edtEveningMinutes"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:hint="Minutes"
+            <Button
+                android:id="@+id/btnEvening"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/transparent_white_rect"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="15dp"
-                android:maxLines="1"
-                android:inputType="number"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_marginTop="10dp"
-                />
 
-        </LinearLayout>
+                android:text="time"
+                android:textColor="@color/colorWhite"
+                android:textStyle="normal" />
 
 
         <Button

@@ -30,6 +30,7 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 
+    //
         Intent activityIntent = new Intent(context, MainActivity.class);
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

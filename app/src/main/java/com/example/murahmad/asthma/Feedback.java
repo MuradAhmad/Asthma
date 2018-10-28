@@ -1,8 +1,11 @@
 package com.example.murahmad.asthma;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,7 +27,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,8 +52,12 @@ public class Feedback extends Fragment {
     private List<String> qList;
     private List<String> aList;
 
+    Database dbHandler;
+    SQLiteDatabase db;
+    Cursor cursor;
 
-    private FusedLocationProviderClient mFusedLocationClient;
+
+
 
 
     @Nullable
@@ -61,7 +73,9 @@ public class Feedback extends Fragment {
 
 
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+        dbHandler = new Database(getContext());
+        db = dbHandler.getWritableDatabase();
 
 
 
@@ -141,6 +155,9 @@ public class Feedback extends Fragment {
         }
         else {
 
+
+            saveFeedback();
+
             Intent intent = new Intent(getContext(), MainActivity.class);
             startActivity(intent);
 
@@ -150,6 +167,36 @@ public class Feedback extends Fragment {
 
 
 
+
+    }
+
+
+
+
+    public void saveFeedback() {
+        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+
+        final JSONObject symptomsJsonObject = new JSONObject();
+        for (int index = 0; index < qList.size(); index++) {
+            try {
+                symptomsJsonObject.put(qList.get(index), aList.get(index));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        String stringFeedback = symptomsJsonObject.toString();
+
+        ContentValues values = new ContentValues();
+
+        values.put(Database.FEEDBACK, stringFeedback);
+
+        values.put(Database.FEEDBACK_timestamp, time);
+
+        dbHandler.insertFeedbackData(values);
+
+        dbHandler.close();
 
     }
 
