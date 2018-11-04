@@ -51,15 +51,14 @@ public class Symptoms extends Fragment {
     private int frequencyQuestionNumber = 0;
     private int estimationQuestionNumber = 0;
 
+    private static final int REQUEST_FEEDBACK_FRAGMENT_CODE = 11;
+
     private Button btn1, btn2, btn3, btn4;
 
     private TextView txtQuestion;
 
 
     private ColorStateList textColorDefaultRb;
-
-
-
 
     private List<String> qList;
     private List<String> aList;
@@ -76,10 +75,6 @@ public class Symptoms extends Fragment {
         View view = inflater.inflate(R.layout.activity_symptoms, container, false);
 
 
-
-
-
-
         txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
 
 
@@ -87,10 +82,6 @@ public class Symptoms extends Fragment {
         btn2 = (Button) view.findViewById(R.id.btn2);
         btn3 = (Button) view.findViewById(R.id.btn3);
         btn4 = (Button) view.findViewById(R.id.btn4);
-
-
-
-
 
 
         dbHandler = new Database(getContext());
@@ -136,10 +127,7 @@ public class Symptoms extends Fragment {
 
                 aList.add(btn3.getText().toString());
 
-
                 updateQuestion();
-
-
 
             }
         });
@@ -149,20 +137,12 @@ public class Symptoms extends Fragment {
 
                 aList.add(btn4.getText().toString());
 
-
                 updateQuestion();
-
-
 
             }
         });
 
-
-
-
-
         return view;
-
 
     }
 
@@ -214,14 +194,7 @@ public class Symptoms extends Fragment {
 
         } else {
 
-            //sendPostRequest();
             saveSymptoms();
-
-
-            FragmentManager fragmentManager = getFragmentManager();
-
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, new Feedback()).commit();
-
 
         }
 
@@ -229,10 +202,7 @@ public class Symptoms extends Fragment {
     }
 
 
-
-
     public void saveSymptoms() {
-        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
         final JSONObject symptomsJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
@@ -243,18 +213,18 @@ public class Symptoms extends Fragment {
             }
         }
 
-
         String stringSymptoms = symptomsJsonObject.toString();
 
-            ContentValues values = new ContentValues();
+        // send symptoms data to Feedback class as a string
+        Feedback feedback = new Feedback ();
+        Bundle args = new Bundle();
+        args.putString("symptoms", stringSymptoms);
+        feedback.setArguments(args);
 
-            values.put(Database.SYMPTOMS, stringSymptoms);
+        //Inflate the fragment Feedback
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, feedback).commit();
 
-            values.put(Database.SYMPTOMS_timestamp, time);
-
-            dbHandler.insertSymptomsData(values);
-
-            dbHandler.close();
 
     }
 

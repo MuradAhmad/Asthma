@@ -30,6 +30,12 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderApi;
@@ -37,14 +43,19 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.JsonObject;
 
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -81,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private Double myLongitude;
 
 
+    // array lists for local database tables
+    private List<String> symptomsList;
+    private List<String> feedbackList;
+    private List<String> deviceList;
 
     private static final String TAG = "MainActivity";
 
@@ -104,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     Database handler;
     SQLiteDatabase db;
-    Cursor cursor;
+    Cursor cursor,cursor1,cursor2;
 
     private Timer timer;
     private Handler scanTimerHandler;
@@ -155,15 +170,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
-       /* //database
+        // send symptoms, feedback, location. device data to online server
+        // get data from local DB
 
         handler = new Database(this);
         db = handler.getReadableDatabase();
 
+        // array list to store data from local DB
+        symptomsList = new ArrayList<>();
+        feedbackList = new ArrayList<>();
+        deviceList = new ArrayList<String>();
 
 
+        //database
 
-
+        handler = new Database(this);
+        db = handler.getReadableDatabase();
 
         // send User notification
 
@@ -190,40 +212,36 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
 
-        String[] parts = morningTime.split(":");
-        String part1 = parts[0]; // hour
-        String part2 = parts[1]; // minutes
-
-        Log.d("Morning Hour", String.valueOf(part1));
-        Log.d("Morning Minutes", String.valueOf(part2));
-
-        Calendar calendar = Calendar.getInstance();
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        Log.d("current Time", String.valueOf(currentTime));
-
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
-        calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
-        calendar.set(Calendar.SECOND, 0);
-
-        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
+        if((morningTime != null && !morningTime.isEmpty()) || (eveningTime != null && !eveningTime.isEmpty())) {
 
 
-        // set evening notification
-        Calendar calendar2 = Calendar.getInstance();
+            // set notification time here
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            long currentTime = calendar.getTimeInMillis();
+            // System.currentTimeMillis();
 
-        if( currentTime == calendar.getTimeInMillis() ) {
+            Log.d("current Time", String.valueOf(currentTime));
 
+            Long morningTimeLong = Long.valueOf(morningTime);
+            Long eveningTimeLong = Long.valueOf(eveningTime);
 
-            Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Log.d("Morning time from DB", String.valueOf(morningTimeLong));
 
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            // AlarmManager.Interval_Day set according to settings screen
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            if ((morningTimeLong.compareTo(currentTime)>= 0) || (eveningTimeLong.compareTo(currentTime)>= 0)) {
+
+                Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                // AlarmManager.Interval_Day set according to settings screen
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+            }
 
         }
 
-*/
 
 
         // Bluetooth manager
@@ -232,10 +250,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         bluetoothAdapter = bluetoothManager.getAdapter();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
-
-
-
-
 
         //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
@@ -297,11 +311,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
             bottomNavigationView.setSelectedItemId(R.id.dashboard);
         }
-
-
-
-
-
 
 
 
@@ -427,13 +436,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 *//*
 
 
-
-
-
-
-
-
-
 }
 
 */
@@ -482,12 +484,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
-
-
-
-
-
-
 
     @Override
     protected void onStart() {
@@ -588,6 +584,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length>1)
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_FINE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -605,5 +602,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 break;
         }
     }
+
+
+
 
 }

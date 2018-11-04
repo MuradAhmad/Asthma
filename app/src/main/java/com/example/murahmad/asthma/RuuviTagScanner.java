@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -114,8 +115,8 @@ public class RuuviTagScanner extends Service {
 
 
         if (settings.getBoolean("pref_bgscan", false))
-            //startFG();
-            startNotification();
+            startFG();
+            //startNotification();
 
 
         Foreground.init(getApplication());
@@ -155,9 +156,8 @@ public class RuuviTagScanner extends Service {
             public void run() {
                 if (!scheduler.isShutdown())
                     startScan();
-                // added notification method here to see if it sends notification or not
-
-                startNotification();
+                // added by me notification method here to see if it sends notification or not
+                //startNotification();
             }
         }, 0, scanInterval - MAX_SCAN_TIME_MS + 1, TimeUnit.MILLISECONDS);
 
@@ -292,8 +292,8 @@ public class RuuviTagScanner extends Service {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (settings.getBoolean("pref_bgscan", false))
-                //startFG();
-                startNotification();
+                startFG();
+
 
             if (!settings.getBoolean("pref_bgscan", false))
                 stopForeground(true);
@@ -325,12 +325,12 @@ public class RuuviTagScanner extends Service {
         }
     };
 
-/*
+
 
     public void startFG()
     {
-       */
-/* Intent notificationIntent = new Intent(this, MainActivity.class);
+
+ Intent notificationIntent = new Intent(this, MainActivity.class);
 
         PendingIntent pendingIntent1111 = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -338,8 +338,8 @@ public class RuuviTagScanner extends Service {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
         notification
                 = new NotificationCompat.Builder(getApplicationContext());
-                *//*
-*/
+
+
 /*.setContentTitle(this.getString(R.string.scanner_notification_title))
                 .setSmallIcon(R.mipmap.ic_launcher_small)
                 .setTicker(this.getString(R.string.scanner_notification_ticker))
@@ -350,14 +350,15 @@ public class RuuviTagScanner extends Service {
                 .setLargeIcon(bitmap)
                 .setContentIntent(pendingIntent);*//*
 */
-/*
+
 
         startForeground(notificationId, notification.build());
 
-        *//*
 
 
 
+
+/*
 
         // Notification code from main activity
 
@@ -418,12 +419,14 @@ public class RuuviTagScanner extends Service {
             alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
 
         }
+*/
 
     }
 
-*/
 
 
+
+/*
 
     public void startNotification()
     {
@@ -452,27 +455,35 @@ public class RuuviTagScanner extends Service {
         }
         cursor.close();
 
-        String[] parts = morningTime.split(":");
+*/
+/*        String[] parts = morningTime.split(":");
         String part1 = parts[0]; // hour
         String part2 = parts[1]; // minutes
 
         Log.d("Morning Hour", String.valueOf(part1));
-        Log.d("Morning Minutes", String.valueOf(part2));
+        Log.d("Morning Minutes", String.valueOf(part2));*//*
+
 
         Calendar calendar = Calendar.getInstance();
-        long currentTime = Calendar.getInstance().getTimeInMillis();
+        calendar.set(Calendar.MILLISECOND,0);
+        long currentTime = calendar.getTimeInMillis();
+        // System.currentTimeMillis();
+
         Log.d("current Time", String.valueOf(currentTime));
 
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
+   */
+/*     calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
         calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
-        calendar.set(Calendar.SECOND, 0);
-
-        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
+        calendar.set(Calendar.SECOND, 0);*//*
 
 
-        if( currentTime.(calendar.getTimeInMillis()) ) {
+        ///Log.d("Morning time from DB", morningTime);
 
-            Intent notificationIntent = new Intent(this, Symptoms.class);
+           Long morningTimeLong= Long.valueOf(morningTime);
+        Log.d("Morning time from DB", String.valueOf(morningTimeLong));
+        if (morningTimeLong.compareTo(currentTime)==0) {//morningTime == String.valueOf(currentTime)
+
+            Intent notificationIntent = new Intent(this, NotificationReceiver.class);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -484,6 +495,7 @@ public class RuuviTagScanner extends Service {
                     .setContentText("Submit daily symptoms")
                     .setShowWhen(true)
                     .setAutoCancel(true)
+
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE);
 
@@ -496,6 +508,7 @@ public class RuuviTagScanner extends Service {
     }
 
 
+*/
 
     public void save(RuuviTag ruuvitag) {
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());

@@ -76,6 +76,14 @@ public class Setting extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         btnMorning.setText( selectedHour + ":" + selectedMinute);
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                        calendar.set(Calendar.MINUTE, selectedMinute);
+                        calendar.set(Calendar.SECOND,0);
+                        calendar.set(Calendar.MILLISECOND,0);
+                        morningTime = String.valueOf(calendar.getTimeInMillis());
+
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -99,6 +107,14 @@ public class Setting extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         btnEvening.setText( selectedHour + ":" + selectedMinute);
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                        calendar.set(Calendar.MINUTE, selectedMinute);
+                        calendar.set(Calendar.SECOND,0);
+                        calendar.set(Calendar.MILLISECOND,0);
+                        eveningTime = String.valueOf(calendar.getTimeInMillis());
+
                     }
                 }, hour, minute, false);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -115,10 +131,10 @@ public class Setting extends Fragment {
             public void onClick(View v) {
 
                 // 1. save data,
-                morningTime = btnMorning.getText().toString();
+               /* morningTime = btnMorning.getText().toString();
                 eveningTime = btnEvening.getText().toString();
 
-
+*/
 
 
                 ContentValues values = new ContentValues();
@@ -127,6 +143,7 @@ public class Setting extends Fragment {
                 values.put(Database.Setting_timestamp,System.currentTimeMillis());
 
                 dbHandler.insertSettingData(values);
+                dbHandler.close();
 
                 Intent intent = new Intent(getContext(), MainActivity.class);
                 startActivity(intent);

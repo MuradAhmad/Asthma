@@ -57,6 +57,7 @@ public class Feedback extends Fragment {
     Cursor cursor;
 
 
+    private String stringSymptoms;
 
 
 
@@ -72,22 +73,19 @@ public class Feedback extends Fragment {
         btn2 = (Button)view.findViewById(R.id.btn2);
 
 
-
-
         dbHandler = new Database(getContext());
         db = dbHandler.getWritableDatabase();
-
-
 
         qList = new ArrayList<String>();
         aList = new ArrayList<String>();
 
 
+        // receiving data from Symptoms class
+
+        stringSymptoms = getArguments().getString("symptoms");
 
 
         updateQuestion();
-
-
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,8 +139,6 @@ public class Feedback extends Fragment {
         }
         else if(feedbackQuestion<2) {
 
-
-
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
             btn1.setText(questionLibrary.getFeedbackOption(2));
             btn2.setText(questionLibrary.getFeedbackOption(3));
@@ -155,8 +151,7 @@ public class Feedback extends Fragment {
         }
         else {
 
-
-            saveFeedback();
+            saveSymptomsFeedback();
 
             Intent intent = new Intent(getContext(), MainActivity.class);
             startActivity(intent);
@@ -164,37 +159,43 @@ public class Feedback extends Fragment {
 
         }
 
-
-
-
-
     }
 
+    public void saveSymptomsFeedback() {
 
-
-
-    public void saveFeedback() {
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
-        final JSONObject symptomsJsonObject = new JSONObject();
+        final JSONObject feedbackJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
             try {
-                symptomsJsonObject.put(qList.get(index), aList.get(index));
+                feedbackJsonObject.put(qList.get(index), aList.get(index));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
+        String stringFeedback = feedbackJsonObject.toString();
 
-        String stringFeedback = symptomsJsonObject.toString();
+        String mergeSymptomsFeedback = stringSymptoms.concat(stringFeedback);
+
+       /* try {
+            final JSONObject symptomsJsonObject = new JSONObject(mergeSymptomsFeedback);
+            Log.d("data symptoms:", symptomsJsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+*/
+
+        Log.d("mergesymptomsfeedback:", mergeSymptomsFeedback);
+
 
         ContentValues values = new ContentValues();
 
-        values.put(Database.FEEDBACK, stringFeedback);
+        values.put(Database.SYMPTOMS, mergeSymptomsFeedback);
 
-        values.put(Database.FEEDBACK_timestamp, time);
+        values.put(Database.SYMPTOMS_timestamp, time);
 
-        dbHandler.insertFeedbackData(values);
+        dbHandler.insertSymptomsData(values);
 
         dbHandler.close();
 

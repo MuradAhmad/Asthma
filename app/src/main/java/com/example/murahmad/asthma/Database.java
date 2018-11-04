@@ -96,7 +96,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Timestamp REAL)");
         db.execSQL("create table " + FEEDBACK_TABLE + "(Feedback TEXT, Timestamp REAL)");
         db.execSQL("create table " + LOCATION_TABLE + "(Latitude TEXT, Longitude TEXT, Timestamp REAL)");
-        db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, EveningTime TEXT, LoginToken TEXT, Timestamp REAL)");
+        db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, Eveni¢ngTime TEXT, LoginToken TEXT, Timestamp REAL)");
     }
 
     @Override

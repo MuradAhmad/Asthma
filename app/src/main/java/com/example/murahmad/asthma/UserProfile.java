@@ -91,7 +91,7 @@ public class UserProfile extends Fragment {
                     }
                 }
                 cursor.close();
-                db.close();
+
 
 
 
