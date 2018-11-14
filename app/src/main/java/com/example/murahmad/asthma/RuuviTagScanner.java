@@ -548,7 +548,7 @@ public class RuuviTagScanner extends Service {
     }
 
     public boolean Exists(String id) {
-        cursor = db.rawQuery("select 1 from Device_Table where "+Database.DEVICE_ID+"= ? ",
+        cursor = db.rawQuery("select 1 from DEVICE_TABLE where "+Database.DEVICE_ID+"= ? ",
                 new String[] { id });
         boolean exists = (cursor.getCount() > 0);
         cursor.close();

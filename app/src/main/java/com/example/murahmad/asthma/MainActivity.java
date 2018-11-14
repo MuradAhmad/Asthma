@@ -182,11 +182,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         deviceList = new ArrayList<String>();
 
 
-        //database
+       //database
 
         handler = new Database(this);
         db = handler.getReadableDatabase();
-
+/*
         // send User notification
 
         cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             }
 
-        }
+        }*/
 
 
 
