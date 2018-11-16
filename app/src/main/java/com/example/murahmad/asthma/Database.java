@@ -59,11 +59,11 @@ public class Database extends SQLiteOpenHelper {
     public static final String SYMPTOMS_timestamp = "Timestamp";
     public static final String SYMPTOMS = "Symptoms";
 
-    // Feedback table
+/*    // Feedback table
 
     public static final String FEEDBACK_TABLE = "Feedback_Table";
     public static final String FEEDBACK_timestamp = "Timestamp";
-    public static final String FEEDBACK = "Feedback";
+    public static final String FEEDBACK = "Feedback";*/
 
     // Location Table
 
@@ -94,7 +94,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT ,Uuid TEXT, Timestamp REAL)");
         db.execSQL("create table " + MEDICATION_TABLE + "(Date TEXT, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
         db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Timestamp REAL)");
-        db.execSQL("create table " + FEEDBACK_TABLE + "(Feedback TEXT, Timestamp REAL)");
+        //db.execSQL("create table " + FEEDBACK_TABLE + "(Feedback TEXT, Timestamp REAL)");
         db.execSQL("create table " + LOCATION_TABLE + "(Latitude TEXT, Longitude TEXT, Timestamp REAL)");
         db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, Eveni¢ngTime TEXT, LoginToken TEXT, Timestamp REAL)");
     }
@@ -106,7 +106,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + REGISTRATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + MEDICATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + SYMPTOMS_TABLE);
-        db.execSQL(" DROP TABLE IF EXISTS " + FEEDBACK_TABLE);
+        //db.execSQL(" DROP TABLE IF EXISTS " + FEEDBACK_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + LOCATION_TABLE);
         db.execSQL(" DROP TABLE IF EXISTS " + SETTING_TABLE);
 
@@ -186,7 +186,7 @@ public class Database extends SQLiteOpenHelper {
         }
 
     }
-    public boolean insertFeedbackData(ContentValues contentValues) {
+  /*  public boolean insertFeedbackData(ContentValues contentValues) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         long result = db.insert(FEEDBACK_TABLE, null, contentValues);
@@ -197,7 +197,7 @@ public class Database extends SQLiteOpenHelper {
             return true;
         }
 
-    }
+    }*/
 
     public boolean insertLocationData(ContentValues contentValues) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -273,7 +273,7 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public Cursor viewFeedbackData(){
+/*    public Cursor viewFeedbackData(){
         String selectQuery= "SELECT * FROM " + FEEDBACK_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -282,7 +282,7 @@ public class Database extends SQLiteOpenHelper {
         //close database
 
 
-    }
+    }*/
     public Cursor viewLocationData(){
         String selectQuery= "SELECT * FROM " + LOCATION_TABLE;
         SQLiteDatabase db = this.getWritableDatabase();

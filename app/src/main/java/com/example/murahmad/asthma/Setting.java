@@ -150,16 +150,16 @@ public class Setting extends Fragment {
 
 */
                if(validate()) {
-                   notification();
+                  // notification();
 
-/*
+
                 ContentValues values = new ContentValues();
                 values.put(Database.MORNING_TIME, morningTime);
                 values.put(Database.EVENING_TIME, eveningTime);
                 values.put(Database.Setting_timestamp,System.currentTimeMillis());
 
                 dbHandler.insertSettingData(values);
-                dbHandler.close();*/
+                dbHandler.close();
 
                    Intent intent = new Intent(getContext(), MainActivity.class);
                    startActivity(intent);
@@ -173,7 +173,7 @@ public class Setting extends Fragment {
 
                 return view;
     }
-
+/*
     public void notification(){
 
 
@@ -239,7 +239,7 @@ public class Setting extends Fragment {
         }
 
 
-    }
+    }*/
 
 
     public boolean validate() {

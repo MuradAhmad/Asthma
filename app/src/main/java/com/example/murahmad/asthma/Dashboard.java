@@ -212,34 +212,9 @@ public class Dashboard extends Fragment {
 
 
         }
-        if(cursor!=null)
-            cursor.close();
-
-        cursor1 = db.rawQuery("SELECT * FROM " + Database.FEEDBACK_TABLE +" order by Timestamp desc", null);
-
-        while (cursor1 != null &&  cursor1.moveToFirst()) {
 
 
-            // get values from cursor here
-
-
-            //get the record id from the database
-            String feedback= cursor1.getString(cursor1.getColumnIndex(Database.FEEDBACK));
-            String timestamp= cursor1.getString(cursor1.getColumnIndex(Database.FEEDBACK_timestamp));
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                //add the record id to the jsonObject
-                jsonObject.put("value", feedback);
-                jsonObject.put("timestamp",timestamp);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.d("feedback data", jsonObject.toString());
-            feedbackList.add(jsonObject.toString());
-
-        }
-
-        if (cursor1!=null);
+       /* if (cursor1!=null);
         cursor1.close();
 
         cursor2 = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE +" order by Timestamp desc limit 1", null);
@@ -262,7 +237,7 @@ public class Dashboard extends Fragment {
             }
 
         }
-        cursor2.close();
+        cursor2.close();*/
 
 
         // Instantiate the RequestQueue.
@@ -287,7 +262,7 @@ public class Dashboard extends Fragment {
 
             JSONObject symptomsJsonObject = new JSONObject();
             symptomsJsonObject.put("symptoms",symptomsList);
-            symptomsJsonObject.put("feedback",feedbackList);
+            //symptomsJsonObject.put("feedback",feedbackList);
             symptomsJsonObject.put("uuid","xxxxx");
             //symptomsJsonObject.
 
