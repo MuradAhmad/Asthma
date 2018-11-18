@@ -58,52 +58,51 @@ public class UserProfile extends Fragment {
 
 
 
-        final Handler threadHandler = new Handler();
-        Runnable runnable = new Runnable()
-        {
-            public void run() {
-                //Whatever task you wish to perform
-                //For eg. textView.setText("SOME TEXT")
-
-                cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE  +","+ Database.MEDICATION_TABLE , null);
-
-                if (cursor != null) {
-                    cursor.moveToFirst();
-
-                    if (cursor.getCount() > 0) {
-// get values from cursor here
-
-
-                        String name = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
-                        String userId = cursor.getString(cursor.getColumnIndex(Database.UUID));
-                        String drugs = cursor.getString(cursor.getColumnIndex(Database.DRUGS));
-
-                        /*if(drugs == null)
-                        {
-                            drugs = "insert drugs";
-                        }*/
-                        txtusername.setText(name);
-                        txtdateofbirth.setText(userId);
-                        txtdrugs.setText(drugs);
 
 
 
-                    }
-                }
-                cursor.close();
+        displayUserProfile();
 
 
-
-
-                threadHandler.postDelayed(this, 1000);
-            }
-        };
-        threadHandler.postDelayed(runnable, 1000);
 
 
 
         return view;
 
+
+    }
+
+    public void displayUserProfile(){
+
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE  +","+ Database.MEDICATION_TABLE , null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+// get values from cursor here
+
+
+                String name = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
+                String userId = cursor.getString(cursor.getColumnIndex(Database.UUID));
+                String drugs = cursor.getString(cursor.getColumnIndex(Database.DRUGS));
+
+                        /*if(drugs == null)
+                        {
+                            drugs = "insert drugs";
+                        }*/
+                Log.d("username", name);
+                Log.d("UUID",userId);
+
+                txtusername.setText(name);
+                txtdateofbirth.setText(userId);
+                txtdrugs.setText(drugs);
+
+            }
+        }
+        cursor.close();
+        db.close();
 
     }
 

@@ -58,6 +58,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String SYMPTOMS_TABLE = "Symptoms_Table";
     public static final String SYMPTOMS_timestamp = "Timestamp";
     public static final String SYMPTOMS = "Symptoms";
+    public static final String LOCATION = "Location";
+    public static final String RUUVITAG_DATA = "RuuvitagData";
+
 
 /*    // Feedback table
 
@@ -85,7 +88,7 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 5);
+        super(context, USER_DATABASE, null, 7);
     }
 
     @Override
@@ -93,7 +96,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table " + DEVICE_TABLE + "(Id TEXT, Url TEXT, Rssi TEXT, Temperature TEXT, Humidity TEXT, Date TEXT )");
         db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT ,Uuid TEXT, Timestamp REAL)");
         db.execSQL("create table " + MEDICATION_TABLE + "(Date TEXT, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
-        db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Timestamp REAL)");
+        db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Location TEXT, RuuvitagData TEXT, Timestamp REAL)");
         //db.execSQL("create table " + FEEDBACK_TABLE + "(Feedback TEXT, Timestamp REAL)");
         db.execSQL("create table " + LOCATION_TABLE + "(Latitude TEXT, Longitude TEXT, Timestamp REAL)");
         db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, Eveni¢ngTime TEXT, LoginToken TEXT, Timestamp REAL)");

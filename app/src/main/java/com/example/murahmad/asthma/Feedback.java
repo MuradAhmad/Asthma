@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -39,7 +45,7 @@ import java.util.List;
  * Created by muradahmad on 20/08/2018.
  */
 
-public class Feedback extends Fragment {
+public class Feedback extends Fragment  {
 
     private QuestionLibrary questionLibrary = new QuestionLibrary();
     private int feedbackQuestion = 0;
@@ -58,6 +64,22 @@ public class Feedback extends Fragment {
 
 
     private String stringSymptoms;
+
+    //location
+
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationRequest locationRequest;
+
+    private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
+    private GoogleApiClient googleApiClient;
+
+
+    private Double myLatitude;
+    private Double myLongitude;
+
+    private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
+    private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 102;
+    private boolean permissionIsGranted = false;
 
 
 
@@ -114,7 +136,24 @@ public class Feedback extends Fragment {
             }
         });
 
+  /*      //user Location
 
+        fusedLocationProviderClient = new FusedLocationProviderClient(getContext());
+
+        googleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        locationRequest = new LocationRequest();
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10 * 1000);
+        locationRequest.setFastestInterval(15 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+*/
 
         return view;
 
@@ -200,6 +239,105 @@ public class Feedback extends Fragment {
         dbHandler.close();
 
     }
+/*
+    @Override
+    public void onStart() {
+
+        super.onStart();
+
+        googleApiClient.connect();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Permission check for Marshmallow and newer
+        int permissionCoarseLocation = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        int permissionWriteExternal = ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        if (permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        if (permissionWriteExternal != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
+        }
+
+
+        if (permissionIsGranted) {
+            if (googleApiClient.isConnected()) {
+                requestLocationUpdates();
+            }
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (permissionIsGranted)
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (permissionIsGranted)
+            googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle){
+        requestLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        myLatitude = location.getLatitude();
+        myLongitude = location.getLongitude();
+        Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude), Toast.LENGTH_SHORT).show();
+
+    }
+    private void requestLocationUpdates(){
+
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionIsGranted = true;
+            }
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+    }*/
 
 
 

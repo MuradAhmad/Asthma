@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.GpsSatellite;
 import android.location.Location;
 import android.os.Build;
 import android.os.Handler;
@@ -173,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // send symptoms, feedback, location. device data to online server
         // get data from local DB
 
-        handler = new Database(this);
-        db = handler.getReadableDatabase();
+       /* handler = new Database(this);
+        db = handler.getReadableDatabase();*/
 
         // array list to store data from local DB
         symptomsList = new ArrayList<>();
@@ -183,9 +184,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
        //database
-
+/*
         handler = new Database(this);
-        db = handler.getReadableDatabase();
+        db = handler.getReadableDatabase();*/
 /*
         // send User notification
 
@@ -460,9 +461,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
-        Toast.makeText(getApplicationContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude) +"Satellite.. "+ String.valueOf(location.getExtras().getInt("satellites")), Toast.LENGTH_SHORT).show();
+        Log.d("satellites",String.valueOf(location.getExtras().getInt("satellites")));
+
 
     }
+
+
 
     private void requestLocationUpdates(){
 
@@ -523,7 +528,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         if (permissionIsGranted) {
             if (googleApiClient.isConnected()) {
-                requestLocationUpdates();
+                //requestLocationUpdates();
             }
         }
 
@@ -532,8 +537,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onPause() {
         super.onPause();
-        if (permissionIsGranted)
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        if (permissionIsGranted) LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     @Override
