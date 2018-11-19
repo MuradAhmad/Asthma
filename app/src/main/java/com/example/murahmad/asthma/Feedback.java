@@ -98,6 +98,37 @@ public class Feedback extends Fragment  {
         dbHandler = new Database(getContext());
         db = dbHandler.getWritableDatabase();
 
+
+
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + "ORDER BY Timestamp desc limit 1", null);
+
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+                String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+                String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
+
+
+                Log.d("Feedbackdevice",deviceId);
+                Log.d("Feedbacktemperature ",temperature);
+                Log.d("Feedbackhumidity",humidity);
+
+
+            }
+        }
+        cursor.close();
+
+
+
+
+
         qList = new ArrayList<String>();
         aList = new ArrayList<String>();
 
@@ -201,6 +232,40 @@ public class Feedback extends Fragment  {
     }
 
     public void saveSymptomsFeedback() {
+
+/*
+
+        // get Ruuvitag sensor data from DB
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + "ORDER BY Timestamp desc limit 1", null);
+
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+                String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+                String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
+
+
+                Log.d("device id",deviceId);
+                Log.d("temperature ",temperature);
+                Log.d("humidity",humidity);
+
+
+            }
+        }
+
+
+*/
+
+
+
+
 
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 

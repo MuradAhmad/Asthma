@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.GpsSatellite;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -61,9 +62,23 @@ import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.GpsStatus.Listener {
 
 
+    @Override
+    public void onGpsStatusChanged(int event) {
+        int satellites = 0;
+        int satellitesInFix = 0;
+        int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
+        Log.i(TAG, "Time to first fix = " + timetofix);
+        for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
+            if(sat.usedInFix()) {
+                satellitesInFix++;
+            }
+            satellites++;
+        }
+        Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
+    }
 
     private class LeScanResult {
         BluetoothDevice device;
@@ -154,6 +169,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         setSupportActionBar(toolbar);
 
         //user Location
+
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
 
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
 
