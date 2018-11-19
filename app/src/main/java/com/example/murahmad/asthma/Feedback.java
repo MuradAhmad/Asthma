@@ -101,31 +101,7 @@ public class Feedback extends Fragment  {
 
 
 
-        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + "ORDER BY Timestamp desc limit 1", null);
-
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            if (cursor.getCount() > 0) {
-
-                // get values from cursor here
-
-                String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-                String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-                String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
-
-
-                Log.d("Feedbackdevice",deviceId);
-                Log.d("Feedbacktemperature ",temperature);
-                Log.d("Feedbackhumidity",humidity);
-
-
-            }
-        }
-        cursor.close();
-
-
+        getDeviceData();
 
 
 
@@ -405,6 +381,36 @@ public class Feedback extends Fragment  {
     }*/
 
 
+public void getDeviceData(){
+
+
+    cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + " ORDER BY Date desc limit 1", null);
+
+
+    if (cursor != null) {
+        cursor.moveToFirst();
+
+        if (cursor.getCount() > 0) {
+
+            // get values from cursor here
+
+            String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+            String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+            String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
+
+
+            Log.d("Feedbackdevice",deviceId);
+            Log.d("Feedbacktemperature ",temperature);
+            Log.d("Feedbackhumidity",humidity);
+
+
+        }
+    }
+    cursor.close();
+
+
+
+}
 
 
 }

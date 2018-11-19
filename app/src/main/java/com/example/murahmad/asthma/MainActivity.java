@@ -62,11 +62,15 @@ import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.GpsStatus.Listener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
 
+/*
 
     @Override
     public void onGpsStatusChanged(int event) {
+
+
+    // , android.location.GpsStatus.Listener
         int satellites = 0;
         int satellitesInFix = 0;
         int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
@@ -79,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
     }
+*/
 
     private class LeScanResult {
         BluetoothDevice device;
@@ -170,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         //user Location
 
-        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+       // final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+      //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
 
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
