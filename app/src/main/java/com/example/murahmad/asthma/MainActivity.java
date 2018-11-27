@@ -62,15 +62,17 @@ import java.util.Timer;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener{
+public class MainActivity extends AppCompatActivity {
 
-/*
+// google api client code
+    // get location updates
+    //implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener , android.location.GpsStatus.Listener
 
-    @Override
+   /* @Override
     public void onGpsStatusChanged(int event) {
 
 
-    // , android.location.GpsStatus.Listener
+    //
         int satellites = 0;
         int satellitesInFix = 0;
         int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
@@ -82,8 +84,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             satellites++;
         }
         Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
-    }
-*/
+    }*/
+
 
     private class LeScanResult {
         BluetoothDevice device;
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
+    LocationListener locationListener;
 
     private static final int REQUEST_READ_PHONE_STATE = 100;
     private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
@@ -176,10 +179,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         //user Location
 
        // final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-      //  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+       // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
 
 
-        fusedLocationProviderClient = new FusedLocationProviderClient(this);
+       /* fusedLocationProviderClient = new FusedLocationProviderClient(this);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         locationRequest.setFastestInterval(15 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
+*/
 
         // send symptoms, feedback, location. device data to online server
         // get data from local DB
@@ -465,6 +468,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 */
 
+/*
 
     @Override
     public void onConnected(Bundle bundle){
@@ -513,6 +517,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
+*/
 
     @Override
     protected void onStart() {
@@ -522,7 +527,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         super.onStart();
 
-        googleApiClient.connect();
+       // googleApiClient.connect();
     }
 
     @Override
@@ -551,9 +556,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         if (permissionIsGranted) {
-            if (googleApiClient.isConnected()) {
+           // if (googleApiClient.isConnected()) {
                 //requestLocationUpdates();
-            }
+            //}
         }
 
     }
@@ -561,14 +566,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     protected void onPause() {
         super.onPause();
-        if (permissionIsGranted) LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        //if (permissionIsGranted) LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (permissionIsGranted)
-            googleApiClient.disconnect();
+        //if (permissionIsGranted)
+           // googleApiClient.disconnect();
     }
 
 

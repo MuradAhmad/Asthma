@@ -100,7 +100,10 @@ public class RuuviTagScanner extends Service {
         if (data != null) {
            save((RuuviTag) data.getParcelable("favorite"));
         }
-        //startNotification();
+
+
+        startNotification();
+
 
         return Service.START_NOT_STICKY;
     }
@@ -169,7 +172,9 @@ public class RuuviTagScanner extends Service {
         TimerTask alertManager = new RuuviTagScanner.alertManager();
         timer.scheduleAtFixedRate(alertManager, 2500, 2500);*/
 
-       startNotification();
+
+     //  startNotification();
+
 
     }
 
@@ -365,68 +370,6 @@ public class RuuviTagScanner extends Service {
 
 
 
-/*
-
-        // Notification code from main activity
-
-        // send User notification
-
-        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            if (cursor.getCount() > 0) {
-
-                // get values from cursor here
-
-                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
-                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
-
-                Log.d("Morning Time", String.valueOf(morningTime));
-                Log.d("Evening Time", String.valueOf(eveningTime));
-
-
-            }
-
-        }
-        cursor.close();
-
-
-
-        String[] parts = morningTime.split(":");
-        String part1 = parts[0]; // hour
-        String part2 = parts[1]; // minutes
-
-        Log.d("Morning Hour", String.valueOf(part1));
-        Log.d("Morning Minutes", String.valueOf(part2));
-
-        Calendar calendar = Calendar.getInstance();
-        long currentTime = Calendar.getInstance().getTimeInMillis();
-        Log.d("current Time", String.valueOf(currentTime));
-
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(part1));
-        calendar.set(Calendar.MINUTE, Integer.valueOf(part2));
-        calendar.set(Calendar.SECOND, 0);
-
-        Log.d("Morning time from DB", String.valueOf(calendar.getTimeInMillis()));
-
-
-        // set evening notification
-        Calendar calendar2 = Calendar.getInstance();
-
-        if( currentTime == calendar.getTimeInMillis() ) {
-
-
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            // AlarmManager.Interval_Day set according to settings screen
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-        }
-*/
 
     }
 
@@ -516,6 +459,80 @@ public class RuuviTagScanner extends Service {
 
 
 
+    public void startNotification(){
+
+
+        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+
+            if (cursor.getCount() > 0) {
+
+                // get values from cursor here
+
+                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
+                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
+
+                Log.d("Morning Time Sc", String.valueOf(morningTime));
+                Log.d("Evening Time Sc", String.valueOf(eveningTime));
+
+
+            }
+
+        }
+        cursor.close();
+
+
+        if((morningTime != null && !morningTime.isEmpty()) || (eveningTime != null && !eveningTime.isEmpty()) ) {
+
+
+
+            Long morningTimeLong = Long.valueOf(morningTime);
+            Long eveningTimeLong = Long.valueOf(eveningTime);
+
+            Log.d("Morning time from Set", String.valueOf(morningTimeLong));
+
+
+
+
+            // set notification time here
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.SECOND, 30);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Long currentTime = calendar.getTimeInMillis();
+            // System.currentTimeMillis();
+
+            Log.d("current Time", String.valueOf(currentTime));
+
+
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            if ((morningTimeLong.compareTo(currentTime)>=0) || (morningTimeLong.compareTo(currentTime)>=0) ) {
+
+
+                Intent intent = new Intent(this, NotificationReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 100, intent, PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent pendingIntent1 = PendingIntent.getBroadcast(this, 100, intent, PendingIntent.FLAG_ONE_SHOT);
+
+
+                // AlarmManager.Interval_Day set according to settings screen
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, morningTimeLong, AlarmManager.INTERVAL_DAY, pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, eveningTimeLong , AlarmManager.INTERVAL_DAY, pendingIntent1);
+
+            }
+
+        }
+
+
+
+
+    }
+
+
+
+/*
 
     public void startNotification(){
 
@@ -532,8 +549,8 @@ public class RuuviTagScanner extends Service {
                 morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
                 eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
 
-                Log.d("Morning Time", String.valueOf(morningTime));
-                Log.d("Evening Time", String.valueOf(eveningTime));
+                Log.d("Morning Time Sc", String.valueOf(morningTime));
+                Log.d("Evening Time Sc", String.valueOf(eveningTime));
 
 
             }
@@ -558,6 +575,16 @@ public class RuuviTagScanner extends Service {
             //Long eveningTimeLong = Long.valueOf(eveningTime);
 
             Log.d("Morning time from Set", String.valueOf(morningTimeLong));
+
+
+            */
+/*
+            if(currentDate.compareTo(datadb)>=0) {
+                myCheckBox.setChecked(true);
+                myCheckBox.setEnabled(false);
+            }
+            *//*
+
 
             if (morningTimeLong.equals(currentTime))  {
 
@@ -588,7 +615,7 @@ public class RuuviTagScanner extends Service {
 
             Long eveningTimeLong = Long.valueOf(eveningTime);
 
-            Log.d("Morning time from Set", String.valueOf(eveningTimeLong));
+            Log.d("Evening time from Set", String.valueOf(eveningTimeLong));
 
             if (eveningTimeLong.equals(currentTime)) {
 
@@ -605,6 +632,7 @@ public class RuuviTagScanner extends Service {
 
 
     }
+*/
 
 
     public void save(RuuviTag ruuvitag) {

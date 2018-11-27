@@ -2,11 +2,14 @@ package com.example.murahmad.asthma;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.GpsSatellite;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +41,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -45,14 +49,16 @@ import java.util.List;
  * Created by muradahmad on 20/08/2018.
  */
 
-public class Feedback extends Fragment  {
+public class Feedback extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.GpsStatus.Listener {
+
+
 
     private QuestionLibrary questionLibrary = new QuestionLibrary();
     private int feedbackQuestion = 0;
 
 
     private TextView txtFeedback;
-    private Button btn1,btn2;
+    private Button btn1, btn2;
 
 
     private List<String> qList;
@@ -64,8 +70,20 @@ public class Feedback extends Fragment  {
 
 
     private String stringSymptoms;
+    private String stringLocation;
+    private String stringDeviceData;
+
+    String deviceId;
+    String temperature;
+    String humidity;
+
 
     //location
+
+    private int satellites = 0;
+    private int satellitesInFix = 0;
+
+    private LocationManager locationManager;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
@@ -82,27 +100,22 @@ public class Feedback extends Fragment  {
     private boolean permissionIsGranted = false;
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_feedback, container, false);
 
 
-
-        txtFeedback = (TextView)view.findViewById(R.id.txtFeedback);
-        btn1 = (Button)view.findViewById(R.id.btn1);
-        btn2 = (Button)view.findViewById(R.id.btn2);
+        txtFeedback = (TextView) view.findViewById(R.id.txtFeedback);
+        btn1 = (Button) view.findViewById(R.id.btn1);
+        btn2 = (Button) view.findViewById(R.id.btn2);
 
 
         dbHandler = new Database(getContext());
         db = dbHandler.getWritableDatabase();
 
 
-
-
         getDeviceData();
-
 
 
         qList = new ArrayList<String>();
@@ -143,7 +156,29 @@ public class Feedback extends Fragment  {
             }
         });
 
-  /*      //user Location
+        //user Location
+
+
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
+            } else {
+                permissionIsGranted = true;
+            }
+            //return;
+
+        }
+
+        locationManager.addGpsStatusListener(this);
+
 
         fusedLocationProviderClient = new FusedLocationProviderClient(getContext());
 
@@ -160,7 +195,7 @@ public class Feedback extends Fragment  {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
 
-*/
+
 
         return view;
 
@@ -209,41 +244,42 @@ public class Feedback extends Fragment  {
 
     public void saveSymptomsFeedback() {
 
-/*
+        // ruuvitag device data
 
-        // get Ruuvitag sensor data from DB
+        final JSONObject ruuvitagJsonObject = new JSONObject();
+        try {
+            ruuvitagJsonObject.put("Device Id",deviceId);
+            ruuvitagJsonObject.put("Temperature",temperature);
+            ruuvitagJsonObject.put("Humidity",humidity);
 
-        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + "ORDER BY Timestamp desc limit 1", null);
-
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            if (cursor.getCount() > 0) {
-
-                // get values from cursor here
-
-                String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-                String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-                String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
-
-
-                Log.d("device id",deviceId);
-                Log.d("temperature ",temperature);
-                Log.d("humidity",humidity);
-
-
-            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
+        String stringRuuvitagData = ruuvitagJsonObject.toString();
 
-*/
+        // location data
+
+        final JSONObject locationJsonObject = new JSONObject();
+            try {
+                locationJsonObject.put("latitude",myLatitude);
+                locationJsonObject.put("longitude",myLongitude);
+                locationJsonObject.put("Number of satellites",satellitesInFix );
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        String stringLocationData = locationJsonObject.toString();
+
+            // merge location and ruuvitage strings
+        String mergeRuuvitagLocation = stringRuuvitagData.concat(stringLocationData);
 
 
 
+        // feedback data
 
-
-        String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+       // String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
         final JSONObject feedbackJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
@@ -258,6 +294,8 @@ public class Feedback extends Fragment  {
 
         String mergeSymptomsFeedback = stringSymptoms.concat(stringFeedback);
 
+        String mergeData = mergeSymptomsFeedback.concat(mergeRuuvitagLocation);
+
        /* try {
             final JSONObject symptomsJsonObject = new JSONObject(mergeSymptomsFeedback);
             Log.d("data symptoms:", symptomsJsonObject);
@@ -266,21 +304,27 @@ public class Feedback extends Fragment  {
         }
 */
 
-        Log.d("mergesymptomsfeedback:", mergeSymptomsFeedback);
+        Log.d("mergesymptomsfeedback:", mergeData);
+
+        Calendar calendar = Calendar.getInstance();
+
+        Log.d("time feedback:", String.valueOf(calendar.getTimeInMillis()));
 
 
         ContentValues values = new ContentValues();
 
-        values.put(Database.SYMPTOMS, mergeSymptomsFeedback);
+        values.put(Database.SYMPTOMS, mergeData);
 
-        values.put(Database.SYMPTOMS_timestamp, time);
+        values.put(Database.SYMPTOMS_timestamp, calendar.getTimeInMillis());
 
         dbHandler.insertSymptomsData(values);
 
         dbHandler.close();
 
     }
-/*
+
+
+
     @Override
     public void onStart() {
 
@@ -356,7 +400,9 @@ public class Feedback extends Fragment  {
     public void onLocationChanged(Location location) {
         myLatitude = location.getLatitude();
         myLongitude = location.getLongitude();
-        Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude), Toast.LENGTH_SHORT).show();
+
+        //Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude) +"Satellite.. "+ String.valueOf(location.getExtras().getInt("satellites")), Toast.LENGTH_SHORT).show();
+        Log.d("satellites",String.valueOf(location.getExtras().getInt("satellites")));
 
     }
     private void requestLocationUpdates(){
@@ -378,7 +424,39 @@ public class Feedback extends Fragment  {
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-    }*/
+    }
+
+
+    @Override
+    public void onGpsStatusChanged(int event) {
+
+
+        //
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+
+        int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
+        Log.d(" ", "Time to first fix = " + timetofix);
+        for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
+            if (sat.usedInFix()) {
+                satellitesInFix++;
+            }
+            satellites++;
+        }
+        // Log.d(" ", satellites + " Used In Last Fix (" + satellitesInFix + ")");
+        //Toast.makeText(getContext(), String.valueOf(satellitesInFix), Toast.LENGTH_SHORT).show();
+
+    }
 
 
 public void getDeviceData(){
@@ -394,9 +472,9 @@ public void getDeviceData(){
 
             // get values from cursor here
 
-            String deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-            String temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-            String humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
+            deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+            temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+            humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
 
             Log.d("Feedbackdevice",deviceId);
