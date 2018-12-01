@@ -27,7 +27,7 @@ public class UserProfile extends Fragment {
     SQLiteDatabase db;
     Cursor cursor;
 
-    TextView txtdrugs, txtusername, txtdateofbirth;
+    TextView txtdrugs, txtusername, txtdateofbirth, txtcurrentMeds;
 
     Button btnSave;
 
@@ -46,9 +46,14 @@ public class UserProfile extends Fragment {
 
         txtusername = (TextView) view.findViewById(R.id.txtusername);
         txtdateofbirth = (TextView)view.findViewById(R.id.txtdateofbirth);
+        txtcurrentMeds = (TextView)view.findViewById(R.id.txtCurrentMeds);
         txtdrugs = (TextView)view.findViewById(R.id.txtdrugs);
 
 
+        txtusername.setText(R.string.user);
+        txtdateofbirth.setText(R.string.userid);
+        txtcurrentMeds.setText(R.string.medication);
+        txtdrugs.setText(R.string.drugs);
 
 
 

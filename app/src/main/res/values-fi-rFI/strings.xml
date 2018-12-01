@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Asthma</string>
+    <string name="login">Kirjaudu sisään</string>
+    <string name="pasword">Salasana</string>
+    <string name="email">Sähköposti</string>
+    <string name="register">Rekisteröityä?</string>
+    <string name="welcome">Tervetuloa</string>
+    <string name="open">Avata</string>
+    <string name="close">kiinni</string>
+    <string name="temperature">Lämpötila</string>
+    <string name="humidity">Kosteus</string>
+    <string name="sync">Virkistää</string>
+    <string name="rssi">RSSI</string>
+    <string name="deviceid">Laitteen</string>
+    <string name="save">Tallentaa</string>
+    <string name="notification">Ilmoitukset</string>
+    <string name="selecttime1">Valitse aamu aika</string>
+    <string name="selecttime2">Valitse ilta-aika</string>
+    <string name="time">Aika</string>
+</resources>

@@ -63,6 +63,14 @@ public class UserRegister extends AppCompatActivity {
         btnRegister = (Button)findViewById(R.id.btnRegister);
 
 
+        txtName.setHint(R.string.username);
+        txtDateOfBirth.setHint(R.string.dob);
+        txtEmail.setHint(R.string.email);
+        txtPassword.setHint(R.string.pasword);
+        txtConfirmPassword.setHint(R.string.conpassword);
+
+        chkConsent.setText(R.string.consent);
+        btnRegister.setText(R.string.register);
 
 
 

@@ -41,6 +41,11 @@ public class Login extends AppCompatActivity {
         username = (AutoCompleteTextView)findViewById(R.id.txtUserEmail);
         password = (AutoCompleteTextView)findViewById(R.id.txtUserPassward);
 
+        btnLogin.setText(R.string.login);
+        txtRegister.setText(R.string.register);
+        username.setHint(R.string.email);
+        password.setHint(R.string.pasword);
+
 
         handler = new Database(getApplicationContext());
         db = handler.getReadableDatabase();

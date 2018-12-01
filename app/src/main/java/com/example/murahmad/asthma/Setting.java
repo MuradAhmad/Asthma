@@ -42,6 +42,8 @@ public class Setting extends Fragment {
     private Button btnEvening;
 
 
+    private TextView txtMorning, txtEvening, txtNotification;
+
 
     private Button btnSave;
 
@@ -67,8 +69,18 @@ public class Setting extends Fragment {
 
         btnSave = (Button) view.findViewById(R.id.btnSave);
 
+        txtMorning = (TextView) view.findViewById(R.id.txtMorning);
+        txtEvening = (TextView) view.findViewById(R.id.txtEvening);
+        txtNotification = (TextView) view.findViewById(R.id.txtNotification);
 
 
+        txtNotification.setText(R.string.notification);
+        txtMorning.setText(R.string.selecttime1);
+        txtEvening.setText(R.string.selecttime2);
+
+        btnMorning.setText(R.string.time);
+        btnEvening.setText(R.string.time);
+        btnSave.setText(R.string.save);
 
         // send User notification
 

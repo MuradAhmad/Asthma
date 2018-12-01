@@ -2,6 +2,63 @@
     <string name="app_name">Asthma</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="welcome">Welcome</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="email">Email</string>
+    <string name="pasword">Password</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidity</string>
+    <string name="sync">Sync</string>
+    <string name="deviceid">DeviceId</string>
+    <string name="rssi">RSSI</string>
+    <string name="save">Save</string>
+    <string name="notification">Notifications</string>
+    <string name="selecttime1">Select morning time</string>
+    <string name="selecttime2">Select evening time</string>
+    <string name="time">Time</string>
+    <string name="user">User</string>
+    <string name="userid">User id</string>
+    <string name="medication">Current medication</string>
+    <string name="drugs">Drugs loading</string>
+    <string name="fillform">Fill the form carefully</string>
+    <string name="username">User name</string>
+    <string name="dob">Date of birth</string>
+    <string name="conpassword">Confirm password</string>
+    <string name="consent">Consent</string>
+    <string name="meds">Medication</string>
+    <string name="openmeds">Opening date of medicine</string>
+    <string name="therameds">Therapeutic drugs of asthma</string>
+    <string name="othermeds">Other medication</string>
+    <string name="changmeds">Changes in medication new dose</string>
+    <string name="docvisit1">Doctor visits due to asthma</string>
+    <string name="docvisit2">Doctor visits due to allergy</string>
+    <string name="otherconsider">Other considerations</string>
+    <string name="rssi">RSSI</string>
+    <string name="symptom_good">Good</string>
+    <string name="rssi">RSSI</string>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

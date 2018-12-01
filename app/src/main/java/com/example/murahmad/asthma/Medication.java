@@ -33,7 +33,7 @@ public class Medication extends Fragment {
     SQLiteDatabase db;
     Cursor cursor;
 
-    private TextView edtmedicationDate;
+    private TextView edtmedicationDate, txtmedication;
 
     private EditText edtdrugs, edtotherDrugs, edtnewDrugs, edtvisits, edtotherVisits, edtotherconsiderations;
 
@@ -48,6 +48,7 @@ public class Medication extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view   = inflater.inflate(R.layout.activity_medication, container,false);
 
+        txtmedication = (TextView) view.findViewById(R.id.txtmeds);
         edtmedicationDate = (TextView) view.findViewById(R.id.edtmedicationDate);
         edtdrugs = (EditText) view.findViewById(R.id.edtdrugs);
         edtotherDrugs = (EditText) view.findViewById(R.id.edtotherMedication);
@@ -57,6 +58,19 @@ public class Medication extends Fragment {
         edtotherconsiderations = (EditText) view.findViewById(R.id.edtotherConsideration);
 
         btnSave = (Button) view.findViewById(R.id.btnSave);
+
+
+        txtmedication.setText(R.string.meds);
+        edtmedicationDate.setHint(R.string.openmeds);
+        edtdrugs.setHint(R.string.therameds);
+        edtotherDrugs.setHint(R.string.othermeds);
+        edtnewDrugs.setHint(R.string.changmeds);
+        edtvisits.setHint(R.string.docvisit1);
+        edtotherVisits.setHint(R.string.docvisit2);
+        edtotherconsiderations.setHint(R.string.otherconsider);
+
+        btnSave.setText(R.string.save);
+
 
 
 

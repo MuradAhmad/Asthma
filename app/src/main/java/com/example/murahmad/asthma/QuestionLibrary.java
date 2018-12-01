@@ -1,11 +1,18 @@
 package com.example.murahmad.asthma;
 
+import android.content.Context;
+
 /**
  * Created by muradahmad on 14/08/2018.
  */
 
 public class QuestionLibrary {
 
+    private Context context;
+
+    public QuestionLibrary(Context c) {
+        this.context = c;
+    }
 
     private String severitySymptoms[] = {
             "Shortness of breath",
@@ -67,7 +74,7 @@ public class QuestionLibrary {
     };
        private String estimationOption [] = {
 
-               "Good",
+               this.context.getResources().getString(R.string.symptom_good),
                "More or less under control",
                "Poorly under control",
                "Not at all under control"

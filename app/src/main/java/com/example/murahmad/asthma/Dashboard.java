@@ -102,6 +102,13 @@ public class Dashboard extends Fragment {
 
         btnSync = (Button) view.findViewById(R.id.btnSync);
 
+        txtTemperature.setText(R.string.temperature);
+        txtDeviceId.setText(R.string.deviceid);
+        txtHumidity.setText(R.string.humidity);
+        txtRssi.setText(R.string.rssi);
+
+        btnSync.setText(R.string.sync);
+
 
 
 
@@ -155,6 +162,7 @@ public class Dashboard extends Fragment {
         };
 
         threadHandler.postDelayed(runnable, 1000);
+
 
 
 
@@ -295,6 +303,7 @@ public class Dashboard extends Fragment {
         cursor1.close();
 
 
+
 /*
 
         final JSONObject symptomsJsonObject = new JSONObject();
@@ -336,8 +345,8 @@ public class Dashboard extends Fragment {
             final JSONObject jsonObject = new JSONObject();
             jsonObject.put("tableName", "RuuviTag");
             // get user UUID from DB
-            jsonObject.put("deviceId", strUUID);
-            //jsonObject.put("deviceId", "35d0ee9c-229e-49a8-a1dc-34c2d2c8c0eb");
+           // jsonObject.put("deviceId", strUUID);
+            jsonObject.put("deviceId", "35d0ee9c-229e-49a8-a1dc-34c2d2c8c0eb");
             jsonObject.put("data", symptomsJsonObject);
             //Log.d("Symptoms sync", symptoms);
             //jsonObject.put("data", symptoms);
