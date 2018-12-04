@@ -34,9 +34,45 @@
     <string name="docvisit1">Doctor visits due to asthma</string>
     <string name="docvisit2">Doctor visits due to allergy</string>
     <string name="otherconsider">Other considerations</string>
-    <string name="rssi">RSSI</string>
-    <string name="symptom_good">Good</string>
-    <string name="rssi">RSSI</string>
+
+    <string name="symptom_question_shortness">Shortness of breath</string>
+    <string name="symptom_question_phlegm">Phlegm production</string>
+    <string name="symptom_question_cough">Cough</string>
+    <string name="symptom_question_wheezing">Wheezing</string>
+
+    <string name="symptom_option_not">Not at all</string>
+    <string name="symptom_option_mild">Mild</string>
+    <string name="symptom_option_moderate">Moderate</string>
+    <string name="symptom_option_strong">Strong</string>
+
+    <string name="symptom_frequency_wakeup">Nocturnal wake ups caused by symptoms</string>
+    <string name="symptom_frequency_openeningmeds1">Opening medication of asthma(short-acting)</string>
+    <string name="symptom_frequency_openeningmeds2">Opening medication of asthma</string>
+
+    <string name="symptom_frequency_optn_once">Once</string>
+    <string name="symptom_frequency_optn_times">2-3 times</string>
+    <string name="symptom_frequency_optn_times1">4 or more times</string>
+
+
+    <string name="symptom_estimation">Your own estimation about asthma balance</string>
+
+    <string name="symptom_option_good">Good</string>
+    <string name="symptom_option_more">More or less under control</string>
+    <string name="symptom_option_poorly">Poorly under control</string>
+    <string name="symptom_option_notatall">Not at all under control</string>
+
+    <string name="feedback_question1">Did your asthma prevent you to act normally in work, school or home / leisure time today ?</string>
+    <string name="feedback_question2">Where are you now?</string>
+
+    <string name="feedback_option_yes">Yes</string>
+    <string name="feedback_option_no">No</string>
+    <string name="feedback_option_indoor">Indoor</string>
+    <string name="feedback_option_outdoor">Outdoor</string>
+
+
+
+
+
 
 
 

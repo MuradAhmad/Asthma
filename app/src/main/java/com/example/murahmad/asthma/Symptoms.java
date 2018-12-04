@@ -1,6 +1,7 @@
 package com.example.murahmad.asthma;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -46,7 +47,7 @@ import java.util.Map;
 
 public class Symptoms extends Fragment {
 
-    private QuestionLibrary questionLibrary = new QuestionLibrary();
+    private QuestionLibrary questionLibrary; //= new QuestionLibrary();
     private int severityQuestionNumber = 0;
     private int frequencyQuestionNumber = 0;
     private int estimationQuestionNumber = 0;
@@ -68,12 +69,19 @@ public class Symptoms extends Fragment {
     SQLiteDatabase db;
     Cursor cursor;
 
+    Context context;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_symptoms, container, false);
 
+
+
+        context = this.getContext();
+
+        questionLibrary = new QuestionLibrary(context);
 
         txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
 

@@ -13,36 +13,44 @@ public class QuestionLibrary {
     public QuestionLibrary(Context c) {
         this.context = c;
     }
+    public QuestionLibrary() {
+
+    }
+
 
     private String severitySymptoms[] = {
-            "Shortness of breath",
-            "Phlegm production",
-            "Cough",
-            "Wheezing"
+            this.context.getResources().getString(R.string.symptom_question_shortness),
+            this.context.getResources().getString(R.string.symptom_question_phlegm),
+            this.context.getResources().getString(R.string.symptom_question_cough),
+            this.context.getResources().getString(R.string.symptom_question_wheezing)
 
     };
     private String severityOptions[][] = {
             {
-            "Not at all",
-            "Mild",
-            "Moderate",
-            "Strong"
+                    this.context.getResources().getString(R.string.symptom_option_not),
+                    this.context.getResources().getString(R.string.symptom_option_mild),
+                    this.context.getResources().getString(R.string.symptom_option_moderate),
+                    this.context.getResources().getString(R.string.symptom_option_strong)
+
+
             },
-            {     "Not at all",
-                  "Mild",
-                  "Moderate",
-                  "Strong"
+            {
+                    this.context.getResources().getString(R.string.symptom_option_not),
+                    this.context.getResources().getString(R.string.symptom_option_mild),
+                    this.context.getResources().getString(R.string.symptom_option_moderate),
+                    this.context.getResources().getString(R.string.symptom_option_strong)
             } ,
-            {    "Not at all",
-                 "Mild",
-                 "Moderate",
-                 "Strong"
+            {
+                    this.context.getResources().getString(R.string.symptom_option_not),
+                    this.context.getResources().getString(R.string.symptom_option_mild),
+                    this.context.getResources().getString(R.string.symptom_option_moderate),
+                    this.context.getResources().getString(R.string.symptom_option_strong)
                 },
             {
-                 "Not at all",
-                 "Mild",
-                 "Moderate",
-                 "Strong"
+                    this.context.getResources().getString(R.string.symptom_option_not),
+                    this.context.getResources().getString(R.string.symptom_option_mild),
+                    this.context.getResources().getString(R.string.symptom_option_moderate),
+                    this.context.getResources().getString(R.string.symptom_option_strong)
             }
 
 
@@ -50,53 +58,50 @@ public class QuestionLibrary {
 
 
     private String frequencySymptoms [] = {
-            "Nocturnal wake ups caused by symptoms",
-            "Opening medication of asthma(short-acting)",
-            "opening medication of asthma",
-
+            this.context.getResources().getString(R.string.symptom_frequency_wakeup),
+            this.context.getResources().getString(R.string.symptom_frequency_openeningmeds1),
+            this.context.getResources().getString(R.string.symptom_frequency_openeningmeds2)
 
     };
     private String frequencyOptions [] = {
-             "Not at all",
-            "Once",
-             "2-3 times",
-             "4 or more times"
-
-
+            this.context.getResources().getString(R.string.symptom_option_not),
+            this.context.getResources().getString(R.string.symptom_frequency_optn_once),
+            this.context.getResources().getString(R.string.symptom_frequency_optn_times),
+            this.context.getResources().getString(R.string.symptom_frequency_optn_times1)
 
     };
 
 
     private String estimationAsthamaBalance []= {
-            "Your own estimation about asthma balance"
+            this.context.getResources().getString(R.string.symptom_estimation)
 
 
     };
        private String estimationOption [] = {
+               this.context.getResources().getString(R.string.symptom_option_good),
+               this.context.getResources().getString(R.string.symptom_option_more),
+               this.context.getResources().getString(R.string.symptom_option_poorly),
+               this.context.getResources().getString(R.string.symptom_option_notatall)
 
-               this.context.getResources().getString(R.string.symptom_good),
-               "More or less under control",
-               "Poorly under control",
-               "Not at all under control"
 
 
        } ;
 
 
        private String feedbackQuestion [] = {
-               "Did your asthma prevent you to act normally in work, school or home / leisure time today ? ",
-               "Where are you now? "
+               this.context.getResources().getString(R.string.feedback_question1),
+               this.context.getResources().getString(R.string.feedback_question2)
 
        };
        private String feedbackOption [] = {
-
-               "Yes",
-               "No",
-               "indoor",
-               "outdoor"
-
+               this.context.getResources().getString(R.string.feedback_option_yes),
+               this.context.getResources().getString(R.string.feedback_option_no),
+               this.context.getResources().getString(R.string.feedback_option_indoor),
+               this.context.getResources().getString(R.string.feedback_option_outdoor)
+             
 
        };
+
 
 
     public String getSeverityQuestion(int a){
