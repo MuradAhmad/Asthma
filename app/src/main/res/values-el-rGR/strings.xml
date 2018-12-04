@@ -23,4 +23,16 @@
     <string name="symptom_option_strong">Έντονα</string>
     <string name="symptom_option_moderate">"Μέτρια και "</string>
     <string name="feedback_question1">Τυχόν περιορισμός της δραστηριότητας στη δουλειά, το σχολείο ή το σπίτι  λόγω του άσθματος</string>
+    <string name="login">Σύνδεση</string>
+    <string name="pasword">Κωδικός</string>
+    <string name="email">e-mail</string>
+    <string name="register">Εγγραφή</string>
+    <string name="welcome">Kαλωσορίσατε</string>
+    <string name="open">Άνοιγμα</string>
+    <string name="othermeds">Άλλη φαρμακευτική αγωγή για το άσθμα</string>
+    <string name="docvisit1">Κοινό κρυολόγημα/Επισκέψεις σε γιατρό λόγω του άσθματος</string>
+    <string name="docvisit2">Κοινό κρυολόγημα/Επισκέψεις σε γιατρό λόγω αλλεργίας</string>
+    <string name="otherconsider">Άλλα σχόλια-παρατηρήσεις</string>
+    <string name="changmeds">" Αλλαγές στα φάρμακα και νέα δοσολογία"</string>
+    <string name="username">Όνομα</string>
 </resources>
