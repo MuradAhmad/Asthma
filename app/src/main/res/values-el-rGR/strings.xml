@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Asthma</string>
+    <string name="symptoms_title">αντανακλούν τη σοβαρότητα των συμπτωμάτων σε καθημερινή βάση</string>
+    <string name="symptom_question_shortness">Δύσπνοια</string>
+    <string name="symptom_question_cough">Βήχας</string>
+    <string name="symptom_question_wheezing">Σφύριγμα στην αναπνοή (βράσιμο)</string>
+    <string name="symptom_question_phlegm">Απόχρεμψη</string>
+    <string name="symptom_frequency_wakeup">Νυχτερινή αφύπνιση λόγω του άσθματος</string>
+    <string name="symptom_frequency_openeningmeds1">Λήψη ανακουφιστικού φαρμάκου</string>
+    <string name="symptom_frequency_openeningmeds2">Εισπνεόμενα κορτικοστεροειδή</string>
+    <string name="symptom_option_not">Καθόλου</string>
+    <string name="symptom_frequency_optn_once">μια φορά</string>
+    <string name="symptom_frequency_optn_times">2-3 φορές και</string>
+    <string name="symptom_frequency_optn_times1">τέσσερις ή περισσότερες φορές</string>
+    <string name="symptom_option_good">Καλή</string>
+    <string name="symptom_option_poorly">υπό έλεγχο 4 Κα</string>
+    <string name="symptom_option_more">Λίγο-πολύ υπό έλεγχο</string>
+    <string name="symptom_option_notatall">Καθόλου υπό έλεγχο</string>
+    <string name="feedback_option_yes">Όχι</string>
+    <string name="feedback_option_no">Ναι</string>
+    <string name="symptom_option_mild">"Ήπια, "</string>
+    <string name="symptom_option_strong">Έντονα</string>
+    <string name="symptom_option_moderate">"Μέτρια και "</string>
+    <string name="feedback_question1">Τυχόν περιορισμός της δραστηριότητας στη δουλειά, το σχολείο ή το σπίτι  λόγω του άσθματος</string>
 </resources>

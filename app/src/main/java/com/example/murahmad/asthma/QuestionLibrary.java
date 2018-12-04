@@ -1,6 +1,7 @@
 package com.example.murahmad.asthma;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Created by muradahmad on 14/08/2018.
@@ -9,22 +10,30 @@ import android.content.Context;
 public class QuestionLibrary {
 
     private Context context;
+    private String severitySymptoms[] = new String[3];
+    private String severityOptions[] = new String[3];
 
     public QuestionLibrary(Context c) {
         this.context = c;
+       // Log.d("test", this.context.getResources().getString(R.string.symptom_option_not));
+        //severity symptoms questions
+        severitySymptoms[0] = this.context.getResources().getString(R.string.symptom_question_shortness);
+        severitySymptoms[1] = this.context.getResources().getString(R.string.symptom_question_phlegm);
+        severitySymptoms[2] = this.context.getResources().getString(R.string.symptom_question_cough);
+        severitySymptoms[3] = this.context.getResources().getString(R.string.symptom_question_wheezing);
+
+        // severity symptoms options
+        severityOptions[0] = this.context.getResources().getString(R.string.symptom_option_not);
+        severityOptions[1] = this.context.getResources().getString(R.string.symptom_option_mild);
+        severityOptions[2] = this.context.getResources().getString(R.string.symptom_option_moderate);
+        severityOptions[3] = this.context.getResources().getString(R.string.symptom_option_strong);
+
     }
     public QuestionLibrary() {
 
     }
 
-
-    private String severitySymptoms[] = {
-            this.context.getResources().getString(R.string.symptom_question_shortness),
-            this.context.getResources().getString(R.string.symptom_question_phlegm),
-            this.context.getResources().getString(R.string.symptom_question_cough),
-            this.context.getResources().getString(R.string.symptom_question_wheezing)
-
-    };
+/*
     private String severityOptions[][] = {
             {
                     this.context.getResources().getString(R.string.symptom_option_not),
@@ -98,11 +107,11 @@ public class QuestionLibrary {
                this.context.getResources().getString(R.string.feedback_option_no),
                this.context.getResources().getString(R.string.feedback_option_indoor),
                this.context.getResources().getString(R.string.feedback_option_outdoor)
-             
+
 
        };
 
-
+*/
 
     public String getSeverityQuestion(int a){
         String question = severitySymptoms[a];
@@ -110,15 +119,15 @@ public class QuestionLibrary {
 
     }
 
-    public String getSeverityOptions(int a, int b){
-     String option = severityOptions[a][b];
+    public String getSeverityOptions(int a){
+     String option = severityOptions[a];
 
      return option;
 
 
     }
 
-    public String getFrequencyQuestion (int a){
+ /*   public String getFrequencyQuestion (int a){
         String question = frequencySymptoms[a];
         return question;
     }
@@ -150,6 +159,6 @@ public class QuestionLibrary {
     public String getFeedbackOption (int a) {
         String option = feedbackOption[a];
         return option;
-    }
+    }*/
 
 }

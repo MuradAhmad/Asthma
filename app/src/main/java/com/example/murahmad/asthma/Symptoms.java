@@ -56,7 +56,7 @@ public class Symptoms extends Fragment {
 
     private Button btn1, btn2, btn3, btn4;
 
-    private TextView txtQuestion;
+    private TextView txtQuestion, txtQuestionTitle;
 
 
     private ColorStateList textColorDefaultRb;
@@ -82,6 +82,9 @@ public class Symptoms extends Fragment {
         context = this.getContext();
 
         questionLibrary = new QuestionLibrary(context);
+
+        txtQuestionTitle = (TextView) view.findViewById(R.id.txtQuestiontitle);
+        txtQuestionTitle.setText(R.string.symptoms_title);
 
         txtQuestion = (TextView) view.findViewById(R.id.txtQuestion);
 
