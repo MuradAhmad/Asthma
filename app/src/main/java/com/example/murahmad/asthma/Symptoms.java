@@ -167,10 +167,10 @@ public class Symptoms extends Fragment {
             txtQuestion.setText(questionLibrary.getSeverityQuestion(severityQuestionNumber));
 
 
-            btn1.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 0));
-            btn2.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 1));
-            btn3.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 2));
-            btn4.setText(questionLibrary.getSeverityOptions(severityQuestionNumber, 3));
+            btn1.setText(questionLibrary.getSeverityOptions(0));
+            btn2.setText(questionLibrary.getSeverityOptions(1));
+            btn3.setText(questionLibrary.getSeverityOptions(2));
+            btn4.setText(questionLibrary.getSeverityOptions(3));
             severityQuestionNumber++;
 
 

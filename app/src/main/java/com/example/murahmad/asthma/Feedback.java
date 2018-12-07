@@ -53,7 +53,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
 
 
 
-    private QuestionLibrary questionLibrary = new QuestionLibrary();
+    private QuestionLibrary questionLibrary;
     private int feedbackQuestion = 0;
 
 
@@ -91,6 +91,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
     private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
     private GoogleApiClient googleApiClient;
 
+    Context context;
 
     private Double myLatitude;
     private Double myLongitude;
@@ -104,6 +105,11 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_feedback, container, false);
+
+
+        context = this.getContext();
+
+        questionLibrary = new QuestionLibrary(context);
 
 
         txtFeedback = (TextView) view.findViewById(R.id.txtFeedback);

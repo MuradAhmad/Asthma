@@ -20,7 +20,7 @@
     <string name="user">User</string>
     <string name="userid">User id</string>
     <string name="medication">Current medication</string>
-    <string name="drugs">Drugs loading</string>
+    <string name="drugs">Medication/Drugs loading</string>
     <string name="fillform">Fill the form carefully</string>
     <string name="username">Name</string>
     <string name="dob">Date of birth</string>
@@ -69,7 +69,10 @@
     <string name="feedback_option_indoor">Indoor</string>
     <string name="feedback_option_outdoor">Outdoor</string>
     <string name="feedback_question1">Did your asthma prevent you to act normally in work, school or home / leisure time today ?</string>
+
     <string name="feedback_question2">Where are you now?</string>
+    
+
     <string name="symptom_option_moderate">Moderate</string>
 
 
