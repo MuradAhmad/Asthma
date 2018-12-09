@@ -44,10 +44,11 @@
         </ImageView>
 
         <TextView
+            android:id="@+id/txtfillform"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:text="Fill the form carefully"
+            android:text="Fill form carefully"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="50px"
             android:textStyle="bold"

@@ -26,7 +26,11 @@
     <string name="dob">Date of birth</string>
     <string name="conpassword">Confirm password</string>
     <string name="consent">Consent</string>
+
     <string name="meds">Medication</string>
+    <string name="symptom">Symptoms</string>
+    <string name="dashboard">Dashboard</string>
+
     <string name="openmeds">Opening date of medicine</string>
     <string name="therameds">Therapeutic drugs of asthma</string>
     <string name="othermeds">Other asthma medication</string>

@@ -25,7 +25,7 @@ public class Login extends AppCompatActivity {
     Cursor cursor;
 
     Button btnLogin;
-    TextView txtRegister;
+    TextView txtRegister, txtWelcome ;
     private String userName,userPassword;
 
     AutoCompleteTextView username,password;
@@ -38,10 +38,12 @@ public class Login extends AppCompatActivity {
 
         btnLogin = (Button) findViewById(R.id.btnlogin);
         txtRegister = (TextView)findViewById(R.id.txtregister);
+        txtWelcome = (TextView)findViewById(R.id.txtwelcome);
         username = (AutoCompleteTextView)findViewById(R.id.txtUserEmail);
         password = (AutoCompleteTextView)findViewById(R.id.txtUserPassward);
 
         btnLogin.setText(R.string.login);
+        txtWelcome.setText(R.string.welcome);
         txtRegister.setText(R.string.register);
         username.setHint(R.string.email);
         password.setHint(R.string.pasword);

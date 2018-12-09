@@ -34,7 +34,7 @@ public class UserRegister extends AppCompatActivity {
     SQLiteDatabase db;
     Cursor cursor;
 
-    TextView txtDateOfBirth;
+    TextView txtDateOfBirth, txtFillForm;
 
     EditText  txtName, txtEmail,txtPassword, txtConfirmPassword;
     CheckBox chkConsent;
@@ -52,6 +52,7 @@ public class UserRegister extends AppCompatActivity {
         setContentView(R.layout.activity_userregister);
 
 
+        txtFillForm = (TextView) findViewById(R.id.txtfillform);
         txtName = (EditText) findViewById(R.id.userName);
         txtDateOfBirth = (TextView) findViewById(R.id.userDOB);
         txtEmail = (EditText) findViewById(R.id.userEmail);
@@ -63,6 +64,7 @@ public class UserRegister extends AppCompatActivity {
         btnRegister = (Button)findViewById(R.id.btnRegister);
 
 
+        txtFillForm.setText(R.string.fillform);
         txtName.setHint(R.string.username);
         txtDateOfBirth.setHint(R.string.dob);
         txtEmail.setHint(R.string.email);
