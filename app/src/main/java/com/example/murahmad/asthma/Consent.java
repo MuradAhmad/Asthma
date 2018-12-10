@@ -26,7 +26,7 @@ public class Consent extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("https://www.google.com");
+        webView.loadUrl("https://goo.gl/forms/AZ4mSBppYWZl1vTB2");
 
     }
 }

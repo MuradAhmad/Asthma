@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/dashboard" android:title="Dashboard" android:icon="@drawable/ic_dashboard_24dp" />
-    <item android:id="@+id/medication" android:title="Medication" android:icon="@drawable/ic_local_pharmacy_24dp"/>
-    <item android:id="@+id/symptoms" android:title="Symptoms" android:icon="@drawable/ic_description_24dp"/>
+    <item android:id="@+id/dashboard" android:title="@string/dashboard" android:icon="@drawable/ic_dashboard_24dp" />
+    <item android:id="@+id/medication" android:title="@string/meds" android:icon="@drawable/ic_local_pharmacy_24dp"/>
+    <item android:id="@+id/symptoms" android:title="@string/symptom" android:icon="@drawable/ic_description_24dp"/>
 
 
 

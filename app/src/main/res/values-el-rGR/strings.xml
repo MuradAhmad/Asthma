@@ -61,4 +61,6 @@
     <string name="userid">Όνομα χρήστη</string>
     <string name="deviceid">Κωδικός συσκευής</string>
     <string name="dob">Ημερομηνία γέννησης</string>
+    <string name="symptom">Συμπτώματα</string>
+    <string name="dashboard">Ταμπλό</string>
 </resources>
