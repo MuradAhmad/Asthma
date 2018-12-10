@@ -74,13 +74,6 @@ public class UserRegister extends AppCompatActivity {
         chkConsent.setText(R.string.consent);
         btnRegister.setText(R.string.register);
 
-
-
-
-
-
-
-
         chkConsent.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -99,9 +92,6 @@ public class UserRegister extends AppCompatActivity {
 
         dbHandler = new Database(getApplicationContext());
         db = dbHandler.getWritableDatabase();
-
-
-
 
 /*
         final Handler threadHandler = new Handler();
@@ -148,22 +138,21 @@ public class UserRegister extends AppCompatActivity {
                         password = txtPassword.getText().toString();
                         confirmPassword = txtConfirmPassword.getText().toString();
 
-
-                        ContentValues values = new ContentValues();
-                        values.put(Database.USERNAME, name);
-                        values.put(Database.DOB, dateOfBirth);
-                        values.put(Database.EMAIL, email);
-                        values.put(Database.PASSWORD, password);
-                        values.put(Database.UUID, uniqueID);
-                        values.put(Database.reg_timestamp,System.currentTimeMillis());
-
-                        dbHandler.insertRegistrationData(values);
-                        db.close();
-
-
                         // 2.validate data
 
                      if(validate()) {
+
+                         ContentValues values = new ContentValues();
+                         values.put(Database.USERNAME, name);
+                         values.put(Database.DOB, dateOfBirth);
+                         values.put(Database.EMAIL, email);
+                         values.put(Database.PASSWORD, password);
+                         values.put(Database.UUID, uniqueID);
+                         values.put(Database.reg_timestamp,System.currentTimeMillis());
+
+                         dbHandler.insertRegistrationData(values);
+                         db.close();
+
                          Intent intent = new Intent(UserRegister.this, MainActivity.class);
                          startActivity(intent);
 
@@ -171,14 +160,8 @@ public class UserRegister extends AppCompatActivity {
                          Toast.makeText(UserRegister.this, "Fill the form", Toast.LENGTH_LONG).show();
 
                      }
-
                     }
                 });
-
-
-
-
-
 
         txtDateOfBirth.setOnClickListener(new View.OnClickListener() {
             @Override

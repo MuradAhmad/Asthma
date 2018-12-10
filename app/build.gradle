@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.murahmad.asthma"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -17,13 +17,15 @@ android {
         }
     }
 }
-repositories{
+repositories {
 
     jcenter()
 
     maven {
         url "https://maven.google.com"
     }
+
+    maven { url "https://jitpack.io" } //MPAndroidChart, AWARE
 
 }
 
@@ -51,5 +53,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:16.0.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+
+    api "com.github.denzilferreira:aware-client:master-SNAPSHOT"
 
 }
