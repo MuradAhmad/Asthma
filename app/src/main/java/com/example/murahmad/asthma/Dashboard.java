@@ -38,6 +38,7 @@ import com.android.volley.toolbox.Volley;
 import com.aware.utils.DatabaseHelper;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -225,23 +226,24 @@ public class Dashboard extends Fragment {
 
     private void sendPostRequest() {
 
-        String registrationData = "";
+        JSONArray registrationData = new JSONArray();
 
         cursor1 = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
         if (cursor1 != null && cursor1.moveToFirst()) {
-
-            registrationData = DatabaseHelper.cursorToString(cursor1);
-
-            strUUID = cursor1.getString(cursor1.getColumnIndex(Database.UUID));
-            Log.d("UUID DB", strUUID);
+            try {
+                registrationData = new JSONArray(DatabaseHelper.cursorToString(cursor1));
+                strUUID = registrationData.getJSONObject(0).getString(Database.UUID);
+                Log.d("UUID DB", strUUID);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if (!cursor1.isClosed()) cursor1.close();
         }
 
         SharedPreferences appData = getContext().getSharedPreferences(getContext().getPackageName(), Context.MODE_PRIVATE);
         if (!appData.contains("registrationSync")) {
             try {
-                JSONObject registrationJSON = new JSONObject(registrationData);
-                pushRegistrationToServer(strUUID, registrationJSON, registrationJSON.getString(Database.reg_timestamp));
+                pushRegistrationToServer(strUUID, registrationData.getJSONObject(0), registrationData.getJSONObject(0).getString(Database.reg_timestamp));
                 appData.edit().putBoolean("registrationSync", true).apply();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -273,16 +275,15 @@ public class Dashboard extends Fragment {
 
         Cursor medications = db.query(Database.MEDICATION_TABLE, null, null, null,null, null, Database.MED_DATE + " ASC");
         if (medications != null && medications.moveToFirst()) {
-            do {
-                String timestamp = medications.getString(medications.getColumnIndex(Database.MED_DATE));
-                try {
-                    JSONObject medication = new JSONObject();
-                    medication.put("Medication", DatabaseHelper.cursorToString(medications));
-                    pushToServerMedication(strUUID, medication, timestamp);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            try {
+                JSONArray medicationJSON = new JSONArray(DatabaseHelper.cursorToString(medications));
+                for( int i = 0; i< medicationJSON.length(); i++) {
+                    JSONObject medication = medicationJSON.getJSONObject(i);
+                    pushToServerMedication(strUUID, medication, medication.getString(Database.MED_DATE));
                 }
-            } while (medications.moveToNext());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if(!medications.isClosed()) medications.close();
         }
     }
@@ -306,7 +307,7 @@ public class Dashboard extends Fragment {
             jsonObject.put("tableName", "RuuviTag");
             // get user UUID from DB
             // jsonObject.put("deviceId", strUUID);
-            jsonObject.put("deviceId", "35d0ee9c-229e-49a8-a1dc-34c2d2c8c0eb");
+            jsonObject.put("deviceId", strUUID);
             jsonObject.put("data", registrationJsonObject);
             //Log.d("Symptoms sync", symptoms);
             //jsonObject.put("data", symptoms);
@@ -390,7 +391,7 @@ public class Dashboard extends Fragment {
             jsonObject.put("tableName", "RuuviTag");
             // get user UUID from DB
             // jsonObject.put("deviceId", strUUID);
-            jsonObject.put("deviceId", "35d0ee9c-229e-49a8-a1dc-34c2d2c8c0eb");
+            jsonObject.put("deviceId", strUUID);
             jsonObject.put("data", symptomsJsonObject);
             //Log.d("Symptoms sync", symptoms);
             //jsonObject.put("data", symptoms);
@@ -481,7 +482,7 @@ public class Dashboard extends Fragment {
             jsonObject.put("tableName", "RuuviTag");
             // get user UUID from DB
             // jsonObject.put("deviceId", strUUID);
-            jsonObject.put("deviceId", "35d0ee9c-229e-49a8-a1dc-34c2d2c8c0eb");
+            jsonObject.put("deviceId", strUUID);
             jsonObject.put("data", symptomsJsonObject);
             //Log.d("Symptoms sync", symptoms);
             //jsonObject.put("data", symptoms);

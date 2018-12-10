@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -25,8 +26,10 @@ public class Consent extends AppCompatActivity {
 
 
         webView = (WebView) findViewById(R.id.webview);
-        webView.setWebViewClient(new WebViewClient());
+        WebViewClient client = new WebViewClient();
+        webView.setWebViewClient(client);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
         webView.loadUrl("https://goo.gl/forms/AZ4mSBppYWZl1vTB2");
-
     }
 }

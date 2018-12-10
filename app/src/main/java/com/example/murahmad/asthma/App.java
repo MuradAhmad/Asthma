@@ -53,17 +53,14 @@ public class App extends Application {
 
         if (userName != null && password != null) {
             Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
         } else {
             Intent intent = new Intent(this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-
-
-
-
-
     }
 
     private void createNotificationChannels(){
