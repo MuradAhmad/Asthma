@@ -4,23 +4,17 @@ import java.io.Serializable;
 
 public class DBModel implements Serializable {
 
-
-
     private String deviceId;
     private String rssi;
     private String url;
     private String temperature;
     private String humidity;
-    private String date;
-
+    private Double date;
 
     public DBModel() {
-
     }
 
-
-    public DBModel(String id, String url, String rssi, String temperature, String humidity, String date ) {
-
+    public DBModel(String id, String url, String rssi, String temperature, String humidity, Double date) {
         super();
         this.deviceId = id;
         this.url = url;
@@ -28,10 +22,7 @@ public class DBModel implements Serializable {
         this.temperature = temperature;
         this.humidity = humidity;
         this.date = date;
-
     }
-
-
 
     public String getDeviceId() {
         return deviceId;
@@ -73,11 +64,11 @@ public class DBModel implements Serializable {
         this.humidity = humidity;
     }
 
-    public String getDate() {
+    public Double getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Double date) {
         this.date = date;
     }
 }

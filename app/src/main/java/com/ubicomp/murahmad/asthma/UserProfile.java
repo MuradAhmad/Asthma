@@ -28,7 +28,7 @@ public class UserProfile extends Fragment {
 
     Button btnSave;
 
-    String drugs, userName,dateOfBirth;
+    String drugs, userName, dateOfBirth;
 
     int year, month, day;
     DatePickerDialog datePickerDialog;
@@ -37,14 +37,13 @@ public class UserProfile extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view   = inflater.inflate(R.layout.activity_userprofile, container,false);
-
+        View view = inflater.inflate(R.layout.activity_userprofile, container, false);
 
 
         txtusername = (TextView) view.findViewById(R.id.txtusername);
-        txtdateofbirth = (TextView)view.findViewById(R.id.txtdateofbirth);
-        txtcurrentMeds = (TextView)view.findViewById(R.id.txtCurrentMeds);
-        txtdrugs = (TextView)view.findViewById(R.id.txtdrugs);
+        txtdateofbirth = (TextView) view.findViewById(R.id.txtdateofbirth);
+        txtcurrentMeds = (TextView) view.findViewById(R.id.txtCurrentMeds);
+        txtdrugs = (TextView) view.findViewById(R.id.txtdrugs);
 
 
         txtusername.setText(R.string.user);
@@ -53,20 +52,11 @@ public class UserProfile extends Fragment {
         txtdrugs.setText(R.string.drugs);
 
 
-
-
         handler = new Database(getContext());
         db = handler.getReadableDatabase();
 
 
-
-
-
-
         displayUserProfile();
-
-
-
 
 
         return view;
@@ -74,10 +64,10 @@ public class UserProfile extends Fragment {
 
     }
 
-    public void displayUserProfile(){
+    public void displayUserProfile() {
 
 
-        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE  +","+ Database.MEDICATION_TABLE , null);
+        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE + "," + Database.MEDICATION_TABLE, null);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -95,7 +85,7 @@ public class UserProfile extends Fragment {
                             drugs = "insert drugs";
                         }*/
                 Log.d("username", name);
-                Log.d("UUID",userId);
+                Log.d("UUID", userId);
 
                 txtusername.setText(name);
                 txtdateofbirth.setText(userId);

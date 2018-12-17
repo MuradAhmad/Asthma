@@ -8,12 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -24,18 +19,17 @@ import java.util.UUID;
 
 public class UserRegister extends AppCompatActivity {
 
-
     Database dbHandler;
     SQLiteDatabase db;
     Cursor cursor;
 
     TextView txtDateOfBirth, txtFillForm;
 
-    EditText  txtName, txtEmail,txtPassword, txtConfirmPassword;
+    EditText txtName, txtEmail, txtPassword, txtConfirmPassword;
     CheckBox chkConsent;
     Button btnRegister;
 
-    String uniqueID, name,dateOfBirth,email,password,confirmPassword;
+    String uniqueID, name, dateOfBirth, email, password, confirmPassword;
 
 
     int year, month, day;
@@ -44,8 +38,8 @@ public class UserRegister extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userregister);
 
+        setContentView(R.layout.activity_userregister);
 
         txtFillForm = (TextView) findViewById(R.id.txtfillform);
         txtName = (EditText) findViewById(R.id.userName);
@@ -53,11 +47,8 @@ public class UserRegister extends AppCompatActivity {
         txtEmail = (EditText) findViewById(R.id.userEmail);
         txtPassword = (EditText) findViewById(R.id.userPassward);
         txtConfirmPassword = (EditText) findViewById(R.id.userPasswardConfirm);
-
-        chkConsent = (CheckBox)findViewById(R.id.chkbConsent);
-
-        btnRegister = (Button)findViewById(R.id.btnRegister);
-
+        chkConsent = (CheckBox) findViewById(R.id.chkbConsent);
+        btnRegister = (Button) findViewById(R.id.btnRegister);
 
         txtFillForm.setText(R.string.fillform);
         txtName.setHint(R.string.username);
@@ -73,95 +64,50 @@ public class UserRegister extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //is chkIos checked?
                 if (((CheckBox) v).isChecked()) {
-                    //Toast.makeText(UserRegister.this, "Check Box is selected", Toast.LENGTH_LONG).show();
-
                     Intent intent = new Intent(UserRegister.this, Consent.class);
                     startActivity(intent);
                 }
             }
         });
 
-
-
         dbHandler = new Database(getApplicationContext());
         db = dbHandler.getWritableDatabase();
 
-/*
-        final Handler threadHandler = new Handler();
-        Runnable runnable = new Runnable()
-        {
-            public void run() {
-                //Whatever task you wish to perform
-
-        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            if (cursor.getCount() > 0) {
-// get values from cursor here
-
-
-
-
-                Log.d("User Name: ", cursor.getString(cursor.getColumnIndex(Database.USERNAME)));
-                Log.d("Email ", cursor.getString(cursor.getColumnIndex(Database.EMAIL)));
-                Log.d("Date of Birth: ", cursor.getString(cursor.getColumnIndex(Database.DOB)));
-            }
-        }
-        threadHandler.postDelayed(this, 1000);
-    }
-};*/
-
-
-
-
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
+                uniqueID = UUID.randomUUID().toString();
+                name = txtName.getText().toString();
+                dateOfBirth = txtDateOfBirth.getText().toString();
+                email = txtEmail.getText().toString();
+                password = txtPassword.getText().toString();
+                confirmPassword = txtConfirmPassword.getText().toString();
 
+                if (validate()) {
+                    ContentValues values = new ContentValues();
+                    values.put(Database.USERNAME, name);
+                    values.put(Database.DOB, dateOfBirth);
+                    values.put(Database.EMAIL, email);
+                    values.put(Database.PASSWORD, password);
+                    values.put(Database.UUID, uniqueID);
+                    values.put(Database.reg_timestamp, System.currentTimeMillis());
 
-                        // 1. save data,
+                    dbHandler.insertRegistrationData(values);
+                    db.close();
 
-                        uniqueID = UUID.randomUUID().toString();
-                        name = txtName.getText().toString();
-                        dateOfBirth = txtDateOfBirth.getText().toString();
-                        email = txtEmail.getText().toString();
-                        password = txtPassword.getText().toString();
-                        confirmPassword = txtConfirmPassword.getText().toString();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
 
-                        // 2.validate data
-
-                     if(validate()) {
-
-                         ContentValues values = new ContentValues();
-                         values.put(Database.USERNAME, name);
-                         values.put(Database.DOB, dateOfBirth);
-                         values.put(Database.EMAIL, email);
-                         values.put(Database.PASSWORD, password);
-                         values.put(Database.UUID, uniqueID);
-                         values.put(Database.reg_timestamp,System.currentTimeMillis());
-
-                         dbHandler.insertRegistrationData(values);
-                         db.close();
-
-                         Intent intent = new Intent(UserRegister.this, MainActivity.class);
-                         startActivity(intent);
-
-                     }else {
-                         Toast.makeText(UserRegister.this, "Fill the form", Toast.LENGTH_LONG).show();
-
-                     }
-                    }
-                });
+                } else {
+                    Toast.makeText(UserRegister.this, getString(R.string.feedback_error_form), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         txtDateOfBirth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 final Calendar c = Calendar.getInstance();
                 year = c.get(Calendar.YEAR);
                 month = c.get(Calendar.MONTH);
@@ -182,90 +128,24 @@ public class UserRegister extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
-
-
-
-
-
-
-
-
-
-   /* public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.chkbConsent:
-                if (checked){
-                    // save data
-
-                }
-
-            else
-                // must select checkbox
-                break;
-
-
-            // TODO: consent page
-        }
-    }*/
-
     }
 
 
     public boolean validate() {
-        boolean valid = true;
-
-
-       String name = txtName.getText().toString();
+        String name = txtName.getText().toString();
         String dateOfBirth = txtDateOfBirth.getText().toString();
-       String email = txtEmail.getText().toString();
-       String password = txtPassword.getText().toString();
+        String email = txtEmail.getText().toString();
+        String password = txtPassword.getText().toString();
         String confirmPassword = txtConfirmPassword.getText().toString();
 
+        if (chkConsent.isChecked()
+                && !name.isEmpty()
+                && !dateOfBirth.isEmpty()
+                && (!email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                && !password.isEmpty() && !confirmPassword.isEmpty() && confirmPassword.equals(password))
+            return true;
 
-
-
-        if (!((CheckBox) chkConsent).isChecked()){
-
-            chkConsent.setError("Read consent");
-            valid = false;
-
-        }
-
-        if(name.isEmpty()) {
-            txtName.setError("enter username");
-        }
-        if(dateOfBirth.isEmpty()) {
-            txtDateOfBirth.setError("enter date of birth");
-        }
-
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            txtEmail.setError("enter a valid email address");
-            valid = false;
-        } else {
-            txtEmail.setError(null);
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            txtPassword.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            txtPassword.setError(null);
-        }
-
-        if (confirmPassword.isEmpty() || !(confirmPassword.equals(password))) {
-            txtConfirmPassword.setError("password did not match");
-            valid = false;
-        } else {
-            txtConfirmPassword.setError(null);
-        }
-
-
-
-        return valid;
+        return false;
     }
 
 }

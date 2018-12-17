@@ -6,7 +6,6 @@
 
     >
 
-
     <LinearLayout
             android:id="@+id/lldevicedata"
             android:layout_width="match_parent"
@@ -17,7 +16,6 @@
             android:orientation="vertical"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="200dp"
-
             >
 
         <TextView

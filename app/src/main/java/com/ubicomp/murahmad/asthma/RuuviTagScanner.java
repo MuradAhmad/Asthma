@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,22 +24,15 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.neovisionaries.bluetooth.ble.advertising.ADManufacturerSpecific;
 import com.neovisionaries.bluetooth.ble.advertising.ADPayloadParser;
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure;
 import com.neovisionaries.bluetooth.ble.advertising.EddystoneURL;
-
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -86,27 +80,34 @@ public class RuuviTagScanner extends Service {
     private boolean scanning;
 
 
-
-
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        if (!isBLEAvailable(getApplicationContext())) return START_NOT_STICKY;
+
         Bundle data = intent.getExtras();
         if (data != null) {
-           save((RuuviTag) data.getParcelable("favorite"));
+            save((RuuviTag) data.getParcelable("favorite"));
         }
 
-
         startNotification();
-
 
         return Service.START_NOT_STICKY;
     }
 
+    public static boolean isBLEAvailable(Context c) {
+        return (c.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE));
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (!isBLEAvailable(getApplicationContext())) {
+            stopSelf();
+            return;
+        }
+
         settings = PreferenceManager.getDefaultSharedPreferences(this);
         settings.registerOnSharedPreferenceChangeListener(mListener);
         notificationId = 1512;
@@ -116,7 +117,7 @@ public class RuuviTagScanner extends Service {
 
         if (settings.getBoolean("pref_bgscan", false))
             startFG();
-            //startNotification();
+        //startNotification();
 
 
         Foreground.init(getApplication());
@@ -125,7 +126,6 @@ public class RuuviTagScanner extends Service {
         bps = new BackgroundPowerSaver(this);
 
         ruuvitagArrayList = new ArrayList<>();
-
 
 
         dbHandler = new Database(getApplicationContext());
@@ -168,7 +168,7 @@ public class RuuviTagScanner extends Service {
         timer.scheduleAtFixedRate(alertManager, 2500, 2500);*/
 
 
-     //  startNotification();
+        //  startNotification();
 
 
     }
@@ -223,7 +223,7 @@ public class RuuviTagScanner extends Service {
 
     void processFoundDevices() {
         ruuvitagArrayList.clear();
-       // ScanEvent scanEvent = new ScanEvent(getApplicationContext(), DeviceIdentifier.id(getApplicationContext()));
+        // ScanEvent scanEvent = new ScanEvent(getApplicationContext(), DeviceIdentifier.id(getApplicationContext()));
 
         Iterator<LeScanResult> itr = scanResults.iterator();
         while (itr.hasNext()) {
@@ -252,7 +252,6 @@ public class RuuviTagScanner extends Service {
                             Log.d("Humidity Scanner:", real.getHumidity());
 
                             update(real);
-
 
 
                         }
@@ -288,11 +287,9 @@ public class RuuviTagScanner extends Service {
             }
 
 
-            }
-
         }
 
-
+    }
 
 
     public SharedPreferences.OnSharedPreferenceChangeListener mListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -333,11 +330,9 @@ public class RuuviTagScanner extends Service {
     };
 
 
+    public void startFG() {
 
-    public void startFG()
-    {
-
- Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
 
         PendingIntent pendingIntent1111 = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
@@ -356,14 +351,10 @@ public class RuuviTagScanner extends Service {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setLargeIcon(bitmap)
                 .setContentIntent(pendingIntent);*//*
-*/
+         */
 
 
         startForeground(notificationId, notification.build());
-
-
-
-
 
 
     }
@@ -453,11 +444,10 @@ public class RuuviTagScanner extends Service {
     }*/
 
 
+    public void startNotification() {
 
-    public void startNotification(){
 
-
-        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
+        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE + " order by Timestamp desc limit 1", null);
 
         if (cursor != null) {
             cursor.moveToFirst();
@@ -479,16 +469,13 @@ public class RuuviTagScanner extends Service {
         cursor.close();
 
 
-        if((morningTime != null && !morningTime.isEmpty()) || (eveningTime != null && !eveningTime.isEmpty()) ) {
-
+        if ((morningTime != null && !morningTime.isEmpty()) || (eveningTime != null && !eveningTime.isEmpty())) {
 
 
             Long morningTimeLong = Long.valueOf(morningTime);
             Long eveningTimeLong = Long.valueOf(eveningTime);
 
             Log.d("Morning time from Set", String.valueOf(morningTimeLong));
-
-
 
 
             // set notification time here
@@ -501,10 +488,9 @@ public class RuuviTagScanner extends Service {
             Log.d("current Time", String.valueOf(currentTime));
 
 
-
             AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-            if ((morningTimeLong.compareTo(currentTime)>=0) || (morningTimeLong.compareTo(currentTime)>=0) ) {
+            if ((morningTimeLong.compareTo(currentTime) >= 0) || (morningTimeLong.compareTo(currentTime) >= 0)) {
 
 
                 Intent intent = new Intent(this, NotificationReceiver.class);
@@ -514,13 +500,11 @@ public class RuuviTagScanner extends Service {
 
                 // AlarmManager.Interval_Day set according to settings screen
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, morningTimeLong, AlarmManager.INTERVAL_DAY, pendingIntent);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, eveningTimeLong , AlarmManager.INTERVAL_DAY, pendingIntent1);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, eveningTimeLong, AlarmManager.INTERVAL_DAY, pendingIntent1);
 
             }
 
         }
-
-
 
 
     }
@@ -633,7 +617,7 @@ public class RuuviTagScanner extends Service {
     public void save(RuuviTag ruuvitag) {
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
-        if(!Exists(ruuvitag.getId())) {
+        if (!Exists(ruuvitag.getId())) {
             ContentValues values = new ContentValues();
             values.put(Database.DEVICE_ID, ruuvitag.getId());
             values.put(Database.URL, ruuvitag.getUrl());
@@ -649,11 +633,10 @@ public class RuuviTagScanner extends Service {
     }
 
 
-
     public void update(RuuviTag ruuvitag) {
         String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
 
-        if(Exists(ruuvitag.getId())) {
+        if (Exists(ruuvitag.getId())) {
             ContentValues values = new ContentValues();
             values.put(Database.DEVICE_ID, ruuvitag.getId());
             values.put(Database.URL, ruuvitag.getUrl());
@@ -663,39 +646,27 @@ public class RuuviTagScanner extends Service {
             //values.put(Database.PRESSURE, ruuvitag.getPressure());
             values.put(Database.DATE, time);
 
-            db.update(Database.DEVICE_TABLE, values, "id="+ DatabaseUtils.sqlEscapeString(ruuvitag.getId()), null);
-        }else{
+            db.update(Database.DEVICE_TABLE, values, "id=" + DatabaseUtils.sqlEscapeString(ruuvitag.getId()), null);
+        } else {
             save(ruuvitag);
         }
     }
 
     public boolean Exists(String id) {
-        cursor = db.rawQuery("select 1 from DEVICE_TABLE where "+Database.DEVICE_ID+"= ? ",
-                new String[] { id });
+        cursor = db.rawQuery("select 1 from DEVICE_TABLE where " + Database.DEVICE_ID + "= ? ",
+                new String[]{id});
         boolean exists = (cursor.getCount() > 0);
         cursor.close();
         return exists;
     }
 
 
-
-
-
-
     @Override
     public void onDestroy() {
-
-
-        scheduler.shutdown();
-        /*
-        try {
-            beaconManager.stopRangingBeaconsInRegion(new Region("uusi", null, null, null));
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if (isBLEAvailable(getApplicationContext())) {
+            scheduler.shutdown();
+            settings.unregisterOnSharedPreferenceChangeListener(mListener);
         }
-        beaconManager.unbind(this);*/
-
-        settings.unregisterOnSharedPreferenceChangeListener(mListener);
         super.onDestroy();
     }
 
@@ -713,16 +684,17 @@ public class RuuviTagScanner extends Service {
 
         public void onBecameBackground() {
             if (!settings.getBoolean("pref_bgscan", false)) {
-               if (timer!=null) timer.cancel();
-                if (scheduler!= null) scheduler.shutdown();
+                if (timer != null) timer.cancel();
+                if (scheduler != null) scheduler.shutdown();
                 stopSelf();
             }
         }
     };
+
     private boolean isRunning(Class<?> serviceClass) {
         ActivityManager mgr = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo service : mgr.getRunningServices(Integer.MAX_VALUE)) {
-            if(serviceClass.getName().equals(service.service.getClassName())) {
+        for (ActivityManager.RunningServiceInfo service : mgr.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
@@ -730,14 +702,15 @@ public class RuuviTagScanner extends Service {
     }
 
 
-private boolean checkForSameTag(RuuviTag ruuvi) {
-        for(RuuviTag ruuvitag : ruuvitagArrayList) {
-        if(ruuvi.getId().equals(ruuvitag.getId())) {
-        return false;
-        }
+    private boolean checkForSameTag(RuuviTag ruuvi) {
+        for (RuuviTag ruuvitag : ruuvitagArrayList) {
+            if (ruuvi.getId().equals(ruuvitag.getId())) {
+                return false;
+            }
         }
         return true;
-        }
+    }
+
     public Integer[] readSeparated(String data) {
         String[] linevector;
         int index = 0;
@@ -746,7 +719,7 @@ private boolean checkForSameTag(RuuviTag ruuvi) {
 
         Integer[] values = new Integer[linevector.length];
 
-        for(String l : linevector) {
+        for (String l : linevector) {
             try {
                 values[index] = Integer.parseInt(l);
             } catch (NumberFormatException e) {

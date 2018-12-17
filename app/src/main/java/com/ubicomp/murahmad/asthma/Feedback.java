@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,8 +45,6 @@ import java.util.List;
  */
 
 public class Feedback extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.GpsStatus.Listener {
-
-
 
     private QuestionLibrary questionLibrary;
     private int feedbackQuestion = 0;
@@ -157,8 +156,6 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         });
 
         //user Location
-
-
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -178,10 +175,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         }
 
         locationManager.addGpsStatusListener(this);
-
-
         fusedLocationProviderClient = new FusedLocationProviderClient(getContext());
-
         googleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -194,19 +188,14 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         locationRequest.setFastestInterval(15 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
-
-
         return view;
-
-
     }
 
 
-    public void updateQuestion(){
+    public void updateQuestion() {
 
 
-        if(feedbackQuestion<1) {
+        if (feedbackQuestion < 1) {
 
 
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
@@ -217,8 +206,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
 
             feedbackQuestion++;
 
-        }
-        else if(feedbackQuestion<2) {
+        } else if (feedbackQuestion < 2) {
 
             txtFeedback.setText(questionLibrary.getFeedbackQuestion(feedbackQuestion));
             btn1.setText(questionLibrary.getFeedbackOption(2));
@@ -229,8 +217,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
 
             feedbackQuestion++;
 
-        }
-        else {
+        } else {
 
             saveSymptomsFeedback();
 
@@ -244,42 +231,31 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
 
     public void saveSymptomsFeedback() {
 
+        JSONArray data = new JSONArray();
+
         // ruuvitag device data
 
         final JSONObject ruuvitagJsonObject = new JSONObject();
         try {
-            ruuvitagJsonObject.put("Device Id",deviceId);
-            ruuvitagJsonObject.put("Temperature",temperature);
-            ruuvitagJsonObject.put("Humidity",humidity);
+            ruuvitagJsonObject.put("Device Id", deviceId);
+            ruuvitagJsonObject.put("Temperature", temperature);
+            ruuvitagJsonObject.put("Humidity", humidity);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        String stringRuuvitagData = ruuvitagJsonObject.toString();
-
-        // location data
+        data.put(ruuvitagJsonObject);
 
         final JSONObject locationJsonObject = new JSONObject();
-            try {
-                locationJsonObject.put("latitude",myLatitude);
-                locationJsonObject.put("longitude",myLongitude);
-                locationJsonObject.put("Number of satellites",satellitesInFix );
+        try {
+            locationJsonObject.put("latitude", myLatitude);
+            locationJsonObject.put("longitude", myLongitude);
+            locationJsonObject.put("Number of satellites", satellitesInFix);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        String stringLocationData = locationJsonObject.toString();
-
-            // merge location and ruuvitage strings
-        String mergeRuuvitagLocation = stringRuuvitagData.concat(stringLocationData);
-
-
-
-        // feedback data
-
-       // String time = new SimpleDateFormat("dd-MM-yyyy, hh:mm:ss").format(new Date());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        data.put(locationJsonObject);
 
         final JSONObject feedbackJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
@@ -290,31 +266,13 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
             }
         }
 
-        String stringFeedback = feedbackJsonObject.toString();
-
-        String mergeSymptomsFeedback = stringSymptoms.concat(stringFeedback);
-
-        String mergeData = mergeSymptomsFeedback.concat(mergeRuuvitagLocation);
-
-       /* try {
-            final JSONObject symptomsJsonObject = new JSONObject(mergeSymptomsFeedback);
-            Log.d("data symptoms:", symptomsJsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-*/
-
-        Log.d("mergesymptomsfeedback:", mergeData);
+        data.put(feedbackJsonObject);
 
         Calendar calendar = Calendar.getInstance();
-
         Log.d("time feedback:", String.valueOf(calendar.getTimeInMillis()));
 
-
         ContentValues values = new ContentValues();
-
-        values.put(Database.SYMPTOMS, mergeData);
-
+        values.put(Database.SYMPTOMS, data.toString());
         values.put(Database.SYMPTOMS_timestamp, calendar.getTimeInMillis());
 
         dbHandler.insertSymptomsData(values);
@@ -322,7 +280,6 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         dbHandler.close();
 
     }
-
 
 
     @Override
@@ -382,7 +339,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
     }
 
     @Override
-    public void onConnected(Bundle bundle){
+    public void onConnected(Bundle bundle) {
         requestLocationUpdates();
     }
 
@@ -402,10 +359,11 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         myLongitude = location.getLongitude();
 
         //Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude) +"Satellite.. "+ String.valueOf(location.getExtras().getInt("satellites")), Toast.LENGTH_SHORT).show();
-        Log.d("satellites",String.valueOf(location.getExtras().getInt("satellites")));
+        Log.d("satellites", String.valueOf(location.getExtras().getInt("satellites")));
 
     }
-    private void requestLocationUpdates(){
+
+    private void requestLocationUpdates() {
 
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -459,36 +417,35 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
     }
 
 
-public void getDeviceData(){
+    public void getDeviceData() {
 
 
-    cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + " ORDER BY Date desc limit 1", null);
+        cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + " ORDER BY Date desc limit 1", null);
 
 
-    if (cursor != null) {
-        cursor.moveToFirst();
+        if (cursor != null) {
+            cursor.moveToFirst();
 
-        if (cursor.getCount() > 0) {
+            if (cursor.getCount() > 0) {
 
-            // get values from cursor here
+                // get values from cursor here
 
-            deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
-            temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
-            humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
-
-
-            Log.d("Feedbackdevice",deviceId);
-            Log.d("Feedbacktemperature ",temperature);
-            Log.d("Feedbackhumidity",humidity);
+                deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
+                temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
+                humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
 
+                Log.d("Feedbackdevice", deviceId);
+                Log.d("Feedbacktemperature ", temperature);
+                Log.d("Feedbackhumidity", humidity);
+
+
+            }
         }
+        cursor.close();
+
+
     }
-    cursor.close();
-
-
-
-}
 
 
 }

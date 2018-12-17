@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -19,20 +20,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
+import com.google.android.gms.location.*;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Region;
 
@@ -43,29 +37,6 @@ import java.util.concurrent.ScheduledExecutorService;
 
 
 public class MainActivity extends AppCompatActivity {
-
-// google api client code
-    // get location updates
-    //implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener , android.location.GpsStatus.Listener
-
-   /* @Override
-    public void onGpsStatusChanged(int event) {
-
-
-    //
-        int satellites = 0;
-        int satellitesInFix = 0;
-        int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
-        Log.i(TAG, "Time to first fix = " + timetofix);
-        for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
-            if(sat.usedInFix()) {
-                satellitesInFix++;
-            }
-            satellites++;
-        }
-        Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
-    }*/
-
 
     private class LeScanResult {
         BluetoothDevice device;
@@ -123,16 +94,13 @@ public class MainActivity extends AppCompatActivity {
 
     Database handler;
     SQLiteDatabase db;
-    Cursor cursor,cursor1,cursor2;
+    Cursor cursor, cursor1, cursor2;
 
     private Timer timer;
     private Handler scanTimerHandler;
     private static int MAX_SCAN_TIME_MS = 1000;
     String morningTime;
     String eveningTime;
-
-
-
 
 
     private BeaconManager beaconManager = null;
@@ -153,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
 
 
         // toolBar
-         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //user Location
 
-       // final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-       // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
+        // final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (android.location.LocationListener) locationListener);
 
 
        /* fusedLocationProviderClient = new FusedLocationProviderClient(this);
@@ -190,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         deviceList = new ArrayList<String>();
 
 
-       //database
+        //database
 /*
         handler = new Database(this);
         db = handler.getReadableDatabase();*/
@@ -251,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
 
-
         // Bluetooth manager
 
         final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -283,15 +250,14 @@ public class MainActivity extends AppCompatActivity {
         //navigation and fragment
 
         frameLayout = (FrameLayout) findViewById(R.id.fragment_container);
-        bottomNavigationView = (BottomNavigationView)findViewById(R.id.navigationView);
-
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigationView);
 
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
 
 
                     case R.id.dashboard:
@@ -315,11 +281,10 @@ public class MainActivity extends AppCompatActivity {
 
         // display dashboard as main screen
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Dashboard()).commit();
             bottomNavigationView.setSelectedItemId(R.id.dashboard);
         }
-
 
 
     }
@@ -337,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         beaconManager.bind(this);*//*
 
 
-      */
+     */
 /*  beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout(BeaconParser.ALTBEACON_LAYOUT));
     beaconManager.bind(this);
 
@@ -507,7 +472,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onStart();
 
-       // googleApiClient.connect();
+        // googleApiClient.connect();
     }
 
     @Override
@@ -536,8 +501,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         if (permissionIsGranted) {
-           // if (googleApiClient.isConnected()) {
-                //requestLocationUpdates();
+            // if (googleApiClient.isConnected()) {
+            //requestLocationUpdates();
             //}
         }
 
@@ -553,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         //if (permissionIsGranted)
-           // googleApiClient.disconnect();
+        // googleApiClient.disconnect();
     }
 
 
@@ -568,8 +533,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
 
-
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
 
             case R.id.profile:
@@ -593,30 +557,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length>1)
-        switch (requestCode) {
-            case MY_PERMISSION_REQUEST_FINE_LOCATION:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted
-                    permissionIsGranted = true;
-                } else {
-                    //permission denied
-                    permissionIsGranted = false;
-                    Toast.makeText(getApplicationContext(), "This app requires location permission to be granted", Toast.LENGTH_SHORT).show();
+        if (grantResults.length > 1)
+            switch (requestCode) {
+                case MY_PERMISSION_REQUEST_FINE_LOCATION:
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        // permission granted
+                        permissionIsGranted = true;
+                    } else {
+                        //permission denied
+                        permissionIsGranted = false;
+                        Toast.makeText(getApplicationContext(), "This app requires location permission to be granted", Toast.LENGTH_SHORT).show();
 
-                }
-                break;
-            case MY_PERMISSION_REQUEST_COARSE_LOCATION:
-                // do something for coarse location
-                break;
-        }
+                    }
+                    break;
+                case MY_PERMISSION_REQUEST_COARSE_LOCATION:
+                    // do something for coarse location
+                    break;
+            }
     }
-
-
 
 
 }

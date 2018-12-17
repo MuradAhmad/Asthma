@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,7 +57,6 @@ public class Symptoms extends Fragment {
         View view = inflater.inflate(R.layout.activity_symptoms, container, false);
 
 
-
         context = this.getContext();
 
         questionLibrary = new QuestionLibrary(context);
@@ -95,7 +93,6 @@ public class Symptoms extends Fragment {
                 updateQuestion();
 
 
-
             }
         });
 
@@ -107,7 +104,6 @@ public class Symptoms extends Fragment {
 
 
                 updateQuestion();
-
 
 
             }
@@ -207,7 +203,7 @@ public class Symptoms extends Fragment {
         String stringSymptoms = symptomsJsonObject.toString();
 
         // send symptoms data to Feedback class as a string
-        Feedback feedback = new Feedback ();
+        Feedback feedback = new Feedback();
         Bundle args = new Bundle();
         args.putString("symptoms", stringSymptoms);
         feedback.setArguments(args);

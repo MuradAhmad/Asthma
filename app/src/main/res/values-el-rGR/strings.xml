@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Asthma</string>
+    <string name="app_name">EXTREMA</string>
     <string name="symptoms_title">αντανακλούν τη σοβαρότητα των συμπτωμάτων σε καθημερινή βάση</string>
     <string name="symptom_question_shortness">Δύσπνοια</string>
     <string name="symptom_question_cough">Βήχας</string>
@@ -33,7 +33,7 @@
     <string name="docvisit1">Κοινό κρυολόγημα/Επισκέψεις σε γιατρό λόγω του άσθματος</string>
     <string name="docvisit2">Κοινό κρυολόγημα/Επισκέψεις σε γιατρό λόγω αλλεργίας</string>
     <string name="otherconsider">Άλλα σχόλια-παρατηρήσεις</string>
-    <string name="changmeds">" Αλλαγές στα φάρμακα και νέα δοσολογία"</string>
+    <string name="changmeds">Αλλαγές στα φάρμακα και νέα δοσολογία</string>
     <string name="username">Όνομα</string>
     <string name="therameds">Φάρμακα για τη θεραπεία του άσθματος</string>
     <string name="openmeds">Ημερομηνία ανοίγματος φαρμάκου</string>
@@ -63,4 +63,10 @@
     <string name="dob">Ημερομηνία γέννησης</string>
     <string name="symptom">Συμπτώματα</string>
     <string name="dashboard">Ταμπλό</string>
+    <string name="notification_title_daily_symptoms">Καθημερινά συμπτώματα</string>
+    <string name="notification_action_daily_symptoms">Πατήστε εδώ για να αναφέρετε τα καθημερινά συμπτώματα</string>
+    <string name="feedback_server_failure">Ο διακομιστής δεν είναι προσβάσιμος. Δοκιμάστε ξανά αργότερα.</string>
+    <string name="feedback_internet_missing">Το Διαδίκτυο δεν είναι διαθέσιμο.</string>
+    <string name="feedback_error_credentials">Λανθασμένα διαπιστευτήρια</string>
+    <string name="feedback_error_form">Απαντήστε στις ερωτήσεις.</string>
 </resources>

@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import android.os.Handler;
 
 /**
  * Created by muradahmad on 04/07/2018.
@@ -17,20 +16,17 @@ import android.os.Handler;
 
 public class Foreground implements Application.ActivityLifecycleCallbacks {
 
-public static final long CHECK_DELAY = 500;
-public static final String TAG = Foreground.class.getName();
+    public static final long CHECK_DELAY = 500;
+    public static final String TAG = Foreground.class.getName();
 
-public interface Listener {
+    public interface Listener {
+        public void onBecameForeground();
+        public void onBecameBackground();
+    }
 
-    public void onBecameForeground();
-
-    public void onBecameBackground();
-
-}
-
-public interface Binding {
-    public void unbind();
-}
+    public interface Binding {
+        public void unbind();
+    }
 
     private static Foreground instance;
 
@@ -39,16 +35,7 @@ public interface Binding {
     private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     private Runnable check;
 
-    /**
-     * Its not strictly necessary to use this method - _usually_ invoking
-     * get with a Context gives us a path to retrieve the Application and
-     * initialise, but sometimes (e.g. in test harness) the ApplicationContext
-     * is != the Application, and the docs make no guarantees.
-     *
-     * @param application
-     * @return an initialised Foreground instance
-     */
-    public static Foreground init(Application application){
+    public static Foreground init(Application application) {
         if (instance == null) {
             instance = new Foreground();
             application.registerActivityLifecycleCallbacks(instance);
@@ -56,18 +43,18 @@ public interface Binding {
         return instance;
     }
 
-    public static Foreground get(Application application){
+    public static Foreground get(Application application) {
         if (instance == null) {
             init(application);
         }
         return instance;
     }
 
-    public static Foreground get(Context ctx){
+    public static Foreground get(Context ctx) {
         if (instance == null) {
             Context appCtx = ctx.getApplicationContext();
             if (appCtx instanceof Application) {
-                init((Application)appCtx);
+                init((Application) appCtx);
             }
             throw new IllegalStateException(
                     "Foreground is not initialised and " +
@@ -76,7 +63,7 @@ public interface Binding {
         return instance;
     }
 
-    public static Foreground get(){
+    public static Foreground get() {
         if (instance == null) {
             throw new IllegalStateException(
                     "Foreground is not initialised - invoke " +
@@ -85,19 +72,19 @@ public interface Binding {
         return instance;
     }
 
-    public boolean isForeground(){
+    public boolean isForeground() {
         return foreground;
     }
 
-    public boolean isBackground(){
+    public boolean isBackground() {
         return !foreground;
     }
 
-    public void addListener(Listener listener){
+    public void addListener(Listener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(Listener listener){
+    public void removeListener(Listener listener) {
         listeners.remove(listener);
     }
 
@@ -110,7 +97,7 @@ public interface Binding {
         if (check != null)
             handler.removeCallbacks(check);
 
-        if (wasBackground){
+        if (wasBackground) {
             Log.i(TAG, "went foreground");
             for (Listener l : listeners) {
                 try {
@@ -131,7 +118,7 @@ public interface Binding {
         if (check != null)
             handler.removeCallbacks(check);
 
-        handler.postDelayed(check = new Runnable(){
+        handler.postDelayed(check = new Runnable() {
             @Override
             public void run() {
                 if (foreground && paused) {
@@ -152,17 +139,22 @@ public interface Binding {
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+    }
 
     @Override
-    public void onActivityStarted(Activity activity) {}
+    public void onActivityStarted(Activity activity) {
+    }
 
     @Override
-    public void onActivityStopped(Activity activity) {}
+    public void onActivityStopped(Activity activity) {
+    }
 
     @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+    }
 
     @Override
-    public void onActivityDestroyed(Activity activity) {}
+    public void onActivityDestroyed(Activity activity) {
+    }
 }

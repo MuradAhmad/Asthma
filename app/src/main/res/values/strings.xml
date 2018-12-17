@@ -4,13 +4,13 @@
     <string name="close">Close</string>
     <string name="welcome">Welcome</string>
     <string name="login">Login</string>
-    <string name="register">Register ?</string>
+    <string name="register">Register</string>
     <string name="email">Email</string>
     <string name="pasword">Password</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
     <string name="sync">Sync</string>
-    <string name="deviceid">DeviceId</string>
+    <string name="deviceid">Device ID</string>
     <string name="rssi">RSSI</string>
     <string name="save">Save</string>
     <string name="notification">Notifications</string>
@@ -18,7 +18,7 @@
     <string name="selecttime2">Select evening time</string>
     <string name="time">Time</string>
     <string name="user">User</string>
-    <string name="userid">User id</string>
+    <string name="userid">User ID</string>
     <string name="medication">Current medication</string>
     <string name="drugs">Medication/Drugs loading</string>
     <string name="fillform">Fill the form carefully</string>
@@ -39,7 +39,7 @@
     <string name="docvisit2">Doctor visits due to allergy</string>
     <string name="otherconsider">Other considerations</string>
 
-    <string name="symptoms_title">Reflecting daily severity of Symptoms</string>
+    <string name="symptoms_title">Reflecting daily severity of symptoms</string>
 
     <string name="symptom_question_shortness">Shortness of breath</string>
     <string name="symptom_question_phlegm">Phlegm production</string>
@@ -51,7 +51,7 @@
     <string name="symptom_option_strong">Strong</string>
 
     <string name="symptom_frequency_wakeup">Nocturnal wake ups caused by symptoms</string>
-    <string name="symptom_frequency_openeningmeds1">Opening medication of asthma(short-acting)</string>
+    <string name="symptom_frequency_openeningmeds1">Opening medication of asthma (short-acting)</string>
     <string name="symptom_frequency_openeningmeds2">Opening medication of asthma</string>
 
     <string name="symptom_frequency_optn_once">Once</string>
@@ -67,17 +67,24 @@
     <string name="symptom_option_notatall">Not at all under control</string>
 
 
-
     <string name="feedback_option_yes">Yes</string>
     <string name="feedback_option_no">No</string>
     <string name="feedback_option_indoor">Indoor</string>
     <string name="feedback_option_outdoor">Outdoor</string>
-    <string name="feedback_question1">Did your asthma prevent you to act normally in work, school or home / leisure time today ?</string>
+    <string name="feedback_question1">Did your asthma prevent you to act normally in work, school or home / leisure time
+        today?
+    </string>
 
     <string name="feedback_question2">Where are you now?</string>
-    
+
 
     <string name="symptom_option_moderate">Moderate</string>
 
+    <string name="notification_title_daily_symptoms">Daily Symptoms</string>
+    <string name="notification_action_daily_symptoms">Tap here to report daily symptoms</string>
+    <string name="feedback_server_failure">Server unreacheable. Try again later.</string>
+    <string name="feedback_internet_missing">Internet not available.</string>
+    <string name="feedback_error_credentials">Wrong credentials</string>
+    <string name="feedback_error_form">Please answer the questions.</string>
 
 </resources>

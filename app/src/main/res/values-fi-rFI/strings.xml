@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Asthma</string>
+    <string name="app_name">EXTREMA</string>
     <string name="login">Kirjaudu sisään</string>
     <string name="pasword">Salasana</string>
     <string name="email">Sähköposti</string>
-    <string name="register">Rekisteröityä?</string>
+    <string name="register">Rekisteröityä</string>
     <string name="welcome">Tervetuloa</string>
     <string name="open">Avata</string>
     <string name="close">kiinni</string>
@@ -18,4 +18,57 @@
     <string name="selecttime1">Valitse aamu aika</string>
     <string name="selecttime2">Valitse ilta-aika</string>
     <string name="time">Aika</string>
+    <string name="symptoms_title">Oireiden päivittäisen vakavuuden heijastaminen</string>
+    <string name="symptom_question_shortness">Hengenahdistus</string>
+    <string name="symptom_question_cough">Yskä</string>
+    <string name="symptom_question_wheezing">Vinkuminen</string>
+    <string name="symptom_question_phlegm">Flegmituotanto</string>
+    <string name="symptom_frequency_wakeup">Oireiden aiheuttama yöllinen herätys</string>
+    <string name="symptom_frequency_openeningmeds1">Astman avaaminen lääkkeeksi (lyhytvaikutteinen)</string>
+    <string name="symptom_frequency_openeningmeds2">Astman avaaminen</string>
+    <string name="symptom_option_not">Ei lainkaan</string>
+    <string name="symptom_frequency_optn_once">Kerran</string>
+    <string name="symptom_frequency_optn_times">2-3 kertaa</string>
+    <string name="symptom_frequency_optn_times1">4 tai useamman kerran</string>
+    <string name="symptom_option_good">Hyvä</string>
+    <string name="symptom_option_poorly">Huonosti hallinnassa</string>
+    <string name="symptom_option_more">Yhä tai vähemmän hallinnassa</string>
+    <string name="symptom_option_notatall">Ei lainkaan hallinnassa</string>
+    <string name="feedback_option_yes">Joo</string>
+    <string name="feedback_option_no">Ei</string>
+    <string name="symptom_option_mild">Mieto</string>
+    <string name="symptom_option_strong">Voimakas</string>
+    <string name="symptom_option_moderate">Kohtalainen</string>
+    <string name="feedback_question1">"Oliko astmaasi estää sinua toimimaan normaalisti työssä, koulussa tai kotona /
+        vapaa-aikana tänään? "
+    </string>
+    <string name="othermeds">Muut astman lääkitys</string>
+    <string name="docvisit1">Lääkärikäynnit astman vuoksi</string>
+    <string name="docvisit2">Lääkärikäynnit allergiasta</string>
+    <string name="otherconsider">Muut näkökohdat</string>
+    <string name="changmeds">Muutokset lääkkeissä uusi annos</string>
+    <string name="username">Nimi</string>
+    <string name="therameds">Astman terapeuttiset lääkkeet</string>
+    <string name="openmeds">Lääkkeen avauspäivä</string>
+    <string name="feedback_option_outdoor">Ulko-</string>
+    <string name="feedback_option_indoor">Sisä-</string>
+    <string name="feedback_question2">Missä olet nyt?</string>
+    <string name="symptom_estimation">Oma arvio astman tasapainosta</string>
+    <string name="consent">Suostumus</string>
+    <string name="conpassword">Vahvista salasana</string>
+    <string name="meds">Lääkitys</string>
+    <string name="fillform">Täytä lomake huolellisesti</string>
+    <string name="drugs">Lääkehoito / huumeiden lastaus</string>
+    <string name="medication">Nykyinen lääkitys</string>
+    <string name="user">Käyttäjä</string>
+    <string name="userid">Käyttäjätunnus</string>
+    <string name="dob">Syntymäaika</string>
+    <string name="symptom">Oireet</string>
+    <string name="dashboard">Kojelauta</string>
+    <string name="notification_title_daily_symptoms">Päivittäiset oireet</string>
+    <string name="notification_action_daily_symptoms">Napauta tästä raportoidaksesi päivittäisiä oireita</string>
+    <string name="feedback_server_failure">Palvelin ei ole tavoitettavissa. Yritä myöhemmin uudelleen.</string>
+    <string name="feedback_internet_missing">Internetiä ei ole saatavilla.</string>
+    <string name="feedback_error_credentials">Väärä valtakirja</string>
+    <string name="feedback_error_form">Vastaa kysymyksiin.</string>
 </resources>

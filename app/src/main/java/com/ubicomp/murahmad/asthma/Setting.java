@@ -43,12 +43,10 @@ public class Setting extends Fragment {
     String eveningTime;
 
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.activity_settings, container,false);
-
+        final View view = inflater.inflate(R.layout.activity_settings, container, false);
 
 
         dbHandler = new Database(getContext());
@@ -71,21 +69,20 @@ public class Setting extends Fragment {
         txtEvening.setText(R.string.selecttime2);
 
         btnMorning.setText(R.string.time);
+
+        Cursor morning = db.query(Database.SETTING_TABLE, null, Database.MORNING_TIME + " IS NOT NULL", null, null, null, null);
+
         btnEvening.setText(R.string.time);
         btnSave.setText(R.string.save);
 
         // send User notification
 
 
-
-
-
-
         btnMorning.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
+
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
@@ -93,13 +90,13 @@ public class Setting extends Fragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        btnMorning.setText( selectedHour + ":" + selectedMinute);
+                        btnMorning.setText(selectedHour + ":" + selectedMinute);
 
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         calendar.set(Calendar.MINUTE, selectedMinute);
-                        calendar.set(Calendar.SECOND,30);
-                        calendar.set(Calendar.MILLISECOND,0);
+                        calendar.set(Calendar.SECOND, 30);
+                        calendar.set(Calendar.MILLISECOND, 0);
                         morningTime = String.valueOf(calendar.getTimeInMillis());
 
                     }
@@ -109,7 +106,6 @@ public class Setting extends Fragment {
 
             }
         });
-
 
 
         btnEvening.setOnClickListener(new View.OnClickListener() {
@@ -124,13 +120,13 @@ public class Setting extends Fragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        btnEvening.setText( selectedHour + ":" + selectedMinute);
+                        btnEvening.setText(selectedHour + ":" + selectedMinute);
 
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
                         calendar.set(Calendar.MINUTE, selectedMinute);
-                        calendar.set(Calendar.SECOND,30);
-                        calendar.set(Calendar.MILLISECOND,0);
+                        calendar.set(Calendar.SECOND, 30);
+                        calendar.set(Calendar.MILLISECOND, 0);
                         eveningTime = String.valueOf(calendar.getTimeInMillis());
 
                     }
@@ -142,8 +138,6 @@ public class Setting extends Fragment {
         });
 
 
-
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,98 +147,28 @@ public class Setting extends Fragment {
                 eveningTime = btnEvening.getText().toString();
 
 */
-               if(validate()) {
-                  // notification();
+                if (validate()) {
+                    // notification();
 
 
-                ContentValues values = new ContentValues();
-                values.put(Database.MORNING_TIME, morningTime);
-                values.put(Database.EVENING_TIME, eveningTime);
-                values.put(Database.Setting_timestamp,System.currentTimeMillis());
+                    ContentValues values = new ContentValues();
+                    values.put(Database.MORNING_TIME, morningTime);
+                    values.put(Database.EVENING_TIME, eveningTime);
+                    values.put(Database.Setting_timestamp, System.currentTimeMillis());
 
-                dbHandler.insertSettingData(values);
-                dbHandler.close();
+                    dbHandler.insertSettingData(values);
+                    dbHandler.close();
 
-                   Intent intent = new Intent(getContext(), MainActivity.class);
-                   startActivity(intent);
-               }
-               else
-               {
-                   Toast.makeText(getContext(), "Enter notification time ", Toast.LENGTH_LONG).show();
-               }
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Enter notification time ", Toast.LENGTH_LONG).show();
+                }
             }
-    });
+        });
 
-                return view;
+        return view;
     }
-/*
-    public void notification(){
-
-
-        if(morningTime != null && !morningTime.isEmpty()) {
-
-
-            // set notification time here
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.SECOND, 30);
-            calendar.set(Calendar.MILLISECOND, 0);
-            long currentTime = calendar.getTimeInMillis();
-            // System.currentTimeMillis();
-
-            Log.d("current Time", String.valueOf(currentTime));
-
-            Long morningTimeLong = Long.valueOf(morningTime);
-            //Long eveningTimeLong = Long.valueOf(eveningTime);
-
-            Log.d("Morning time from Set", String.valueOf(morningTimeLong));
-
-            if (morningTimeLong.compareTo(currentTime)>= 0)  {
-
-                Intent intent = new Intent(getContext(), NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-                // AlarmManager.Interval_Day set according to settings screen
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-            }
-
-        }
-
-        //||
-
-        if(eveningTime != null && !eveningTime.isEmpty()) {
-
-            // set notification time here
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.SECOND, 30);
-            calendar.set(Calendar.MILLISECOND, 0);
-            long currentTime = calendar.getTimeInMillis();
-            // System.currentTimeMillis();
-
-            Log.d("current Time", String.valueOf(currentTime));
-
-
-            Long eveningTimeLong = Long.valueOf(eveningTime);
-
-            Log.d("Morning time from Set", String.valueOf(eveningTimeLong));
-
-            if (eveningTimeLong.compareTo(currentTime)>= 0)  {
-
-                Intent intent = new Intent(getContext(), NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-                // AlarmManager.Interval_Day set according to settings screen
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-            }
-
-        }
-
-
-    }*/
-
 
     public boolean validate() {
         boolean valid = true;

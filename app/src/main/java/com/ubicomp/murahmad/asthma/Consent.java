@@ -12,15 +12,11 @@ import android.webkit.WebViewClient;
 
 public class Consent extends AppCompatActivity {
 
-
-    WebView webView;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.consent_webview);
 
-
-        webView = (WebView) findViewById(R.id.webview);
+        WebView webView = findViewById(R.id.webview);
         WebViewClient client = new WebViewClient();
         webView.setWebViewClient(client);
         WebSettings webSettings = webView.getSettings();

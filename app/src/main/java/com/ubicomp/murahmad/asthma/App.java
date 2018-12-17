@@ -10,51 +10,38 @@ import android.os.Build;
 
 /**
  * Created by muradahmad on 06/09/2018.
+ * Last modification:
+ * 12.12.2018 Denzil: Code clean-up, remove redundant global variables
  */
-
 public class App extends Application {
 
-    public static final String CHANNEL_1_ID = "channel1";
-    public static final String CHANNEL_2_ID = "channel2";
-
-
-    Database handler;
-    SQLiteDatabase db;
-    Cursor cursor;
-    private String userName, password;
+    static final String CHANNEL_1_ID = "extrema";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-
-        handler = new Database(this);
-        db = handler.getReadableDatabase();
-
         createNotificationChannels();
 
-        cursor = db.rawQuery("SELECT * FROM " + Database.REGISTRATION_TABLE, null);
+        Database handler = new Database(this);
+        SQLiteDatabase db = handler.getReadableDatabase();
 
-        if (cursor != null) {
-            cursor.moveToFirst();
+        String userName = null, password = null;
 
-            if (cursor.getCount() > 0) {
-// get values from cursor here
-
-                userName = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
-                password = cursor.getString(cursor.getColumnIndex(Database.PASSWORD));
-
-
-            }
-
+        Cursor cursor = db.query(Database.REGISTRATION_TABLE, null, null, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            userName = cursor.getString(cursor.getColumnIndex(Database.USERNAME));
+            password = cursor.getString(cursor.getColumnIndex(Database.PASSWORD));
+            cursor.close();
         }
-        cursor.close();
 
-        if (userName != null && password != null) {
+        /**
+         * @Murad: TODO: missing actual username and password validation. Right now, only checks whether there is a user and password on the database...
+         */
+        if (userName != null && password != null && userName.length() > 0 && password.length() > 0) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-
         } else {
             Intent intent = new Intent(this, Login.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -62,26 +49,12 @@ public class App extends Application {
         }
     }
 
-    private void createNotificationChannels(){
-
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-
-            NotificationChannel channel1 = new NotificationChannel(CHANNEL_1_ID,"Channel 1",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel1.setDescription("This is Channel 1");
-
-
-            NotificationChannel channel2 = new NotificationChannel(CHANNEL_2_ID,"Channel 2",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel2.setDescription("This is Channel 2");
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel1 = new NotificationChannel(CHANNEL_1_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_HIGH);
+            channel1.setDescription(getString(R.string.app_name));
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel1);
-            notificationManager.createNotificationChannel(channel2);
-
         }
-
-
-
     }
 }

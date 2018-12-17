@@ -12,20 +12,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by muradahmad on 05/08/2018.
  */
 
 public class Medication extends Fragment {
-
 
     Database dbHandler;
     SQLiteDatabase db;
@@ -37,14 +35,14 @@ public class Medication extends Fragment {
 
     private Button btnSave;
 
-    String medicationDate, drugs, otherDrugs,newDrugs,  visits,otherVisits,otherconsiderations;
+    String medicationDate, drugs, otherDrugs, newDrugs, visits, otherVisits, otherconsiderations;
 
     int year, month, day;
     DatePickerDialog datePickerDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view   = inflater.inflate(R.layout.activity_medication, container,false);
+        View view = inflater.inflate(R.layout.activity_medication, container, false);
 
         txtmedication = (TextView) view.findViewById(R.id.txtmeds);
         edtmedicationDate = (TextView) view.findViewById(R.id.edtmedicationDate);
@@ -56,7 +54,6 @@ public class Medication extends Fragment {
         edtotherconsiderations = (EditText) view.findViewById(R.id.edtotherConsideration);
 
         btnSave = (Button) view.findViewById(R.id.btnSave);
-
 
         txtmedication.setText(R.string.meds);
         edtmedicationDate.setHint(R.string.openmeds);
@@ -70,13 +67,8 @@ public class Medication extends Fragment {
         btnSave.setText(R.string.save);
 
 
-
-
         dbHandler = new Database(getContext());
         db = dbHandler.getWritableDatabase();
-
-
-
 
 
         edtmedicationDate.setOnClickListener(new View.OnClickListener() {
@@ -105,17 +97,22 @@ public class Medication extends Fragment {
         });
 
 
-
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //medicationDate = edtmedicationDate.getText().toString();
 
-                // 1. save data,
+                SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
 
+                double medicate_time = 0;
 
-                medicationDate = edtmedicationDate.getText().toString();
+                try {
+                    medicate_time = format.parse(edtmedicationDate.getText().toString()).getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 drugs = edtdrugs.getText().toString();
                 otherDrugs = edtotherDrugs.getText().toString();
                 newDrugs = edtnewDrugs.getText().toString();
@@ -123,11 +120,9 @@ public class Medication extends Fragment {
                 otherVisits = edtotherVisits.getText().toString();
                 otherconsiderations = edtotherconsiderations.getText().toString();
 
-
-
-                if(validate()) {
+                if (validate()) {
                     ContentValues values = new ContentValues();
-                    values.put(Database.MED_DATE, medicationDate);
+                    values.put(Database.MED_DATE, medicate_time);
                     values.put(Database.DRUGS, drugs);
                     values.put(Database.OTHER_DRUGS, otherDrugs);
                     values.put(Database.NEW_DRUGS, newDrugs);
@@ -135,46 +130,20 @@ public class Medication extends Fragment {
                     values.put(Database.DOC_VISITS_ALLERGY, otherVisits);
                     values.put(Database.OTHER, otherconsiderations);
 
-
                     dbHandler.insertMedicationData(values);
 
-
-                }
-
-                // 2.validate data
-
-
-                if(validate()) {
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), getString(R.string.feedback_error_form), Toast.LENGTH_LONG).show();
                 }
-                else {
-                    Toast.makeText(getContext(), "Fill the form", Toast.LENGTH_LONG).show();
-                }
-
-
-
             }
         });
 
-
-
-
-
-        // save button
-        // save data in database
-        // goto dashboard
-
-
         return view;
-
     }
 
-
     public boolean validate() {
-        boolean valid = true;
-
-
         medicationDate = edtmedicationDate.getText().toString();
         drugs = edtdrugs.getText().toString();
         otherDrugs = edtotherDrugs.getText().toString();
@@ -183,30 +152,11 @@ public class Medication extends Fragment {
         otherVisits = edtotherVisits.getText().toString();
         otherconsiderations = edtotherconsiderations.getText().toString();
 
-
-
-
-
-
-      /*  if(medicationDate.isEmpty()) {
-            edtmedicationDate.setError("enter medication intake date ");
-        }else {
-            edtmedicationDate.setError(null);
-        }*/
-        if(drugs.isEmpty()) {
+        if (drugs.isEmpty()) {
             edtdrugs.setError("enter drugs");
-            return valid =false;
-        }else {
+            return false;
+        } else {
             return true;
         }
-
-
-
-
-
     }
-
-
-
-
 }
