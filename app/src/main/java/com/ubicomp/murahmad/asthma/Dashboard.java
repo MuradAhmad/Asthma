@@ -274,6 +274,11 @@ public class Dashboard extends Fragment {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            handler = new Database(getContext());
+                            db = handler.getWritableDatabase();
                             db.delete(Database.MEDICATION_TABLE, Database.MED_DATE + " <= " + timestamp, null);
                         }
                     },
@@ -310,6 +315,11 @@ public class Dashboard extends Fragment {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            handler = new Database(getContext());
+                            db = handler.getWritableDatabase();
                             db.delete(Database.SYMPTOMS_TABLE, Database.SYMPTOMS_timestamp + " <= " + timestamp, null);
                         }
                     },

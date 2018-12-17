@@ -49,7 +49,6 @@ public class Database extends SQLiteOpenHelper {
     public static final String DOC_VISITS_ALLERGY = "Allergy_Visits";
     public static final String OTHER = "Other";
 
-
     // Symptoms table
 
     public static final String SYMPTOMS_TABLE = "Symptoms_Table";
