@@ -23,15 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
+import com.google.android.gms.location.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +38,7 @@ import java.util.List;
  * Created by muradahmad on 20/08/2018.
  */
 
-public class Feedback extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, android.location.GpsStatus.Listener {
+public class Feedback extends Fragment  {
 
     private QuestionLibrary questionLibrary;
     private int feedbackQuestion = 0;
@@ -73,26 +67,10 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
 
     //location
 
-    private int satellites = 0;
-    private int satellitesInFix = 0;
 
-    private LocationManager locationManager;
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationRequest locationRequest;
-
-    private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
-    private GoogleApiClient googleApiClient;
 
     Context context;
-
-    private Double myLatitude;
-    private Double myLongitude;
-
-    private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
-    private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 102;
-    private boolean permissionIsGranted = false;
-
 
     @Nullable
     @Override
@@ -155,23 +133,18 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
             }
         });
 
+<<<<<<< HEAD
+
+=======
         //user Location
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
             } else {
                 permissionIsGranted = true;
             }
             //return;
-
         }
 
         locationManager.addGpsStatusListener(this);
@@ -187,6 +160,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         locationRequest.setInterval(10 * 1000);
         locationRequest.setFastestInterval(15 * 1000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+>>>>>>> 55aa86c4c2c47d1787dedf3c66a9224c19654abe
 
         return view;
     }
@@ -246,16 +220,7 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         }
         data.put(ruuvitagJsonObject);
 
-        final JSONObject locationJsonObject = new JSONObject();
-        try {
-            locationJsonObject.put("latitude", myLatitude);
-            locationJsonObject.put("longitude", myLongitude);
-            locationJsonObject.put("Number of satellites", satellitesInFix);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        data.put(locationJsonObject);
 
         final JSONObject feedbackJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
@@ -276,12 +241,12 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
         values.put(Database.SYMPTOMS_timestamp, calendar.getTimeInMillis());
 
         dbHandler.insertSymptomsData(values);
-
         dbHandler.close();
-
     }
 
 
+<<<<<<< HEAD
+=======
     @Override
     public void onStart() {
 
@@ -364,82 +329,44 @@ public class Feedback extends Fragment implements GoogleApiClient.ConnectionCall
     }
 
     private void requestLocationUpdates() {
-
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
-            } else {
-                permissionIsGranted = true;
-            }
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
 
     @Override
     public void onGpsStatusChanged(int event) {
-
-
-        //
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-
-        int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
-        Log.d(" ", "Time to first fix = " + timetofix);
-        for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
-            if (sat.usedInFix()) {
-                satellitesInFix++;
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
+            Log.d(" ", "Time to first fix = " + timetofix);
+            for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
+                if (sat.usedInFix()) {
+                    satellitesInFix++;
+                }
+                satellites++;
             }
-            satellites++;
         }
-        // Log.d(" ", satellites + " Used In Last Fix (" + satellitesInFix + ")");
-        //Toast.makeText(getContext(), String.valueOf(satellitesInFix), Toast.LENGTH_SHORT).show();
-
     }
+>>>>>>> 55aa86c4c2c47d1787dedf3c66a9224c19654abe
 
 
     public void getDeviceData() {
 
-
         cursor = db.rawQuery("SELECT * FROM " + Database.DEVICE_TABLE + " ORDER BY Date desc limit 1", null);
-
 
         if (cursor != null) {
             cursor.moveToFirst();
 
             if (cursor.getCount() > 0) {
-
                 // get values from cursor here
 
                 deviceId = cursor.getString(cursor.getColumnIndex(Database.DEVICE_ID));
                 temperature = cursor.getString(cursor.getColumnIndex(Database.TEMPERATURE));
                 humidity = cursor.getString(cursor.getColumnIndex(Database.HUMIDITY));
 
-
                 Log.d("Feedbackdevice", deviceId);
                 Log.d("Feedbacktemperature ", temperature);
                 Log.d("Feedbackhumidity", humidity);
-
-
             }
         }
         cursor.close();

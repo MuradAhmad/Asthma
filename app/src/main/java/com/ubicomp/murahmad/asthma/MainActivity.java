@@ -47,24 +47,16 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FrameLayout frameLayout;
 
-
-    // Fused Location and Location request
-
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private LocationRequest locationRequest;
-    LocationListener locationListener;
-
     private static final int REQUEST_READ_PHONE_STATE = 100;
+
+   // Fused Location and Location request
+
+
+
     private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
     private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 102;
     private boolean permissionIsGranted = false;
 
-    private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
-    private GoogleApiClient googleApiClient;
-
-
-    private Double myLatitude;
-    private Double myLongitude;
 
 
     // array lists for local database tables
@@ -158,65 +150,6 @@ public class MainActivity extends AppCompatActivity {
         deviceList = new ArrayList<String>();
 
 
-        //database
-/*
-        handler = new Database(this);
-        db = handler.getReadableDatabase();*/
-/*
-        // send User notification
-
-        cursor = db.rawQuery("SELECT * FROM " + Database.SETTING_TABLE +" order by Timestamp desc limit 1", null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-
-            if (cursor.getCount() > 0) {
-
-                // get values from cursor here
-
-                morningTime = cursor.getString(cursor.getColumnIndex(Database.MORNING_TIME));
-                eveningTime = cursor.getString(cursor.getColumnIndex(Database.EVENING_TIME));
-
-                Log.d("Morning Time", String.valueOf(morningTime));
-                Log.d("Evening Time", String.valueOf(eveningTime));
-
-
-            }
-
-        }
-        cursor.close();
-
-
-
-        if((morningTime != null && !morningTime.isEmpty()) || (eveningTime != null && !eveningTime.isEmpty())) {
-
-
-            // set notification time here
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            long currentTime = calendar.getTimeInMillis();
-            // System.currentTimeMillis();
-
-            Log.d("current Time", String.valueOf(currentTime));
-
-            Long morningTimeLong = Long.valueOf(morningTime);
-            Long eveningTimeLong = Long.valueOf(eveningTime);
-
-            Log.d("Morning time from DB", String.valueOf(morningTimeLong));
-
-            if ((morningTimeLong.compareTo(currentTime)>= 0) || (eveningTimeLong.compareTo(currentTime)>= 0)) {
-
-                Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                // AlarmManager.Interval_Day set according to settings screen
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-            }
-
-        }*/
 
 
         // Bluetooth manager
@@ -228,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
         //requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1234);
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new
                             String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -235,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             permissionIsGranted = true;
         }
+
 
 
         // permissions for UUID
@@ -500,11 +435,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        if (permissionIsGranted) {
+      /*  if (permissionIsGranted) {
             // if (googleApiClient.isConnected()) {
             //requestLocationUpdates();
             //}
-        }
+        }*/
 
     }
 
@@ -578,6 +513,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
     }
+
 
 
 }
