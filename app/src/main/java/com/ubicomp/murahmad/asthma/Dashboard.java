@@ -35,6 +35,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.aware.providers.Locations_Provider;
 import com.aware.utils.DatabaseHelper;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -294,6 +295,7 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
             if (!medications.isClosed()) medications.close();
         }
 
+<<<<<<< HEAD
         Cursor location = db.query(Database.LOCATION_TABLE, null, null, null, null, null, Database.LOCATION_timestamp + " ASC");
         if (location != null && location.moveToFirst()) {
             try {
@@ -307,6 +309,20 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
             }
             if (!location.isClosed()) location.close();
         }
+=======
+//        Cursor locations = getContext().getContentResolver().query(Locations_Provider.Locations_Data.CONTENT_URI, null, null, null, Locations_Provider.Locations_Data.TIMESTAMP + " ASC");
+//        if (locations != null && locations.getCount() > 0) {
+//            try {
+//                JSONArray locationsJSON = new JSONArray(DatabaseHelper.cursorToString(locations));
+//                for(int i=0; i<locationsJSON.length(); i++) {
+//                    pushLocationsToServer(strUUID, locationsJSON.getJSONObject(i), locationsJSON.getJSONObject(i).getDouble(Locations_Provider.Locations_Data.TIMESTAMP));
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+>>>>>>> 55aa86c4c2c47d1787dedf3c66a9224c19654abe
         db.close();
 
 
@@ -314,6 +330,45 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
 
     }
 
+    private void pushLocationsToServer(String strUUID, JSONObject locationsJsonObject, final Double timestamp) {
+
+        try {
+            final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+            String url = "https://co2.awareframework.com:8443/insert";
+
+            final JSONObject jsonObject = new JSONObject();
+            jsonObject.put("tableName", "locations");
+            jsonObject.put("deviceId", strUUID);
+            jsonObject.put("data", locationsJsonObject);
+            jsonObject.put("timestamp", timestamp);
+
+            final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, jsonObject,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            //getContext().getContentResolver().delete(Locations_Provider.Locations_Data.CONTENT_URI, Locations_Provider.Locations_Data.TIMESTAMP +" <= " + timestamp, null);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("Error is: ", error.getMessage());
+                            Toast.makeText(getContext(),
+                                    getString(R.string.feedback_server_failure), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+            );
+
+            requestQueue.add(jsonObjectRequest);
+
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
 
     private void pushRegistrationToServer(String strUUID, JSONObject registrationJsonObject, Double timestamp) {
 
@@ -371,6 +426,11 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            handler = new Database(getContext());
+                            db = handler.getWritableDatabase();
                             db.delete(Database.MEDICATION_TABLE, Database.MED_DATE + " <= " + timestamp, null);
                         }
                     },
@@ -407,6 +467,11 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            Log.d("Response is: ", response.toString());
+                            Log.d("Json data: ", jsonObject.toString());
+
+                            handler = new Database(getContext());
+                            db = handler.getWritableDatabase();
                             db.delete(Database.SYMPTOMS_TABLE, Database.SYMPTOMS_timestamp + " <= " + timestamp, null);
                         }
                     },
