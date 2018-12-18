@@ -415,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Permission check for Marshmallow and newer
         int permissionCoarseLocation = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
+                Manifest.permission.ACCESS_FINE_LOCATION);
 
         int permissionWriteExternal = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -423,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
         List<String> listPermissionsNeeded = new ArrayList<>();
 
         if (permissionCoarseLocation != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            listPermissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
         if (permissionWriteExternal != PackageManager.PERMISSION_GRANTED) {

@@ -43,7 +43,6 @@ public class Feedback extends Fragment  {
     private QuestionLibrary questionLibrary;
     private int feedbackQuestion = 0;
 
-
     private TextView txtFeedback;
     private Button btn1, btn2;
 
@@ -55,20 +54,11 @@ public class Feedback extends Fragment  {
     SQLiteDatabase db;
     Cursor cursor;
 
-
     private String stringSymptoms;
-    private String stringLocation;
-    private String stringDeviceData;
 
     String deviceId;
     String temperature;
     String humidity;
-
-
-    //location
-
-
-
 
     Context context;
 
@@ -133,35 +123,6 @@ public class Feedback extends Fragment  {
             }
         });
 
-<<<<<<< HEAD
-
-=======
-        //user Location
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
-            } else {
-                permissionIsGranted = true;
-            }
-            //return;
-        }
-
-        locationManager.addGpsStatusListener(this);
-        fusedLocationProviderClient = new FusedLocationProviderClient(getContext());
-        googleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        locationRequest = new LocationRequest();
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(10 * 1000);
-        locationRequest.setFastestInterval(15 * 1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
->>>>>>> 55aa86c4c2c47d1787dedf3c66a9224c19654abe
-
         return view;
     }
 
@@ -206,9 +167,6 @@ public class Feedback extends Fragment  {
     public void saveSymptomsFeedback() {
 
         JSONArray data = new JSONArray();
-
-        // ruuvitag device data
-
         final JSONObject ruuvitagJsonObject = new JSONObject();
         try {
             ruuvitagJsonObject.put("Device Id", deviceId);
@@ -220,7 +178,12 @@ public class Feedback extends Fragment  {
         }
         data.put(ruuvitagJsonObject);
 
-
+        try {
+            JSONObject symptomsData = new JSONObject(stringSymptoms);
+            data.put(symptomsData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         final JSONObject feedbackJsonObject = new JSONObject();
         for (int index = 0; index < qList.size(); index++) {
@@ -233,28 +196,18 @@ public class Feedback extends Fragment  {
 
         data.put(feedbackJsonObject);
 
-        Calendar calendar = Calendar.getInstance();
-        Log.d("time feedback:", String.valueOf(calendar.getTimeInMillis()));
-
         ContentValues values = new ContentValues();
         values.put(Database.SYMPTOMS, data.toString());
-        values.put(Database.SYMPTOMS_timestamp, calendar.getTimeInMillis());
+        values.put(Database.SYMPTOMS_timestamp, System.currentTimeMillis());
 
         dbHandler.insertSymptomsData(values);
         dbHandler.close();
     }
 
-
-<<<<<<< HEAD
-=======
     @Override
     public void onStart() {
-
         super.onStart();
-
-        googleApiClient.connect();
     }
-
 
     @Override
     public void onResume() {
@@ -280,74 +233,7 @@ public class Feedback extends Fragment  {
             ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
 
-
-        if (permissionIsGranted) {
-            if (googleApiClient.isConnected()) {
-                requestLocationUpdates();
-            }
-        }
-
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (permissionIsGranted)
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (permissionIsGranted)
-            googleApiClient.disconnect();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        requestLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        myLatitude = location.getLatitude();
-        myLongitude = location.getLongitude();
-
-        //Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude) +"Satellite.. "+ String.valueOf(location.getExtras().getInt("satellites")), Toast.LENGTH_SHORT).show();
-        Log.d("satellites", String.valueOf(location.getExtras().getInt("satellites")));
-
-    }
-
-    private void requestLocationUpdates() {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-    }
-
-
-    @Override
-    public void onGpsStatusChanged(int event) {
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
-            Log.d(" ", "Time to first fix = " + timetofix);
-            for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
-                if (sat.usedInFix()) {
-                    satellitesInFix++;
-                }
-                satellites++;
-            }
-        }
-    }
->>>>>>> 55aa86c4c2c47d1787dedf3c66a9224c19654abe
 
 
     public void getDeviceData() {

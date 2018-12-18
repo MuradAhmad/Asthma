@@ -3,14 +3,10 @@ package com.ubicomp.murahmad.asthma;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
-import com.aware.Aware;
-import com.aware.Aware_Preferences;
-import com.aware.Locations;
 
 /**
  * Created by muradahmad on 06/09/2018.
@@ -51,23 +47,6 @@ public class App extends Application {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-
-        //This would work, but I don't log satellite info...
-//        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_GPS, true);
-//        Aware.setSetting(this, Aware_Preferences.STATUS_LOCATION_NETWORK, true);
-//        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_GPS, 300);
-//        Aware.setSetting(this, Aware_Preferences.FREQUENCY_LOCATION_NETWORK, 600);
-//        Aware.setSetting(this, Aware_Preferences.LOCATION_SAVE_ALL, true);
-//        Aware.setSetting(this, Aware_Preferences.LOCATION_EXPIRATION_TIME, 300);
-//        Aware.setSetting(this, Aware_Preferences.MIN_LOCATION_GPS_ACCURACY, 100);
-//
-//        Aware.startLocations(this);
-//        Locations.setSensorObserver(new Locations.AWARESensorObserver() {
-//            @Override
-//            public void onLocationChanged(ContentValues contentValues) {
-//
-//            }
-//        });
     }
 
     private void createNotificationChannels() {

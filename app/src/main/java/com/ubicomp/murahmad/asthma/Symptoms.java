@@ -177,15 +177,9 @@ public class Symptoms extends Fragment {
 
             qList.add(txtQuestion.getText().toString());
             estimationQuestionNumber++;
-
-
         } else {
-
             saveSymptoms();
-
         }
-
-
     }
 
 

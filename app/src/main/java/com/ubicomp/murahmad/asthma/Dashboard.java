@@ -73,10 +73,7 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
 
     private LocationManager locationManager;
 
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
-
-    private FusedLocationProviderApi locationProvider = LocationServices.FusedLocationApi;
     private GoogleApiClient googleApiClient;
 
     Context context;
@@ -85,7 +82,6 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
     private Double myLongitude;
 
     private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 104;
-    private static final int MY_PERMISSION_REQUEST_COARSE_LOCATION = 105;
     private boolean permissionIsGranted = false;
 
     boolean isWifiConn;
@@ -95,10 +91,6 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
     String symptoms;
     String strUUID;
 
-    private Timer timer;
-    private Handler scanTimerHandler;
-    private static int MAX_SCAN_TIME_MS = 1000;
-
     Database handler;
     SQLiteDatabase db;
 
@@ -106,6 +98,7 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
     private Button btnSync;
 
     final JSONObject symptomsJsonObject = new JSONObject();
+    final JSONObject locationJsonObject = new JSONObject();
 
     @Nullable
     @Override
@@ -151,11 +144,6 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
                         txtTemperature.setText(temperature + " °C ");
                         txtHumidity.setText(humidity + " % ");
                         txtRssi.setText(rssi + "  dBm");
-
-                        Log.d("Device ID Dashboard: ", deviceId);
-                        Log.d("Temperature Dashboard: ", temperature);
-                        Log.d("Humidity Dashboard: ", humidity);
-                        Log.d("RSSI Dashboard: ", rssi);
                     }
 
                     threadHandler.postDelayed(this, 1000);
@@ -189,44 +177,26 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
             }
         });
 
-
-
-
-
-
         //user Location
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
             } else {
                 permissionIsGranted = true;
             }
-            //return;
-
         }
 
         locationManager.addGpsStatusListener(this);
-        fusedLocationProviderClient = new FusedLocationProviderClient(getContext());
         googleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
         locationRequest = new LocationRequest();
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(10 * 1000);
-        locationRequest.setFastestInterval(15 * 1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
+        locationRequest.setInterval(5 * 60 * 1000);
+        locationRequest.setFastestInterval(60 * 1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         return view;
     }
@@ -310,10 +280,6 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
         }
 
         db.close();
-
-
-
-
     }
 
     private void pushRegistrationToServer(String strUUID, JSONObject registrationJsonObject, Double timestamp) {
@@ -440,9 +406,6 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
     }
 
     private void pushToServerLocation(String strUUID, JSONObject locationJsonObject, final Double timestamp){
-
-
-
         try {
             final RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
@@ -458,8 +421,10 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            db.delete(Database.LOCATION_TABLE, Database.LOCATION_timestamp + " <= " + timestamp, null);
+                            handler = new Database(getContext());
+                            db = handler.getWritableDatabase();
 
+                            db.delete(Database.LOCATION_TABLE, Database.LOCATION_timestamp + " <= " + timestamp, null);
                         }
                     },
                     new Response.ErrorListener() {
@@ -481,38 +446,11 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
 
     }
     public void saveLocation(){
-
-        JSONArray data = new JSONArray();
-
-        final JSONObject locationJsonObject = new JSONObject();
-        try {
-            locationJsonObject.put("latitude", myLatitude);
-            locationJsonObject.put("longitude", myLongitude);
-            locationJsonObject.put("Number of satellites", satellitesInFix);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        data.put(locationJsonObject);
-
-        Calendar calendar = Calendar.getInstance();
-
         ContentValues values = new ContentValues();
-        values.put(Database.LOCATION, data.toString());
-        values.put(Database.LOCATION_timestamp, calendar.getTimeInMillis());
-
+        values.put(Database.LOCATION, locationJsonObject.toString());
+        values.put(Database.LOCATION_timestamp, System.currentTimeMillis());
         handler.insertLocationData(values);
-
-      //  handler.close();
-
-
-
     }
-
-
-
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -531,29 +469,28 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
 
     @Override
     public void onLocationChanged(Location location) {
-        myLatitude = location.getLatitude();
-        myLongitude = location.getLongitude();
-
-        //Toast.makeText(getContext(), String.valueOf(myLatitude) + String.valueOf(myLongitude) +"Satellite.. "+ String.valueOf(location.getExtras().getInt("satellites")), Toast.LENGTH_SHORT).show();
-       // Log.d("satellites", String.valueOf(location.getExtras().getInt("satellites")));
-
-        saveLocation();
-
+        try {
+            locationJsonObject.put("latitude", location.getLatitude());
+            locationJsonObject.put("longitude", location.getLongitude());
+            locationJsonObject.put("accuracy", location.getAccuracy());
+            locationJsonObject.put("altitude", location.getAltitude());
+            locationJsonObject.put("provider", location.getProvider());
+            locationJsonObject.put("speed", location.getSpeed());
+            locationJsonObject.put("bearing",location.getBearing());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
 
     @Override
     public void onGpsStatusChanged(int event) {
-
-
         if (ActivityCompat.checkSelfPermission((Activity)context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions((Activity)context, new String[]{
                     android.Manifest.permission.ACCESS_FINE_LOCATION
             }, 10);
         }
-
-
 
         int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
         Log.d(" ", "Time to first fix = " + timetofix);
@@ -563,9 +500,17 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
             }
             satellites++;
         }
-         Log.d(" satellites", satellites + " Used In Last Fix (" + satellitesInFix + ")");
-        //Toast.makeText(getContext(), String.valueOf(satellitesInFix), Toast.LENGTH_SHORT).show();
 
+        try {
+            locationJsonObject.put("satellites", satellitesInFix);
+            locationJsonObject.put("isIndoor", !(satellitesInFix>0));
+
+            if (locationJsonObject.length()>1)
+                saveLocation();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -603,26 +548,17 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
             ActivityCompat.requestPermissions(getActivity(), listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), 1);
         }
 
-
         if (permissionIsGranted) {
             if (googleApiClient.isConnected()) {
                 requestLocationUpdates();
+            } else if (!googleApiClient.isConnecting()){
+                googleApiClient.connect();
             }
         }
-
     }
 
     private void requestLocationUpdates() {
-
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
             } else {
@@ -632,20 +568,4 @@ public class Dashboard extends Fragment implements GoogleApiClient.ConnectionCal
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (permissionIsGranted)
-            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (permissionIsGranted)
-            googleApiClient.disconnect();
-    }
-
-
 }
