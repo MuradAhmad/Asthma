@@ -61,8 +61,7 @@ public class Database extends SQLiteOpenHelper {
 
     public static final String LOCATION_TABLE = "Location_Table";
     public static final String LOCATION_timestamp = "Timestamp";
-    public static final String LATITUDE = "Latitude";
-    public static final String LONGITUDE = "Longitude";
+    public static final String LOCATION = "Location";
 
 
     public static Database instance;
@@ -77,7 +76,7 @@ public class Database extends SQLiteOpenHelper {
 
 
     public Database(Context context) {
-        super(context, USER_DATABASE, null, 9);
+        super(context, USER_DATABASE, null, 10);
     }
 
     @Override
@@ -86,7 +85,7 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL("create table " + REGISTRATION_TABLE + "(Name TEXT, DateOfBirth TEXT, Email TEXT, Password TEXT ,Uuid TEXT, Timestamp REAL)");
         db.execSQL("create table " + MEDICATION_TABLE + "(Date REAL, Drugs TEXT, Other_Drugs TEXT, New_Drugs TEXT, Asthma_Visits TEXT, Allergy_Visits TEXT, Other TEXT)");
         db.execSQL("create table " + SYMPTOMS_TABLE + "(Symptoms TEXT, Timestamp REAL)");
-        db.execSQL("create table " + LOCATION_TABLE + "(Latitude TEXT, Longitude TEXT, Timestamp REAL)");
+        db.execSQL("create table " + LOCATION_TABLE + "(Location TEXT, Timestamp REAL)");
         db.execSQL("create table " + SETTING_TABLE + "(MorningTime TEXT, EveningTime TEXT, LoginToken TEXT, Timestamp REAL)");
     }
 
